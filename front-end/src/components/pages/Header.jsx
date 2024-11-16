@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <header className='flex border-b py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
             {/* Logo */}
-            <div className='flex  items-center gap-12 w-full'>
+            <div className='flex items-center gap-12 w-full'>
                 <Link to='/'>
                     <img src={Logo} width={80} height={50} />   
                 </Link>

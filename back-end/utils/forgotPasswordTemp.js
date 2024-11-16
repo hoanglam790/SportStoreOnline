@@ -1,7 +1,7 @@
 const forgotPasswordTemp = ({ name, otp }) => {
     return `
     <div>
-        <p>Dear <span style='font-weight: bold'>${name}</span>,</p>
+        <p>Gửi <span style='font-weight: bold'>${name}</span>,</p>
         <p>Bạn vừa gửi yêu cầu khôi phục mật khẩu. Vui lòng sử dụng mã OTP dưới đây để tiến hành khôi phục.</p>
         <div style='background: yellow; font-size: 24px; text-align: center; font-weight: 600'>
             ${otp}

@@ -1,6 +1,7 @@
 import { Outlet, Route, Routes } from 'react-router-dom'
-import Header from './components/pages/Header'
+import Header from './components/pages/Header_main'
 import Footer from './components/pages/Footer'
+import toast, { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Outlet />
       </main>      
       <Footer />
+      <Toaster />
     </>
   )
 }

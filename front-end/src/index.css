@@ -3,13 +3,25 @@
 @tailwind utilities;
 
 
-input[type='text'], input[type='password'], input[type='email'] {
+/* input[type='text'], input[type='password'], input[type='email'] {
     @apply text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500
+} */
+
+
+body{
+    @apply bg-slate-200
 }
 
-@layer base{
-    .active_link{
-        @apply text-[#007bff] hover:text-[#007bff] text-[14px] block font-semibold
+/* Ẩn hai nút mũi tên lên xuống của thẻ input */
+@layer components {
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type='number'] {
+        -moz-appearance: textfield;
+        appearance: none;
     }
 }
-
