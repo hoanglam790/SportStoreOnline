@@ -50,7 +50,12 @@ const VerifyPasswordByOtp = () => {
             if(responseData.data.success){
                 toast.success(responseData.data.message)
                 setUserData(['','','','','',''])
-                //navigate('/verification-password')
+                navigate('/reset-password', {
+                    state: {
+                        data: responseData.data,
+                        email: currentLocation?.state?.email
+                    }
+                })
             }
 
         } catch (error) {
@@ -61,7 +66,7 @@ const VerifyPasswordByOtp = () => {
     return (
         <section id='login'>
             <div className='container mx-auto p-8'>
-                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto'>
+                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
                     <form onSubmit={handleSubmitLogin}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Thông tin xác thực</h3>

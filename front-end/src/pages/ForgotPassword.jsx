@@ -50,6 +50,7 @@ const ForgotPassword = () => {
             }
 
         } catch (error) {
+            // Hiển thị thông báo lỗi từ API
             axiosErrorAnnounce(error)
         }
     }

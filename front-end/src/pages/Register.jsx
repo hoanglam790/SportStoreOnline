@@ -37,7 +37,7 @@ const Register = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         if(userData.password !== userData.confirmPassword){
-            toast.error('Mật khẩu bạn nhập vào phải giống nhau !!!')
+            toast.error('Mật khẩu nhập vào phải giống nhau. Vui lòng kiểm tra lại !!!')
             return
         }
 
@@ -64,6 +64,7 @@ const Register = () => {
             }
 
         } catch (error) {
+            // Hiển thị thông báo lỗi từ API
             axiosErrorAnnounce(error)
         }
         
@@ -71,7 +72,7 @@ const Register = () => {
 
     return (
         <section id='register' className='py-8'>
-            <div className='font-[sans-serif] bg-gray-100 max-w-4xl flex items-center mx-auto md:h-screen p-4'>
+            <div className='font-[sans-serif] bg-gray-100 max-w-4xl flex items-center mx-auto md:h-screen p-4 rounded-lg'>
                 <div className='grid md:grid-cols-3 items-center rounded-xl overflow-hidden'>
                     <div className='max-md:order-1 flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4'>
                         <div>

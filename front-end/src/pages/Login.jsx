@@ -7,6 +7,9 @@ import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import toast from 'react-hot-toast'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
+import fetchUser from '@/utils/FetchUser'
+import { useDispatch } from 'react-redux'
+import { setUserDetails } from '@/redux/userSlice'
 
 const Login = () => {
     const [userData, setUserData] = useState({
@@ -16,6 +19,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -44,6 +48,12 @@ const Login = () => {
 
             if(responseData.data.success){
                 toast.success(responseData.data.message)
+                localStorage.setItem('accessToken', responseData.data.data.accessToken)
+                localStorage.setItem('refreshToken', responseData.data.data.refreshToken)
+
+                const updateUser = await fetchUser()
+                dispatch(setUserDetails(updateUser.data))
+                
                 setUserData({
                     email: '',
                     password: ''
@@ -52,6 +62,7 @@ const Login = () => {
             }
 
         } catch (error) {
+            // Hiển thị thông báo lỗi từ API
             axiosErrorAnnounce(error)
         }
     }
@@ -59,7 +70,7 @@ const Login = () => {
     return (
         <section id='login'>
             <div className='container mx-auto p-8'>
-                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto'>
+                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
                     <form onSubmit={handleSubmitLogin}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Đăng nhập</h3>

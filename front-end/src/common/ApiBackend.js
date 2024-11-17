@@ -16,6 +16,22 @@ const connectApi = {
     verifyPasswordByOtp: {
         url: '/api/users/verify-forgot-password',
         method: 'PUT'
+    },
+    resetPassword: {
+        url: '/api/users/reset-password',
+        method: 'PUT'
+    },
+    refreshToken: {
+        url: '/api/users/refresh-token',
+        method: 'POST'
+    },
+    getUser: {
+        url: '/api/users/get-user',
+        method: 'GET'
+    },
+    logout: {
+        url: '/api/users/logout',
+        method: 'GET'
     }
 }
 

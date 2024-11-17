@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Search from './Search'
 import { FaUserCircle } from 'react-icons/fa'
 import { TiShoppingCart } from 'react-icons/ti'
+import { useDispatch, useSelector } from 'react-redux'
+import { GoTriangleUp, GoTriangleDown } from 'react-icons/go'
+import UserMenu from './UserMenu'
+
 
 const Header_main = () => {
+    const navigate = useNavigate()
+    const currentLocation = useLocation()
+    const isSearchPage = currentLocation.pathname === '/search'
+    const user = useSelector((state) => state?.user_data)
+    const [isOpenMenu, setIsOpenMenu] = useState(false)
+
+    const handleCloseUserMenu = () => {
+        setIsOpenMenu(false)
+    }
+
     return (
         <header className='h-50 border-b sticky top-0 bg-white'>
             <div className='container mx-auto h-full flex items-center justify-between p-3'>
@@ -43,8 +57,36 @@ const Header_main = () => {
                         <FaUserCircle size={25} />
                     </button>
 
-                    <div className='items-center hidden lg:flex gap-12'>
-                        <Link to='/login'>Đăng nhập</Link>
+                    <div className='items-center hidden lg:flex gap-10'>
+                        {
+                            user._id ? (
+                                <div className='relative'>
+                                    <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-2 cursor-pointer'>
+                                        <p>Tài khoản</p>
+                                        {
+                                            isOpenMenu ? (
+                                                <GoTriangleUp size={25}/>
+                                            ) : (
+                                                <GoTriangleDown size={25}/> 
+                                            )
+                                        }                                        
+                                    </div>
+                                    {
+                                        isOpenMenu && (
+                                            <div className='absolute right-2 top-10'>
+                                                <div className='bg-slate-300 rounded-sm p-4 min-w-52'>
+                                                    <UserMenu close={handleCloseUserMenu}/>
+                                                </div>                                       
+                                            </div>
+                                        )
+                                    }
+                                    
+                                </div>
+                            ) : (
+                                <Link to='/login' className='text-xl px-2'>Đăng nhập</Link>  
+                            )
+                        }
+                        
                         <button className='flex items-center relative'>
                             <div>
                                 <TiShoppingCart size={30}/>

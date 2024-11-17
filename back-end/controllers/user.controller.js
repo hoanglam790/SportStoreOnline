@@ -142,7 +142,7 @@ const loginUser = async (req,res) => {
             return res.status(400).json({
                 success: false,
                 error: true,
-                message: 'Sai mật khẩu. Vui lòng kiểm tra lại'
+                message: 'Mật khẩu bạn vừa nhập không đúng. Vui lòng kiểm tra lại'
             })
         }
 
@@ -383,6 +383,11 @@ const verifyForgotPasswordByOTP = async (req,res) => {
             })
         }
 
+        const updateUser = await UserModel.findByIdAndUpdate(user._id, {
+            forgot_password_otp: '',
+            forgot_password_expire: ''
+        })
+
         return res.status(201).json({
             success: true,
             error: false,
@@ -505,5 +510,25 @@ const refreshTokenAPI = async (req,res) => {
     }
 }
 
+const getUserToDisplay = async (req,res) => {
+    try {
+        const userID = req.user.id // Dữ liệu lấy từ Middleware
+
+        const getUser = await UserModel.findById(userID)
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Lấy dữ liệu thành công',
+            data: getUser
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: 'Lỗi server'
+        })
+    }
+}
+
 module.exports = { registerUser, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
-    updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, refreshTokenAPI }
+    updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, refreshTokenAPI, getUserToDisplay }
