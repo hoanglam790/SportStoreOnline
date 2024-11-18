@@ -6,6 +6,9 @@ import SearchPage from "@/pages/SearchPage"
 import ForgotPassword from "@/pages/ForgotPassword"
 import VerifyByOTP from "@/pages/VerifyByOTP"
 import ResetPassword from "@/pages/ResetPassword"
+import Dashboard from "@/pages_admin/Dashboard"
+import Category from '../pages_admin/Category'
+import SubCategory from "@/pages_admin/SubCategory"
 
 const router = createBrowserRouter([
     {
@@ -13,28 +16,43 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: '/login',
+                path: 'login',
                 element: <Login />
             },
             {
-                path: '/register',
+                path: 'register',
                 element: <Register />
             },
             {
-                path: '/search',
+                path: 'search',
                 element: <SearchPage />
             },
             {
-                path: '/forgot-password',
+                path: 'forgot-password',
                 element: <ForgotPassword />
             },
             {
-                path: '/verification-password',
+                path: 'verification-password',
                 element: <VerifyByOTP />
             },
             {
-                path: '/reset-password',
+                path: 'reset-password',
                 element: <ResetPassword />
+            },
+            
+        ]
+    },
+    {
+        path: '/admin',
+        element: <Dashboard />,
+        children: [
+            {
+                path: 'category',
+                element: <Category />
+            },
+            {
+                path: 'sub-category',
+                element: <SubCategory />
             }
         ]
     }

@@ -6,6 +6,8 @@ import connectApi from '../../common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import { setLogout } from '@/redux/userSlice'
 import Swal from 'sweetalert2'
+import { BiLogOut } from 'react-icons/bi'
+import { TiShoppingCart } from 'react-icons/ti'
 
 
 const UserMenu = ({ close }) => {
@@ -26,7 +28,7 @@ const UserMenu = ({ close }) => {
     const handleLogout = async() => {
         Swal.fire({
             title: "Bạn có chắc chắn muốn đăng xuất không?",
-            icon: "warning",
+            icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
@@ -62,9 +64,17 @@ const UserMenu = ({ close }) => {
 
             <div className='p-[1px] bg-slate-800'/>
 
-            <div className='text-sm grid gap-4 py-4'>
-                <Link to={''} className='hover:bg-orange-700 px-2 py-1'>Đơn hàng</Link>
-                <button onClick={handleLogout} className='text-left hover:bg-orange-700 px-2 py-1'>Đăng xuất</button>
+            <div className='text-[15px] grid gap-4 py-5'>
+                <div className='flex items-center hover:text-blue-700 gap-2 cursor-pointer'>
+                    <TiShoppingCart size={23}/>
+                    <Link to={''}>Đơn hàng</Link>
+                </div>
+                
+                <div className='flex items-center hover:text-blue-700 gap-2 cursor-pointer'>
+                    <BiLogOut size={22}/>
+                    <button onClick={handleLogout}>Đăng xuất</button>
+                </div>
+                
             </div>
         </div>
     )

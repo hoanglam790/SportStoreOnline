@@ -90,7 +90,7 @@ const Login = () => {
                             </div>
                         </div>
                         <div className='mt-8'>
-                            <label className='text-gray-800 text-sm block mb-2 px-2 py-1'>Mật khẩu: </label>
+                            <label className='text-gray-800 text-sm block mb-2 px-2'>Mật khẩu: </label>
                             <div className='relative flex items-center'>
                                 <input type={showPassword ? 'text' : 'password'} 
                                     value={userData.password}

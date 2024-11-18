@@ -11,14 +11,14 @@ const Footer = () => {
     <footer className='bg-gray-800 py-5 mt-4 font-sans tracking-wide'>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-10 py-8'>
         <div className='column01'>
-          <h3 className='text-lg font-semibold mb-6 text-white'>About us</h3>
+          <h3 className='text-lg font-semibold mb-6 text-white'>Thông tin</h3>
           <p className='text-gray-400 text-base text-justify'>
             This is a website that shows to everyone all matches, all tournaments and another things in Top Seed Manager.
           </p>
         </div>
 
         <div className='column2 mx-20'>
-          <h3 className='text-lg font-semibold mb-6 text-white'>Information</h3>
+          <h3 className='text-lg font-semibold mb-6 text-white'>Đường dẫn</h3>
           <ul className='space-y-4'>
             <li>
               <a href='/' className='text-gray-400 hover:text-white text-base'>Trang chủ</a>
@@ -36,7 +36,7 @@ const Footer = () => {
         </div>
 
         <div className='column3 mx-10'>
-          <h3 className='text-lg font-semibold mb-6 text-white'>Contact us</h3>
+          <h3 className='text-lg font-semibold mb-6 text-white'>Liên hệ</h3>
           <ul className='mt-4 flex-wrap justify-center gap-4 lg:space-x-6 max-lg:flex-col max-lg:items-center max-lg:space-y-2'>         
             <li className='flex text-yellow-400'>              
               <IoMdHome className='size-12' />
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
 
         <div className='column4 mx-12'>
-          <h3 className='text-lg font-semibold mb-6 text-white'>Follow us</h3>
+          <h3 className='text-lg font-semibold mb-6 text-white'>Theo dõi</h3>
           <ul className='flex flex-wrap gap-x-5 gap-4'>            
             {/* Facebook */}
             <li>

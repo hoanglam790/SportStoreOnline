@@ -83,7 +83,7 @@ const Header_main = () => {
                                     
                                 </div>
                             ) : (
-                                <Link to='/login' className='text-xl px-2'>Đăng nhập</Link>  
+                                <Link to='/login' className='text-base px-2 font-medium hover:text-blue-700'>Đăng nhập</Link>  
                             )
                         }
                         
