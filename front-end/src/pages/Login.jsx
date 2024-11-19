@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { HiOutlineMailOpen } from 'react-icons/hi'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
-import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import fetchUser from '@/utils/FetchUser'
 import { useDispatch } from 'react-redux'
@@ -20,6 +20,7 @@ const Login = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const currentLocation = useLocation()
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -34,35 +35,68 @@ const Login = () => {
     const changeColorValue = Object.values(userData).every(e => e)
 
     const handleSubmitLogin = async(e) => {
-        e.preventDefault()
+        {/** Ngừng hành động gửi form mặc định khi nhấn nút Đăng nhập */}
+        e.preventDefault() 
         try {
+            {/** Gọi API từ Backend */}
             const responseData = await Axios({
                 ...connectApi.login,
                 data: userData
             })
 
-            // Thông báo lỗi
+            {/** Thông báo lỗi */}
             if(responseData.data.error){
-                toast.error(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    text: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
             }
 
+            {/** Nếu đăng nhập thành công thì chuyển hướng về trang chủ, đồng thời xóa token
+                Cài đặt mới (reset) các ô nhập liệu về trạng thái ban đầu (chưa nhập) */}
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+
+                {/** Lưu token vào localStorage */}
                 localStorage.setItem('accessToken', responseData.data.data.accessToken)
                 localStorage.setItem('refreshToken', responseData.data.data.refreshToken)
-
+                
+                {/** Cập nhật thông tin người dùng */}
                 const updateUser = await fetchUser()
                 dispatch(setUserDetails(updateUser.data))
                 
+                {/** // Reset lại form sau khi đăng nhập thành công */}
                 setUserData({
                     email: '',
                     password: ''
                 })
-                navigate('/')
+
+                {/** / Kiểm tra role và chuyển hướng */}
+                if(updateUser.data.role === 'Admin'){
+                    navigate('/admin')
+                }
+                else {
+                    navigate('/')
+                }             
             }
 
         } catch (error) {
-            // Hiển thị thông báo lỗi từ API
+            {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
         }
     }

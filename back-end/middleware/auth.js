@@ -36,9 +36,9 @@ const auth = async (req, res, next) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         }) 
     }
 }
 
-module.exports = auth
+module.exports = auth 

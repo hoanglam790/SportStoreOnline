@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { HiOutlineMailOpen } from 'react-icons/hi'
 import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
-import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 
 const ForgotPassword = () => {
@@ -25,7 +25,8 @@ const ForgotPassword = () => {
     
     const changeColorValue = Object.values(userData).every(e => e)
 
-    const handleSubmitLogin = async(e) => {
+    const handleForgotPassword = async(e) => {
+        {/** Ngừng hành động gửi form mặc định khi nhấn nút Quên mật khẩu */}
         e.preventDefault()
         try {
             const responseData = await Axios({
@@ -35,11 +36,30 @@ const ForgotPassword = () => {
 
             // Thông báo lỗi
             if(responseData.data.error){
-                toast.error(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
             }
 
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+
                 navigate('/verification-password', {
                     state: userData
                 })
@@ -48,7 +68,6 @@ const ForgotPassword = () => {
                 })
                 
             }
-
         } catch (error) {
             // Hiển thị thông báo lỗi từ API
             axiosErrorAnnounce(error)
@@ -59,7 +78,7 @@ const ForgotPassword = () => {
         <section id='login'>
             <div className='container mx-auto p-8'>
                 <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto'>
-                    <form onSubmit={handleSubmitLogin}>
+                    <form onSubmit={handleForgotPassword}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Thông tin xác thực</h3>
                         </div>

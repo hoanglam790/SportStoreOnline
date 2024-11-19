@@ -2,9 +2,11 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const connectDatabase = require('./config/database')
-const cateRoutes = require('./routes/category.route')
-const userRoutes = require('./routes/user.route')
+const categoryRouter = require('./routes/category.route')
+const userRouter = require('./routes/user.route')
+const uploadImageRouter = require('./routes/uploadImage.route')
 require('dotenv').config()
+
 
 const app = express()
 const PORT = process.env.PORT
@@ -17,8 +19,10 @@ app.use(express.json()) // Cho phép chấp nhận dữ liệu JSON trong req.bo
 app.use(cookieParser()) // Cho phép truy cập các Cookies trong req.cookies
 app.use(cors(corsOptions))
 
-app.use('/api/categories', cateRoutes)
-app.use('/api/users', userRoutes)
+// Routes
+app.use('/api/categories', categoryRouter)
+app.use('/api/users', userRouter)
+app.use('/api/file', uploadImageRouter)
 
 app.listen(PORT, () => {
     connectDatabase()

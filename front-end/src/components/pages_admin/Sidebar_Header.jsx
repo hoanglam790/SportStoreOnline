@@ -9,7 +9,7 @@ import { BiLogOut } from 'react-icons/bi'
 
 const Sidebar_Header = () => {
     return (
-        <div className='bg-[#121e31] mx-2 grid grid-cols-[340px] py-5 px-3 font-[sans-serif]'>
+        <div className='bg-[#121e31] mx-6 grid grid-cols-[340px] py-5 px-3 font-[sans-serif]'>
             <div className='text-white text-xl ml-4'>
                 MENU
             </div>

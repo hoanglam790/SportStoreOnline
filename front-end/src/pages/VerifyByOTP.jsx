@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
-import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 
 const VerifyPasswordByOtp = () => {
@@ -44,11 +44,30 @@ const VerifyPasswordByOtp = () => {
 
             // Thông báo lỗi
             if(responseData.data.error){
-                toast.error(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
             }
 
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+
                 setUserData(['','','','','',''])
                 navigate('/reset-password', {
                     state: {

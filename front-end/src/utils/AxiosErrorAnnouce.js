@@ -1,9 +1,16 @@
-import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 
 const axiosErrorAnnounce = (error) => {
-    toast.error(
-        error?.response?.data?.message
-    )
+    Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: error?.response?.data?.message,
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+            title: 'text-xl font-semibold'
+        }
+    })
 }
 
 export default axiosErrorAnnounce

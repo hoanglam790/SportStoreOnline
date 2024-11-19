@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-//import { Link } from 'react-router-dom'
-import { FaUser } from 'react-icons/fa'
-import { HiOutlineMail } from 'react-icons/hi'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import Axios from '@/utils/AxiosConfig'
-import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -15,6 +12,7 @@ const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+    {/** Gán dữ liệu */}
     const [userData, setUserData] = useState({
         email: '',
         newPassword: '',
@@ -22,10 +20,12 @@ const ResetPassword = () => {
     })
 
     useEffect(() => {
+        {/** Nếu không có giá trị thành công (success) trong currentLocation?.state?.data, người dùng sẽ được chuyển hướng về trang chủ */}
         if(!(currentLocation?.state?.data?.success)){
             navigate('/')
         }
 
+        {/** Nếu có giá trị email trong currentLocation?.state?.email, state người dùng sẽ được cập nhật với email đó */}
         if(currentLocation?.state?.email){
             setUserData((prev)=>{
                 return{
@@ -49,39 +49,69 @@ const ResetPassword = () => {
     const changeColorValue = Object.values(userData).every(e => e)
 
     const handleSubmit = async(e) => {
+        {/** Ngừng hành động gửi form mặc định khi nhấn nút Đồng ý */}
         e.preventDefault()
         if(userData.newPassword !== userData.confirmPassword){
-            toast.error('Mật khẩu nhập vào phải giống nhau. Vui lòng kiểm tra lại !!!')
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Mật khẩu nhập vào phải giống nhau. Vui lòng kiểm tra lại !!!',                   
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                    title: 'text-xl font-semibold'
+                }
+            })
             return
         }
 
         try {
+            {/** Gọi API từ Backend */}
             const responseData = await Axios({
                 ...connectApi.resetPassword,
                 data: userData
             })
 
-            // Thông báo lỗi
+            {/** Thông báo lỗi */} 
             if(responseData.data.error){
-                toast.error(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: responseData.data.message,                   
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
             }
 
+            {/** Nếu đăng ký mật khẩu mới thành công thì chuyển hướng về trang Đăng nhập
+                Cài đặt mới (reset) các ô nhập liệu về trạng thái ban đầu (chưa nhập) */}
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,                   
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+
                 navigate('/login')
                 setUserData({
                     email: '',
                     newPassword: '',
                     confirmPassword: ''
-                })
-                
+                })              
             }
 
         } catch (error) {
-            // Hiển thị thông báo lỗi từ API
+            {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
-        }
-        
+        }       
     }
 
     return (

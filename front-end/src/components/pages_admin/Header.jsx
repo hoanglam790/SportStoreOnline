@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 import { GrSearch } from 'react-icons/gr'
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go'
 import AdminMenu from './AdminMenu'
+import { useSelector } from 'react-redux'
 
 const Header = () => {
     const [isOpenMenu, setIsOpenMenu] = useState(false)
+
+    const user = useSelector((state) => state.user_data)
 
     const handleCloseAdminMenu = () => {
         setIsOpenMenu(false)
@@ -14,9 +17,9 @@ const Header = () => {
 
     return (
         <>
-        <header className='h-50 border-b sticky top-0 z-20 bg-white'>
+        <header className='h-50 border-b sticky top-0 z-20 bg-slate-800'>
             {/** Logo */}
-            <div className='container mx-5 h-full flex items-center justify-between p-3'>
+            <div className='container h-full flex items-center justify-between p-3 mx-auto gap-6'>
                 <div className='h-full flex items-center gap-3'>
                     <Link to='/admin'>
                         <img
@@ -25,7 +28,7 @@ const Header = () => {
                             height={80}
                         />
                     </Link>
-                    <p className='text-xl font-semibold'>Sport Store</p>
+                    <p className='text-xl font-semibold text-white'>Sport Store</p>
                 </div>
                 {/** Tìm kiếm */}
                 <div className='min-w-[250px] lg:min-w-[400px] h-12 rounded-md border overflow-hidden focus-within:border-orange-400'>
@@ -39,14 +42,9 @@ const Header = () => {
 
                 {/** Thông tin tài khoản */}
                 <div className='relative'>
-                    <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-4 cursor-pointer'>
-                        <div className='mt-4'>
-                            <p>ABC</p>
-                            <p>Admin</p>
-                        </div>
-                        
+                    <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-4 cursor-pointer'>                      
                         <span className='h-10 w-10 rounded-full'>
-                            <img src={Logo} className='w-full h-full object-cover'></img>
+                            <img src={user.avatar} className='w-full h-full rounded-full'></img>
                         </span>
                         {
                             isOpenMenu ? (
@@ -59,7 +57,7 @@ const Header = () => {
                     </div>
                     {
                         isOpenMenu && (
-                            <div className='absolute right-2 top-[85px]'>
+                            <div className='absolute right-2 top-[73px]'>
                                 <div className='bg-slate-300 rounded-sm p-4 min-w-52'>
                                     <AdminMenu close={handleCloseAdminMenu}/>
                                 </div>                                       

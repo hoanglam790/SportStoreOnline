@@ -15,16 +15,6 @@ const UserMenu = ({ close }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const customNotifyAlert = async() => {
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Đăng xuất thành công',
-            showConfirmButton: false,
-            timer: 1500
-        })
-    }
-
     const handleLogout = async() => {
         Swal.fire({
             title: "Bạn có chắc chắn muốn đăng xuất không?",
@@ -45,9 +35,19 @@ const UserMenu = ({ close }) => {
                         if(close){
                             close()
                         }
-                        dispatch(setLogout())
+                        dispatch(setLogout(null))
                         localStorage.clear()
-                        customNotifyAlert(responseData.data.message)
+
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: responseData.data.message,
+                            showConfirmButton: false,
+                            timer: 3000,
+                            customClass: {
+                                title: 'text-xl font-semibold'
+                            }
+                        })
                         navigate('/')
                     }
                 } catch (error) {

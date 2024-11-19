@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import { FaUser } from 'react-icons/fa'
 import { HiOutlineMail } from 'react-icons/hi'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import Axios from '@/utils/AxiosConfig'
-import toast from 'react-hot-toast'
+import Axios from '../utils/AxiosConfig'
+import Swal from 'sweetalert2'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import { Link, useNavigate } from 'react-router-dom'
+//import axios from 'axios'
 
 const Register = () => {
     const [userData, setUserData] = useState({
@@ -34,26 +35,61 @@ const Register = () => {
     
     const changeColorValue = Object.values(userData).every(e => e)
 
-    const handleSubmit = async(e) => {
+    const registerNewUser = async(e) => {
+        {/** Ngừng hành động gửi form mặc định khi nhấn nút Đăng ký */}
         e.preventDefault()
+
+        {/** Kiểm tra mật khẩu và xác nhận mật khẩu khi nhập vào */}
         if(userData.password !== userData.confirmPassword){
-            toast.error('Mật khẩu nhập vào phải giống nhau. Vui lòng kiểm tra lại !!!')
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Mật khẩu nhập vào phải giống nhau. Vui lòng kiểm tra lại !!!',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                    title: 'text-xl font-semibold'
+                }
+            })
             return
         }
 
         try {
+            {/** Gọi API từ Backend */}
+            //const responseData = await axios.post('http://localhost:5000/api/users/register', userData)
             const responseData = await Axios({
                 ...connectApi.register,
                 data: userData
             })
-
-            // Thông báo lỗi
+            
+            {/** Thông báo lỗi */}
             if(responseData.data.error){
-                toast.error(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: responseData.data.message,                   
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
             }
 
+            {/** Nếu đăng ký thành công thì chuyển hướng về trang Đăng nhập
+                Cài đặt mới (reset) các ô nhập liệu về trạng thái ban đầu (chưa nhập) */}
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,                 
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+
                 setUserData({
                     name: '',
                     email: '',
@@ -64,7 +100,7 @@ const Register = () => {
             }
 
         } catch (error) {
-            // Hiển thị thông báo lỗi từ API
+            {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
         }
         
@@ -85,7 +121,7 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className='md:col-span-2 w-full py-6 px-6 sm:px-16'>
+                    <form onSubmit={registerNewUser} className='md:col-span-2 w-full py-6 px-6 sm:px-16'>
                         <div className='mb-6'>
                             <h3 className='text-gray-800 text-2xl font-bold'>Tạo tài khoản</h3>
                         </div>

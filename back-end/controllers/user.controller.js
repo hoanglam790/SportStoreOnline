@@ -5,7 +5,7 @@ const resendEmail = require('../config/resendEmail')
 const verifyEmail = require('../utils/verifyEmail')
 const generateAccessToken = require('../utils/generateToken')
 const generateRefreshAccessToken = require('../utils/generateRefreshToken')
-const UploadImage = require('../utils/uploadImage')
+const UploadImage = require('../utils/uploadImageByCloudinary')
 const generateOtp = require('../utils/generateOTP')
 const forgotPasswordTemp = require('../utils/forgotPasswordTemp')
 require('dotenv').config()
@@ -33,18 +33,17 @@ const registerUser = async (req,res) => {
             })
         }
 
-        // Mã hóa mật khẩu
+        // Mã hóa mật khẩu bằng Bcrypt
         const salt = await bcrypt.genSaltSync(10)
         const hashPassword = await bcrypt.hashSync(password,salt)
         
         // Lưu lại mật khẩu đã được mã hóa
-        const payload = {
+        const newUser = new UserModel({
             name,
             email,
             password: hashPassword
-        }
+        })
 
-        const newUser = new UserModel(payload)
         const save = await newUser.save()
 
         const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save._id}`
@@ -65,7 +64,7 @@ const registerUser = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -97,7 +96,7 @@ const verifyEmailUser = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -179,7 +178,7 @@ const loginUser = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -224,7 +223,7 @@ const logoutUser = async (req, res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         }) 
     }
 } 
@@ -255,7 +254,7 @@ const uploadImageUser = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -291,7 +290,7 @@ const updateUser = async (req, res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -338,7 +337,7 @@ const forgotPassword = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: false,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -398,7 +397,7 @@ const verifyForgotPasswordByOTP = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -452,7 +451,7 @@ const resetPassword = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -505,7 +504,7 @@ const refreshTokenAPI = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
@@ -525,7 +524,7 @@ const getUserToDisplay = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: 'Lỗi server'
+            message: error.message || error
         })
     }
 }
