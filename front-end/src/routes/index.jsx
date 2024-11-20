@@ -9,6 +9,8 @@ import ResetPassword from "@/pages/ResetPassword"
 import Dashboard from "@/pages_admin/Dashboard"
 import Category from '../pages_admin/Category'
 import SubCategory from "@/pages_admin/SubCategory"
+import AdminPermission from "@/pages_admin/AdminPermission"
+import Profile from "@/pages_admin/Profile"
 
 const router = createBrowserRouter([
     {
@@ -39,23 +41,27 @@ const router = createBrowserRouter([
                 path: 'reset-password',
                 element: <ResetPassword />
             },
-            
-        ]
-    },
-    {
-        path: '/admin',
-        element: <Dashboard />,
-        children: [
             {
-                path: 'category',
-                element: <Category />
-            },
-            {
-                path: 'sub-category',
-                element: <SubCategory />
-            }
+                path: 'admin',
+                element: <AdminPermission><Dashboard /></AdminPermission>,
+                children: [
+                    {
+                        path: 'profile',
+                        element: <AdminPermission><Profile /></AdminPermission>
+                    },
+                    {
+                        path: 'category',
+                        element: <AdminPermission><Category /></AdminPermission>
+                    },
+                    {
+                        path: 'sub-category',
+                        element: <AdminPermission><SubCategory /></AdminPermission>
+                    }
+                ]
+            }            
         ]
     }
+    
 ])
 
 export default router

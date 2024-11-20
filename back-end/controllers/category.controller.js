@@ -4,7 +4,8 @@ const mongoose = require('mongoose')
 // Tìm tất cả các danh mục sản phẩm
 const getCategories = async (req,res) => {
     try {
-        const getAllCate = await CategoryModel.find({})
+        const getAllCate = await CategoryModel.find().sort({ createdAt : -1 }) // Hiển thị danh mục sản phẩm mới nhất
+
         return res.status(200).json({
             success: true,
             error: false,
@@ -21,23 +22,23 @@ const getCategories = async (req,res) => {
 }
 
 // Tìm danh mục sản phẩm theo ID
-const getCategoryByID = async (req,res) => {
+const getCategoryById = async (req,res) => {
     try {
-        const { id } = req.params
-        if(!mongoose.Types.ObjectId.isValid(id)) {
+        const { _id } = req.body
+        if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
                 error: true,
-                message: `Không tìm thấy danh mục sản phẩm có mã số: ${id}`
+                message: `Không tìm thấy danh mục sản phẩm có mã số: ${_id}`
             })
         }
 
-        const getCateByID = await CategoryModel.findById(id)
+        const getCateByID = await CategoryModel.findOne({ _id: _id})
         
         return res.status(200).json({
             success: true,
             error: false,
-            message: `Lấy danh mục sản phẩm có mã số ${id} thành công`,
+            message: `Lấy danh mục sản phẩm có mã số ${_id} thành công`,
             data: getCateByID
         })
     } catch (error) {
@@ -114,7 +115,7 @@ const updateCategory = async (req,res) => {
         return res.status(200).json({
             success: true,
             error: false,
-            message: 'Sửa danh mục sản phẩm thành công',
+            message: 'Chỉnh sửa danh mục sản phẩm thành công',
             data: updateCate
         })
     } catch (error) {
@@ -129,16 +130,17 @@ const updateCategory = async (req,res) => {
 // Xóa danh mục sản phẩm
 const deleteCategory = async (req,res) => {
     try {
-        const {id} = req.params
-        if(!mongoose.Types.ObjectId.isValid(id)) {
+        const {_id} = req.body
+        if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
                 error: true,
-                message: `Không tìm thấy danh mục sản phẩm có mã số: ${id}`
+                message: `Không tìm thấy danh mục sản phẩm có mã số: ${_id}`
             })
         }
 
-        await Category.findByIdAndDelete(id)
+        await CategoryModel.deleteOne({ _id: _id})
+
         return res.status(200).json({
             success: true,
             error: false,
@@ -153,4 +155,4 @@ const deleteCategory = async (req,res) => {
     }
 }
 
-module.exports = { getCategories, getCategoryByID, createCategory, updateCategory, deleteCategory }
+module.exports = { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory }

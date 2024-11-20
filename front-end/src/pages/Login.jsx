@@ -8,7 +8,7 @@ import connectApi from '@/common/ApiBackend'
 import Swal from 'sweetalert2'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import fetchUser from '@/utils/FetchUser'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setUserDetails } from '@/redux/userSlice'
 
 const Login = () => {
@@ -20,7 +20,6 @@ const Login = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const currentLocation = useLocation()
 
     const handleChange = (e) => {
         const { name, value } = e.target

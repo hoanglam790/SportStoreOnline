@@ -1,15 +1,17 @@
-import { Outlet, Route, Routes } from 'react-router-dom'
-import Header from './components/pages/Header_main'
-import Footer from './components/pages/Footer'
-import toast, { Toaster } from 'react-hot-toast'
+import { Outlet, Route, Routes, useNavigate } from 'react-router-dom'
+import Header from './components/user/Header'
+import Footer from './components/user/Footer'
 import fetchUser from './utils/FetchUser'
 import { setUserDetails } from './redux/userSlice'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 function App() {
   const dispatch = useDispatch()
 
+  const checkIsAdminHeader = window.location.pathname.includes('admin')
+  const checkIsAdmin = window.location.pathname.includes('admin')
+  
   const fetchUsers = async() => {
     const userData = await fetchUser()
     dispatch(setUserDetails(userData.data))
@@ -19,14 +21,14 @@ function App() {
     fetchUsers()
   }, [])
 
+
   return (
     <>
-      <Header />
+      <Header isAdmin={checkIsAdminHeader} />
       <main className='min-h-screen max-w-screen-2xl mx-auto'>
         <Outlet />
       </main>      
-      <Footer />
-      <Toaster />
+      <Footer isAdmin={checkIsAdmin}/>
     </>
   )
 }

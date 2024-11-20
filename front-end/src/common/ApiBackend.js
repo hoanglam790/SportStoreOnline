@@ -1,4 +1,3 @@
-import { Upload } from "lucide-react"
 
 export const baseURL = 'http://localhost:5000'
 
@@ -39,6 +38,7 @@ const connectApi = {
         url: '/api/file/upload-image',
         method: 'POST'
     },
+    
     getCategory: {
         url: '/api/categories',
         method: 'GET'
@@ -46,6 +46,14 @@ const connectApi = {
     createNewCategory: {
         url: '/api/categories/create-category',
         method: 'POST'
+    },
+    updateCategory: {
+        url: '/api/categories/update-category',
+        method: 'PUT'
+    },
+    deleteCategory: {
+        url: '/api/categories/delete-category',
+        method: 'DELETE'
     }
 }
 
