@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-// const UserModel = require('../models/UserModel') // Thêm import UserModel nếu chưa có
 
 // Middleware xác thực refresh token
 const auth = async (req, res, next) => {
@@ -31,7 +30,6 @@ const auth = async (req, res, next) => {
             req.user = decoded  
             next()  // Tiến hành vào bước tiếp theo (route handler)
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,

@@ -20,12 +20,14 @@ const Dashboard = () => {
     return (
         <>
         <section className='bg-white'>
-            <div className='container mx-auto p-3 grid grid-cols-[300px,1fr] gap-2'>
-                <div className='bg-slate-500 p-3 sticky top-[128px] max-h-[calc(90vh-130px)] border-r z-10'>
+            <div className='p-3 grid grid-cols-[300px,1fr] gap-2'>
+                {/** Nội dung bên trái */}
+                <div className='bg-slate-500 p-3 sticky top-[128px] max-h-[calc(88vh-120px)] border-r'>
                     <UserMenu />
                 </div>
 
-                <div className='flex-1 bg-white min-h-[100vh] mt-4'>
+                {/** Nội dung bên phải */}
+                <div className='flex-1 bg-white min-h-screen'>
                     <Outlet />
                 </div>
             </div>

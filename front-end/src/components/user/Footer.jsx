@@ -8,12 +8,10 @@ import { IoLogoYoutube } from 'react-icons/io5'
 
 const Footer = ({ isAdmin }) => {
   return (
-    <footer className='bg-gray-800 py-5 mt-4 font-sans tracking-wide'>
+    <footer className='bg-gray-800 py-5 font-sans tracking-wide md:justify-between'>
       {isAdmin ? (
         <>
-          <hr className='mx-10 mb-5 border-gray-400' />
-      
-          <div className='pb-3'>
+          <div className='fixed bottom-0 left-0 w-full bg-gray-800 text-white py-4 text-center'>
             <p className='text-gray-400 text-base text-center'>© Copyright 2024 by Hoang Lam. All rights reserved. Please don't copy and re-up.</p>
           </div>
         </>

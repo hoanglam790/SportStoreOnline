@@ -263,10 +263,11 @@ const uploadImageUser = async (req,res) => {
 // Cập nhật người dùng
 const updateUser = async (req, res) => {
     try {
-        const userID = req.user.id // Middleware auth
         const { name, email, password, phone_number } = req.body
-        
+        const userID = req.user.id // Middleware auth
+               
         let hashPassword = ''
+
         if(password){
             const salt = await bcrypt.genSaltSync(10)
             hashPassword = await bcrypt.hashSync(password,salt)
@@ -312,7 +313,7 @@ const forgotPassword = async (req,res) => {
         const otpPass = await generateOtp()
         const expireTime = new Date(Date.now() + 30 * 60 * 1000) // Cộng thêm 30 phút vào thời gian hiện tại = Hết hạn: 30 phút
 
-        const update = await UserModel.findByIdAndUpdate(user._id, {
+        await UserModel.findByIdAndUpdate(user._id, {
             forgot_password_otp: otpPass,
             forgot_password_expire: new Date(expireTime).toISOString()
         })
@@ -382,7 +383,9 @@ const verifyForgotPasswordByOTP = async (req,res) => {
             })
         }
 
-        const updateUser = await UserModel.findByIdAndUpdate(user._id, {
+        // Cập nhật vào cơ sở dữ liệu
+        // Xác thực thành công => Reset mã OTP và hiệu lực về trạng thái ban đầu
+        await UserModel.findByIdAndUpdate(user._id, {
             forgot_password_otp: '',
             forgot_password_expire: ''
         })
@@ -433,6 +436,7 @@ const resetPassword = async (req,res) => {
             })
         }
 
+        // Mã hóa mật khẩu bằng Bcrypt
         const salt = await bcrypt.genSaltSync(10)
         const hashPassword = await bcrypt.hashSync(newPassword,salt)
 
@@ -498,8 +502,6 @@ const refreshTokenAPI = async (req,res) => {
                 accessToken: newToken
             }
         })
-
-
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -511,6 +513,8 @@ const refreshTokenAPI = async (req,res) => {
 
 const getUserToDisplay = async (req,res) => {
     try {
+        // req.user.id (req.user: decoded at Middleware)
+        // console.log('decoded', decoded) => decoded { id: '6736137ab916eaa4457a0f1c', iat: 1732157732, exp: 1734749732 }
         const userID = req.user.id // Dữ liệu lấy từ Middleware
 
         const getUser = await UserModel.findById(userID)

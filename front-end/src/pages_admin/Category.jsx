@@ -104,7 +104,7 @@ const Category = () => {
                 )
             }
 
-            <div className='p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5'>
+            <div className='p-3 m-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 h-[calc(80vh-100px)] overflow-y-scroll bg-red-50'>
             {
                 categoryData.map((c) => {
                     return (

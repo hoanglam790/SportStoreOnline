@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/logo.png'
 import { GrSearch } from 'react-icons/gr'
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go'
-import AdminMenu from './AdminMenu'
+import UserMenu from '../user/UserMenu'
 import { useSelector } from 'react-redux'
 
 const Header = () => {
@@ -11,7 +11,7 @@ const Header = () => {
 
     const user = useSelector((state) => state.user_data)
 
-    const handleCloseAdminMenu = () => {
+    const handleCloseUserMenu = () => {
         setIsOpenMenu(false)
     }
 
@@ -41,31 +41,36 @@ const Header = () => {
                 </div>
 
                 {/** Thông tin tài khoản */}
-                <div className='relative'>
-                    <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-4 cursor-pointer'>                      
-                        <span className='h-10 w-10 rounded-full'>
-                            <img src={user.avatar} className='w-full h-full rounded-full'></img>
-                        </span>
-                        {
-                            isOpenMenu ? (
-                                <GoTriangleUp size={25}/>
-                            ) : (
-                                <GoTriangleDown size={25}/>
-                            )
-                        }
-                        
-                    </div>
+                <div className='items-center hidden lg:flex gap-10'>
                     {
-                        isOpenMenu && (
-                            <div className='absolute right-2 top-[73px]'>
-                                <div className='bg-slate-300 rounded-sm p-4 min-w-52'>
-                                    <AdminMenu close={handleCloseAdminMenu}/>
-                                </div>                                       
+                        user._id ? (
+                            <div className='relative'>
+                                <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-2 cursor-pointer'>
+                                    <p>Tài khoản</p>
+                                    {
+                                        isOpenMenu ? (
+                                            <GoTriangleUp size={25}/>
+                                        ) : (
+                                            <GoTriangleDown size={25}/> 
+                                        )
+                                    }                                        
+                                </div>
+                                {
+                                    isOpenMenu && (
+                                        <div className='absolute right-2 top-10'>
+                                            <div className='bg-slate-300 rounded-sm p-4 min-w-52'>
+                                                <UserMenu close={handleCloseUserMenu}/>
+                                            </div>                                       
+                                        </div>
+                                    )
+                                }
+                                
                             </div>
+                        ) : (
+                            <Link to='/login' className='text-base px-2 font-medium hover:text-blue-700'>Đăng nhập</Link>  
                         )
                     }
-                </div>
-                
+                </div>               
             </div>
         </header>
         </>        

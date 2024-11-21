@@ -11,12 +11,17 @@ import Category from '../pages_admin/Category'
 import SubCategory from "@/pages_admin/SubCategory"
 import AdminPermission from "@/pages_admin/AdminPermission"
 import Profile from "@/pages_admin/Profile"
+import Home from "@/pages/Home"
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
         children: [
+            {
+                path: '',
+                element: <Home />
+            },
             {
                 path: 'login',
                 element: <Login />
@@ -40,6 +45,9 @@ const router = createBrowserRouter([
             {
                 path: 'reset-password',
                 element: <ResetPassword />
+            },
+            {
+                path: ''
             },
             {
                 path: 'admin',

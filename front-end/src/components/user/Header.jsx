@@ -22,11 +22,11 @@ const Header = ({ isAdmin }) => {
     }
 
     return (
-        <header className='h-32 border-b sticky top-0 bg-white'>
+        <header className='h-32 border-b fixed top-0 left-0 w-full bg-white z-50'>
             {
                 isAdmin ? (
                 <>
-                    <div className='container h-full flex items-center justify-between p-3 mx-auto gap-6'>
+                    <div className='container mx-auto h-full flex items-center justify-between p-3 gap-6'>
                         {/* Logo  */}
                         <div className='h-full flex items-center gap-3'>
                             <Link to='/admin'>
@@ -86,8 +86,7 @@ const Header = ({ isAdmin }) => {
                                                         </div>                                       
                                                     </div>
                                                 )
-                                            }
-                                            
+                                            }                                           
                                         </div>
                                     ) : (
                                         <Link to='/login' className='text-base px-2 font-medium hover:text-blue-700'>Đăng nhập</Link>  
@@ -157,8 +156,7 @@ const Header = ({ isAdmin }) => {
                                                         </div>                                       
                                                     </div>
                                                 )
-                                            }
-                                            
+                                            }                                           
                                         </div>
                                     ) : (
                                         <Link to='/login' className='text-base px-2 font-medium hover:text-blue-700'>Đăng nhập</Link>  
@@ -174,8 +172,7 @@ const Header = ({ isAdmin }) => {
                                     </div>
                                 </button>
                             </div>
-                        </div>
-                
+                        </div>               
                     </div>
                 </>
                 )

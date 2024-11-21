@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import Header from './components/user/Header'
 import Footer from './components/user/Footer'
 import fetchUser from './utils/FetchUser'
@@ -25,7 +25,7 @@ function App() {
   return (
     <>
       <Header isAdmin={checkIsAdminHeader} />
-      <main className='min-h-screen max-w-screen-2xl mx-auto'>
+      <main className='max-w-screen-2xl mx-auto mt-[125px]'>
         <Outlet />
       </main>      
       <Footer isAdmin={checkIsAdmin}/>
