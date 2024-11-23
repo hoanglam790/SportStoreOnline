@@ -2,6 +2,7 @@ import React from 'react'
 
 const Loading = () => {
     return (
+        // Spinner
         <div className='flex items-center justify-center p-8'>
             <svg xmlns='http://www.w3.org/2000/svg' className='w-10 animate-[spin_0.8s_linear_infinite] fill-blue-600 block mx-auto'
                 viewBox='0 0 24 24'>

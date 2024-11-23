@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Logo from '../../assets/logo.png'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Search from './Search'
 import { FaUserCircle } from 'react-icons/fa'
 import { TiShoppingCart } from 'react-icons/ti'
@@ -16,6 +16,25 @@ const Header = ({ isAdmin }) => {
     const isSearchPage = currentLocation.pathname === '/search'
     const user = useSelector((state) => state?.user_data)
     const [isOpenMenu, setIsOpenMenu] = useState(false)
+
+    const navigation = [
+        {
+            title: 'Trang chủ',
+            href: ''
+        },
+        {
+            title: 'Sản phẩm',
+            href: 'product'
+        },
+        {
+            title: 'Tin tức',
+            href: 'news'
+        },
+        {
+            title: 'Liên hệ',
+            href: 'contact'
+        }
+    ]
 
     const handleCloseUserMenu = () => {
         setIsOpenMenu(false)
@@ -119,10 +138,22 @@ const Header = ({ isAdmin }) => {
                                 />
                             </Link>
                         </div>
+
                         {/* Navbar */}
-                        <div>
-                            Navbar
-                        </div>
+                        <nav className='lg:flex items-center gap-6 hidden'>
+                            {
+                                navigation.map((nav, index) => {
+                                    return (
+                                        <div>
+                                            <NavLink key={nav.title} to={nav.href} 
+                                                className={({isActive})=>`px-3 font-medium hover:text-blue-800 ${isActive && 'text-blue-700'}`}>
+                                                {nav.title}
+                                            </NavLink>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </nav>
                         {/* Search  */}
                         <div className='hidden lg:block'>
                             <Search />

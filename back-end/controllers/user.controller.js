@@ -11,11 +11,14 @@ const forgotPasswordTemp = require('../utils/forgotPasswordTemp')
 require('dotenv').config()
 
 
-// Đăng ký tài khoản
+{/** Đăng ký tài khoản mới */}
 const registerUser = async (req,res) => {
     try {
+        // req.body: chứa dữ liệu được gửi lên từ Client trong body của HTTP
+        // Trích xuất các thuộc tính vào đối tượng req.body và gắn vào các biến riêng biệt
         const { name, email, password } = req.body
         
+        // Kiểm tra dữ liệu đầu vào
         if(!name || !email || !password) {
             return res.status(400).json({
                 success: false,
@@ -24,6 +27,8 @@ const registerUser = async (req,res) => {
             })
         }
         
+        // Tìm email
+        // Nếu email đã có trong cơ sở dữ liệu thì không cho đăng ký
         const user = await UserModel.findOne({ email })
         if(user) {
             return res.json({
@@ -44,8 +49,10 @@ const registerUser = async (req,res) => {
             password: hashPassword
         })
 
+        // Lưu vào cơ sở dữ liệu
         const save = await newUser.save()
 
+        // Xác nhận email
         const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save._id}`
         const verify_Email = await resendEmail({
             sendTo: email,
@@ -53,6 +60,7 @@ const registerUser = async (req,res) => {
             html: verifyEmail(name, verifyEmailUrl)
         })
 
+        // Thông báo lưu thành công
         return res.status(201).json({
             success: true,
             error: false,
@@ -69,11 +77,12 @@ const registerUser = async (req,res) => {
     }
 }
 
-// Xác thực tài khoản
+{/** Xác thực tài khoản */}
 const verifyEmailUser = async (req,res) => {
     try {
         const { code } = req.body
 
+        // Kiểm tra mã code khi người dùng nhập vào
         const user = await UserModel.findOne({ _id: code })
         if(!user){
             return res.status(400).json({
@@ -83,14 +92,17 @@ const verifyEmailUser = async (req,res) => {
             })
         }
 
+        // Cập nhật vào cơ sở dữ liệu
         const updateUser = await UserModel.updateOne({ _id: code },{
             verify_email: true
         })
 
+        // Thông báo khi xác thực thành công
         return res.status(201).json({
             success: true,
             error: false,
-            message: 'Tài khoản đã được xác thực thành công.'
+            message: 'Tài khoản đã được xác thực thành công.',
+            data: updateUser
         })
     } catch (error) {
         return res.status(500).json({
@@ -101,7 +113,7 @@ const verifyEmailUser = async (req,res) => {
     }
 }
 
-// Đăng nhập
+{/** Đăng nhập tài khoản vào hệ thống */}
 const loginUser = async (req,res) => {
     try {
         const { email, password } = req.body
@@ -183,11 +195,10 @@ const loginUser = async (req,res) => {
     }
 }
 
-
-// Đăng xuất tài khoản
+{/** Đăng xuất tài khoản khỏi hệ thống */}
 const logoutUser = async (req, res) => {
     try {
-        const userId = req.user.id  // Lấy userId từ thông tin người dùng đã xác thực từ Token trong Middleware.
+        const userId = req.user.id  // Lấy userId từ thông tin người dùng đã xác thực từ Token trong Middleware
 
         // Cấu hình cookie options
         const cookieOption = {
@@ -205,6 +216,7 @@ const logoutUser = async (req, res) => {
             refresh_token: ''
         }) 
 
+        // Thông báo không tìm thấy dữ liệu
         if (!removeRefreshToken) {
             return res.status(404).json({
                 success: false,
@@ -213,6 +225,7 @@ const logoutUser = async (req, res) => {
             }) 
         }
 
+        // Thông báo khi đăng xuất thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -228,18 +241,21 @@ const logoutUser = async (req, res) => {
     }
 } 
 
-// Đăng tải hình ảnh lên Cloudinary
+{/** Đăng tải hình ảnh lên Cloudinary */}
 const uploadImageUser = async (req,res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user.id // Middleware
         const image = req.file
 
+        // Gọi hàm cập nhật hình ảnh
         const uploadImg = await UploadImage(image)
 
-        const updateUser = await UserModel.findByIdAndUpdate(userId, {
+        // Nếu tìm thấy id thì thực hiện cập nhật hình ảnh vào cơ sở dữ liệu
+        await UserModel.findByIdAndUpdate(userId, {
             avatar: uploadImg.url
         })
 
+        // Thông báo lưu dữ liệu thành công
         return res.status(201).json({
             success: true,
             error: false,
@@ -259,31 +275,34 @@ const uploadImageUser = async (req,res) => {
     }
 }
 
-
-// Cập nhật người dùng
+{/** Cập nhật tài khoản */}
 const updateUser = async (req, res) => {
     try {
-        const { name, email, password, phone_number } = req.body
-        const userID = req.user.id // Middleware auth
+        // const userId = req.user.id // Middleware auth
+        const { _id, name, email, password, phone_number, role } = req.body
                
         let hashPassword = ''
 
+        // Mã hóa mật khẩu
         if(password){
             const salt = await bcrypt.genSaltSync(10)
             hashPassword = await bcrypt.hashSync(password,salt)
         }
 
-        const updateUser = await UserModel.updateOne({ _id: userID }, {
+        // Thực hiện cập nhật vào dữ liệu
+        const updateUser = await UserModel.updateOne({ _id: _id}, {
             ...(name && { name: name }),
             ...(email && { email: email }),
             ...(password && { password: hashPassword }),
-            ...(phone_number && { phone_number: phone_number })
+            ...(phone_number && { phone_number: phone_number }),
+            ...(role && { role: role })
         })
 
+        // Thông báo khi cập nhật thành công
         return res.status(201).json({
             success: true,
             error: false,
-            message: 'Cập nhật người dùng thành công',
+            message: 'Cập nhật tài khoản thành công',
             data: updateUser
         })
 
@@ -296,11 +315,13 @@ const updateUser = async (req, res) => {
     }
 }
 
-// Quên mật khẩu
+{/** Quên mật khẩu */}
 const forgotPassword = async (req,res) => {
     try {
         const { email } = req.body
 
+        // Kiểm tra email có tồn tại hay không?
+        // Thông báo lỗi khi không tìm thấy
         const user = await UserModel.findOne({ email })
         if(!user){
             return res.status(404).json({
@@ -310,9 +331,11 @@ const forgotPassword = async (req,res) => {
             })
         }
 
+        // Tạo mã OTP và thời gian hiệu lực tương ứng
         const otpPass = await generateOtp()
         const expireTime = new Date(Date.now() + 30 * 60 * 1000) // Cộng thêm 30 phút vào thời gian hiện tại = Hết hạn: 30 phút
 
+        // Thực hiện cập nhật dữ liệu dựa vào id
         await UserModel.findByIdAndUpdate(user._id, {
             forgot_password_otp: otpPass,
             forgot_password_expire: new Date(expireTime).toISOString()
@@ -328,6 +351,7 @@ const forgotPassword = async (req,res) => {
             })
         })
 
+        // Gửi thông báo kiểm tra email cho người dùng khi xác thực đúng email
         return res.status(201).json({
             success: true,
             error: false,
@@ -405,10 +429,12 @@ const verifyForgotPasswordByOTP = async (req,res) => {
     }
 }
 
-// Khôi phục mật khẩu
+{/** Khôi phục mật khẩu */}
 const resetPassword = async (req,res) => {
     try {
         const { email, newPassword, confirmPassword } = req.body
+
+        // Kiểm tra dữ liệu đầu vào
         if(!email || !newPassword || !confirmPassword){
             return res.status(400).json({
                 success: false,
@@ -445,12 +471,12 @@ const resetPassword = async (req,res) => {
             password: hashPassword
         })
 
+        // Thông báo khi cập nhật dữ liệu thành công
         return res.status(201).json({
             success: true,
             error: false,
             message: 'Cập nhật dữ liệu thành công.'
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -460,10 +486,12 @@ const resetPassword = async (req,res) => {
     }
 }
 
-// Refresh token API
+{/** Tạo token API mới */}
 const refreshTokenAPI = async (req,res) => {
     try {
         const refreshToken = req.body.refreshToken || req.cookies.refreshToken
+
+        // Kiểm tra token
         if(!refreshToken){
             return res.status(401).json({
                 success: false,
@@ -472,6 +500,7 @@ const refreshTokenAPI = async (req,res) => {
             })
         }
 
+        // Xác thực token
         const verifyToken = await jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH_TOKEN)
         if(!verifyToken){
             return res.status(401).json({
@@ -492,8 +521,10 @@ const refreshTokenAPI = async (req,res) => {
             sameSite: 'None'
         }
 
+        // Tạo cookie
         res.cookie('accessToken', newToken, cookieOption)
 
+        // Thông báo khi tạo mới token thành công
         return res.status(201).json({
             success: true,
             error: false,
@@ -511,13 +542,15 @@ const refreshTokenAPI = async (req,res) => {
     }
 }
 
+{/** Hiển thị dữ liệu 1 tài khoản */}
 const getUserToDisplay = async (req,res) => {
     try {
         // req.user.id (req.user: decoded at Middleware)
         // console.log('decoded', decoded) => decoded { id: '6736137ab916eaa4457a0f1c', iat: 1732157732, exp: 1734749732 }
-        const userID = req.user.id // Dữ liệu lấy từ Middleware
+        const userId = req.user.id // Dữ liệu lấy từ Middleware
 
-        const getUser = await UserModel.findById(userID)
+        // Thông báo khi tìm thành công
+        const getUser = await UserModel.findById(userId)
         return res.status(200).json({
             success: true,
             error: false,
@@ -533,5 +566,27 @@ const getUserToDisplay = async (req,res) => {
     }
 }
 
+{/** Lấy dữ liệu tất cả các tài khoản hiện có - Admin */}
+const getAllUsersToDisplay = async (req,res) => {
+    try {
+        // Tìm dữ liệu trong cơ sở dữ liệu
+        const getAllUsers = await UserModel.find()
+
+        // Thông báo khi tìm thấy
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Lấy tất cả dữ liệu tài khoản thành công',
+            data: getAllUsers
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message || error
+        })
+    }
+}
+
 module.exports = { registerUser, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
-    updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, refreshTokenAPI, getUserToDisplay }
+    updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, refreshTokenAPI, getUserToDisplay, getAllUsersToDisplay }

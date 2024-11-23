@@ -86,7 +86,7 @@ const UserMenu = ({ close }) => {
                     checkIsAdmin(user.role) && (
                         <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
                             <FaUserTie size={20}/>
-                            <Link onClick={handleClose} to='/admin/profile'>Thông tin tài khoản</Link>
+                            <Link onClick={handleClose} to='/admin/all-users'>Thông tin tài khoản</Link>
                         </div>
                     )
                 }

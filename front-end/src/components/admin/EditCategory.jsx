@@ -9,7 +9,7 @@ import Swal from 'sweetalert2'
 const EditCategory = ({close, fetchData, data : cateData}) => {
     const [categoryData, setCategoryData] = useState({
         _id: cateData._id,
-        cateName: cateData.cateName,
+        name: cateData.name,
         image: cateData.image
     })
 
@@ -107,10 +107,10 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
                         <label className='py-2'>Tên:</label>
                         <input 
                             type='text'
-                            id='cateName'
+                            id='name'
                             placeholder='Nhập tên danh mục sản phẩm'
-                            value={categoryData.cateName}
-                            name='cateName'
+                            value={categoryData.name}
+                            name='name'
                             onChange={handleInputChange}
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />
@@ -118,7 +118,7 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
 
                     <div className='grid gap-1 py-1'>
                         <label id='categoryImage' className='py-1'>Hình ảnh:</label>
-                        <div className='flex flex-col gap-4 lg:flex-row items-center'>
+                        <div className='flex flex-col gap-4 lg:flex-row items-center justify-center'>
                             <div className='border border-blue-200 h-40 w-full lg:w-40 flex items-center justify-center rounded'>
                                 {
                                     categoryData.image ? (
@@ -135,7 +135,7 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
                             </div>
 
                             <label htmlFor='uploadCateImg'>
-                                <div className={`${!categoryData.cateName ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
+                                <div className={`${!categoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                 {
                                     isLoading ? 'Đang tải ảnh...' : 'Tải hình ảnh'
                                 }
@@ -145,13 +145,13 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
                                     type='file' 
                                     id='uploadCateImg' 
                                     className='hidden'
-                                    disabled={!categoryData.cateName}
+                                    disabled={!categoryData.name}
                                     onChange={handleUploadImage}
                                 />
                             </label>
                             
                         </div>
-                        <button disabled={!changeColorValue} className={`${categoryData.cateName && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
+                        <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.name ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
                             : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
                             Cập nhật
                         </button>

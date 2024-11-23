@@ -1,11 +1,12 @@
 const CategoryModel = require('../models/category.model')
 const mongoose = require('mongoose')
 
-// Tìm tất cả các danh mục sản phẩm
-const getCategories = async (req,res) => {
+{/** Tìm tất cả các danh mục sản phẩm */}
+const getCategoryController = async (req,res) => {
     try {
         const getAllCate = await CategoryModel.find().sort({ createdAt : -1 }) // Hiển thị danh mục sản phẩm mới nhất
 
+        // Thông báo khi tìm thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -21,10 +22,12 @@ const getCategories = async (req,res) => {
     }
 }
 
-// Tìm danh mục sản phẩm theo ID
-const getCategoryById = async (req,res) => {
+{/** Tìm danh mục sản phẩm theo id */}
+const getCategoryByIdController = async (req,res) => {
     try {
         const { _id } = req.body
+
+        // Kiểm tra id có tồn tại hay không?
         if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
@@ -33,8 +36,10 @@ const getCategoryById = async (req,res) => {
             })
         }
 
+        // Tìm id trong bảng Category
         const getCateByID = await CategoryModel.findOne({ _id: _id})
         
+        // Thông báo khi tìm thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -50,11 +55,13 @@ const getCategoryById = async (req,res) => {
     }
 }
 
-// Tạo mới danh mục sản phẩm
-const createCategory = async (req,res) => {
+{/** Tạo mới danh mục sản phẩm */}
+const createCategoryController = async (req,res) => {
     try {
-        const { cateName, image } = req.body
-        if(!cateName || !image) {
+        const { name, image } = req.body
+
+        // Kiểm tra dữ liệu đầu vào
+        if(!name || !image) {
             return res.status(400).json({
                 success: false,
                 error: true,
@@ -62,13 +69,16 @@ const createCategory = async (req,res) => {
             })       
         }
 
+        // Cập nhật dữ liệu đã nhập thành công vào Model
         const newCategory = new CategoryModel({
-            cateName,
+            name,
             image
         })
 
+        // Thực hiện lưu vào cơ sở dữ liệu
         const saveCategory = await newCategory.save()
 
+        // Lưu thất bại thì hiển thị thông báo lỗi
         if(!saveCategory){
             return res.status(500).json({
                 success: false,
@@ -77,6 +87,7 @@ const createCategory = async (req,res) => {
             })
         }
 
+        // Thông báo khi lưu dữ liệu thành công
         return res.status(201).json({
             success: true,
             error: false,
@@ -92,11 +103,12 @@ const createCategory = async (req,res) => {
     } 
 }
 
-// Sửa danh mục sản phẩm
-const updateCategory = async (req,res) => {
+{/** Sửa danh mục sản phẩm */}
+const updateCategoryController = async (req,res) => {
     try {
-        const { _id, cateName, image } = req.body
+        const { _id, name, image } = req.body
 
+        // Kiểm tra id có tồn tại hay không?
         if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
@@ -105,13 +117,13 @@ const updateCategory = async (req,res) => {
             })
         }
 
-        const updateCate = await CategoryModel.updateOne({
-            _id: _id
-        }, {
-            cateName,
+        // Cập nhật vào cơ sở dữ liệu
+        const updateCate = await CategoryModel.findByIdAndUpdate(_id, {
+            name,
             image
         })
 
+        // Thông báo khi cập nhật dữ liệu thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -127,10 +139,12 @@ const updateCategory = async (req,res) => {
     }
 }
 
-// Xóa danh mục sản phẩm
-const deleteCategory = async (req,res) => {
+{/** Xóa danh mục sản phẩm */}
+const deleteCategoryController = async (req,res) => {
     try {
-        const {_id} = req.body
+        const { _id } = req.body
+
+        // Kiểm tra id có tồn tại hay không?
         if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
@@ -139,8 +153,10 @@ const deleteCategory = async (req,res) => {
             })
         }
 
-        await CategoryModel.deleteOne({ _id: _id})
+        // Thực hiện xóa dựa vào id
+        await CategoryModel.findByIdAndDelete(_id)
 
+        // Thông báo khi xóa thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -155,4 +171,5 @@ const deleteCategory = async (req,res) => {
     }
 }
 
-module.exports = { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory }
+module.exports = { getCategoryController, 
+    getCategoryByIdController, createCategoryController, updateCategoryController, deleteCategoryController }

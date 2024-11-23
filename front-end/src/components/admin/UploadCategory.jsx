@@ -5,10 +5,11 @@ import Axios from '../../utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
+import checkImageExistence from '@/utils/checkImageFromCloudinary'
 
-const UploadCategory = ({close, fetchData}) => {
+const UploadCategory = ({ close, fetchData }) => {
     const [categoryData, setCategoryData] = useState({
-        cateName: '',
+        name: '',
         image: ''
     })
 
@@ -35,16 +36,31 @@ const UploadCategory = ({close, fetchData}) => {
         }
 
         setIsLoading(true)
-        const responseImage = await uploadNewImage(file)
-        const { data: responseNewImage } = responseImage
-        setIsLoading(false)
+        try {
+            const fileName = file.name.split('.')[0] // Lấy tên file (không có phần mở rộng)
 
-        setCategoryData((prev) => {
-            return {
-                ...prev,
-                image: responseNewImage.data.url
+            // 1. Kiểm tra nếu ảnh đã có trên Cloudinary
+            const imageExists = await checkImageExistence(fileName)  // Kiểm tra ảnh trên Cloudinary
+
+            if (imageExists) {
+                setIsLoading(false)
+                alert("Ảnh đã tồn tại trên Cloudinary!")
+                return
             }
-        })
+
+            const responseImage = await uploadNewImage(file)
+            const { data: responseNewImage } = responseImage
+            setIsLoading(false)
+
+            setCategoryData((prev) => {
+                return {
+                    ...prev,
+                    image: responseNewImage.data.url
+                }
+            })
+        } catch (error) {
+            axiosErrorAnnounce(error)
+        }       
     }
 
     {/** Xử lý khi bấm nút Submit */}
@@ -104,10 +120,10 @@ const UploadCategory = ({close, fetchData}) => {
                         <label className='py-2'>Tên:</label>
                         <input 
                             type='text'
-                            id='cateName'
+                            id='name'
                             placeholder='Nhập tên danh mục sản phẩm'
-                            value={categoryData.cateName}
-                            name='cateName'
+                            value={categoryData.name}
+                            name='name'
                             onChange={handleInputChange}
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />
@@ -131,7 +147,7 @@ const UploadCategory = ({close, fetchData}) => {
                             </div>
 
                             <label htmlFor='uploadCateImg'>
-                                <div className={`${!categoryData.cateName ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
+                                <div className={`${!categoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                     {
                                         isLoading ? 'Đang tải ảnh...' : 'Tải hình ảnh'
                                     }                              
@@ -140,13 +156,13 @@ const UploadCategory = ({close, fetchData}) => {
                                     type='file' 
                                     id='uploadCateImg' 
                                     className='hidden'
-                                    disabled={!categoryData.cateName}
+                                    disabled={!categoryData.name}
                                     onChange={handleUploadImage}
                                 />
                             </label>
                             
                         </div>
-                        <button disabled={!changeColorValue} className={`${categoryData.cateName && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                        <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
                             : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
                             Thêm mới
                         </button>

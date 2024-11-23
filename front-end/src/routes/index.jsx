@@ -7,17 +7,24 @@ import ForgotPassword from "@/pages/ForgotPassword"
 import VerifyByOTP from "@/pages/VerifyByOTP"
 import ResetPassword from "@/pages/ResetPassword"
 import Dashboard from "@/pages_admin/Dashboard"
-import Category from '../pages_admin/Category'
+import Category from '@/pages_admin/Category'
 import SubCategory from "@/pages_admin/SubCategory"
 import AdminPermission from "@/pages_admin/AdminPermission"
-import Profile from "@/pages_admin/Profile"
 import Home from "@/pages/Home"
+import AllUsers from "@/pages_admin/AllUsers"
+import Product from "@/pages/Product"
+import NoItemInCart from "@/components/user/NoItemInCart"
+import PageNotFound from "@/pages/PageNotFound"
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
         children: [
+            {
+                path: '*',
+                element: <PageNotFound />
+            },
             {
                 path: '',
                 element: <Home />
@@ -47,15 +54,24 @@ const router = createBrowserRouter([
                 element: <ResetPassword />
             },
             {
-                path: ''
+                path: 'product',
+                element: <Product />
+            },
+            {
+                path: 'no-item',
+                element: <NoItemInCart />
             },
             {
                 path: 'admin',
                 element: <AdminPermission><Dashboard /></AdminPermission>,
                 children: [
                     {
-                        path: 'profile',
-                        element: <AdminPermission><Profile /></AdminPermission>
+                        path: '*',
+                        element: <PageNotFound />
+                    },
+                    {
+                        path: 'all-users',
+                        element: <AdminPermission><AllUsers /></AdminPermission>
                     },
                     {
                         path: 'category',

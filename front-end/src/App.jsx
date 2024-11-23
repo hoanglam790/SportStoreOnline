@@ -5,6 +5,9 @@ import fetchUser from './utils/FetchUser'
 import { setUserDetails } from './redux/userSlice'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { setAllCategories } from './redux/productSlice'
+import Axios from './utils/AxiosConfig'
+import connectApi from './common/ApiBackend'
 
 function App() {
   const dispatch = useDispatch()
@@ -17,10 +20,27 @@ function App() {
     dispatch(setUserDetails(userData.data))
   }
 
+  const fetchCategoryData = async() => {
+    try {
+        const responseData = await Axios({
+            ...connectApi.getCategory
+        })
+
+        if(responseData.data.success){
+          dispatch(setAllCategories(responseData.data.data))
+        }
+
+    } catch (error) {
+        
+    } finally{
+
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
+    fetchCategoryData()
   }, [])
-
 
   return (
     <>

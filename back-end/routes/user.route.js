@@ -1,7 +1,7 @@
 const express = require('express')
 const { registerUser, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
         updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, 
-        refreshTokenAPI, getUserToDisplay } = require('../controllers/user.controller')
+        refreshTokenAPI, getUserToDisplay, getAllUsersToDisplay } = require('../controllers/user.controller')
 const auth = require('../middleware/auth')
 const upload = require('../middleware/multer')
 
@@ -18,5 +18,6 @@ userRouter.put('/verify-forgot-password', verifyForgotPasswordByOTP)
 userRouter.put('/reset-password', resetPassword)
 userRouter.post('/refresh-token', refreshTokenAPI)
 userRouter.get('/get-user', auth, getUserToDisplay)
+userRouter.get('/get-all-users', auth, getAllUsersToDisplay)
 
 module.exports = userRouter

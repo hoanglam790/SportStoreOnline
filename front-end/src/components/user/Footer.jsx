@@ -8,10 +8,10 @@ import { IoLogoYoutube } from 'react-icons/io5'
 
 const Footer = ({ isAdmin }) => {
   return (
-    <footer className='bg-gray-800 py-5 font-sans tracking-wide md:justify-between'>
+    <footer className='bg-gray-800 font-sans tracking-wide md:justify-between'>
       {isAdmin ? (
         <>
-          <div className='fixed bottom-0 left-0 w-full bg-gray-800 text-white py-4 text-center'>
+          <div className='fixed bottom-0 left-0 w-full bg-gray-800 text-white py-5 text-center'>
             <p className='text-gray-400 text-base text-center'>© Copyright 2024 by Hoang Lam. All rights reserved. Please don't copy and re-up.</p>
           </div>
         </>
@@ -48,7 +48,7 @@ const Footer = ({ isAdmin }) => {
             <ul className='mt-4 flex-wrap justify-center gap-4 lg:space-x-6 max-lg:flex-col max-lg:items-center max-lg:space-y-2'>         
               <li className='flex text-yellow-400'>              
                 <IoMdHome className='size-12' />
-                <p className='text-gray-400 text-base text-justify ml-5'>359 La Xuan Oai Street, Truong Thanh Ward, Thu Duc District, Ho Chi Minh City.</p>                          
+                <p className='text-gray-400 text-base text-justify ml-5'>359 đường Lã Xuân Oai, phường Trường Thạnh, TP. Thủ Đức, TPHCM.</p>                          
               </li>
             </ul>
        
@@ -94,10 +94,10 @@ const Footer = ({ isAdmin }) => {
           </div>
         </div>
         
-        <hr className='mx-10 my-8 border-gray-400' />
+        <hr className='mx-8 my-6 border-gray-400' />
         
-        <div className='pb-3'>
-          <p className='text-gray-400 text-base text-center'>© Copyright 2024 by Hoang Lam. All rights reserved. Please don't copy and re-up.</p>
+        <div className='pb-6'>
+          <p className='text-gray-400 text-base text-center'>© Bản quyền 2024 bởi Hoàng Lâm. Vui lòng không sao chép hay đăng tải dưới mọi hình thức.</p>
         </div>
         </>
       )}

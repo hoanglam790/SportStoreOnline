@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const subCategorySchema = new mongoose.Schema({
-    subCateName: {
+    name: {
         type: String,
         required: true
     },
@@ -9,10 +9,10 @@ const subCategorySchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    Category: [
+    category: [
         {
             type: mongoose.Schema.ObjectId,
-            ref: 'Category'
+            ref: 'category'
         }
     ]
 },

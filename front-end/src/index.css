@@ -25,3 +25,15 @@ body{
         appearance: none;
     }
 }
+
+.userTable {
+    @apply bg-white
+}
+
+.userTable th{
+    @apply border border-b text-base font-medium p-2
+}
+
+.userTable td{
+    @apply border border-b text-base text-center p-1
+}
