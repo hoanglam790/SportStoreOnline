@@ -6,6 +6,7 @@ import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
 import { useSelector } from 'react-redux'
+import { CgSpinner } from 'react-icons/cg'
 
 const UploadSubCategory = ({ close, fetchData }) => {
     const [subCategoryData, setSubCategoryData] = useState({
@@ -53,20 +54,23 @@ const UploadSubCategory = ({ close, fetchData }) => {
 
     // Xử lý khi chọn ô dữ liệu trong Dropdown list
     const handleChangeSelect = (e) => {
-        const handleSelectedCate = e.target.value
-        setSelectCate(handleSelectedCate)
+        const value = e.target.value
+        const category = allCategories.find(el=> el._id === value)
+
         setSubCategoryData((prev) => {
-            return{
+            return {
                 ...prev,
-                category: handleSelectedCate
+                category: [...prev.category, category]
             }
         })
+        setSelectCate(value)
     }
 
     // Xử lý khi nhấn nút xác nhận
     const handleSubmitCreateSubCategory = async(e) => {
         e.preventDefault()
         try {
+            setIsLoading(true)
             const responseData = await Axios({
                 ...connectApi.createSubCate,
                 data: subCategoryData
@@ -102,11 +106,13 @@ const UploadSubCategory = ({ close, fetchData }) => {
 
         } catch (error) {
             axiosErrorAnnounce(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
-        <section className='fixed top-10 bottom-10 left-0 right-0 mt-[60px] p-10 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
+        <section className='fixed top-0 bottom-0 left-0 right-0 z-50 p-10 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
             <div className='bg-white max-w-2xl w-[600px] p-3 rounded-md'>
                 <div className='flex items-center justify-between'>
                     <h2 className='font-semibold'>Thêm mới danh mục sản phẩm phụ</h2>
@@ -150,7 +156,16 @@ const UploadSubCategory = ({ close, fetchData }) => {
                             <label htmlFor='uploadCateImg'>
                                 <div className={`${!subCategoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                 {
-                                    isLoading ? 'Đang tải ảnh...' : 'Tải hình ảnh'
+                                    isLoading ? (
+                                        <div className='w-[110px] h-[42px] flex items-center justify-center'>
+                                            <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
+                                            Đang tải ảnh...
+                                        </div>
+                                    ) : (
+                                        <div className='px-3 py-2'>
+                                            <p>Tải hình ảnh</p>
+                                        </div>
+                                    )
                                 }
                                 </div>
                                 <input 
@@ -168,7 +183,7 @@ const UploadSubCategory = ({ close, fetchData }) => {
                     <div className='grid gap-2 mt-6'>
                         <label>Chọn danh mục sản phẩm:</label>
                         <div className='border focus-within:border-orange-400 rounded'>
-                            <select value={subCategoryData.category.name} onChange={handleChangeSelect} className='w-full bg-transparent p-3 outline-none'>
+                            <select value={selectCate} onChange={handleChangeSelect} className='w-full bg-transparent p-3 outline-none'>
                                 <option value={''} >--- Hãy chọn 01 danh mục sản phẩm</option>
                                 {
                                     allCategories.map((category, index) => {
@@ -184,8 +199,8 @@ const UploadSubCategory = ({ close, fetchData }) => {
                         
                     </div>
 
-                    <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
-                        : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                    <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image && subCategoryData.category[1] ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                        : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                         Thêm mới
                     </button>
                 </form>                

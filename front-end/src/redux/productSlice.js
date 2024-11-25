@@ -13,11 +13,15 @@ export const productSlice = createSlice({
         setAllCategories: (state, action) => {
             console.log('all cate redux', action.payload)
             state.allCategory = [...action.payload]
+        },
+        setAllSubCategories: (state, action) => {
+            console.log('all sub cate redux', action.payload)
+            state.allSubCategory = [...action.payload]
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllCategories } = productSlice.actions
+export const { setAllCategories, setAllSubCategories } = productSlice.actions
 
 export default productSlice.reducer

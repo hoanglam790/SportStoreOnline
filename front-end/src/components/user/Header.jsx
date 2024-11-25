@@ -10,13 +10,16 @@ import { GrSearch } from 'react-icons/gr'
 import UserMenu from './UserMenu'
 
 
-const Header = ({ isAdmin }) => {
-    const navigate = useNavigate()
-    const currentLocation = useLocation()
-    const isSearchPage = currentLocation.pathname === '/search'
-    const user = useSelector((state) => state?.user_data)
+const Header = () => {
     const [isOpenMenu, setIsOpenMenu] = useState(false)
+    const navigate = useNavigate()
+    const [searchText, setSearchText] = useState({
+        text: ''
+    })
 
+    const user = useSelector((state) => state?.user_data)
+    
+    // Tạo thanh menu
     const navigation = [
         {
             title: 'Trang chủ',
@@ -36,14 +39,28 @@ const Header = ({ isAdmin }) => {
         }
     ]
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target
+        setSearchText((prev) => {
+            return{
+                ...prev,
+                [name]: value
+            }
+        })
+    }
+
     const handleCloseUserMenu = () => {
         setIsOpenMenu(false)
+    }
+
+    const redirectToSearchPage = () => {
+        navigate(`/search/${searchText}`)
     }
 
     return (
         <header className='h-32 border-b fixed top-0 left-0 w-full bg-white z-50'>
             {
-                isAdmin ? (
+                user.role === 'Admin' ? (
                 <>
                     <div className='container mx-auto h-full flex items-center justify-between p-3 gap-6'>
                         {/* Logo  */}
@@ -140,13 +157,13 @@ const Header = ({ isAdmin }) => {
                         </div>
 
                         {/* Navbar */}
-                        <nav className='lg:flex items-center gap-6 hidden'>
+                        <nav className='hidden md:flex items-center gap-3 lg:gap-5'>
                             {
                                 navigation.map((nav, index) => {
                                     return (
                                         <div>
                                             <NavLink key={nav.title} to={nav.href} 
-                                                className={({isActive})=>`px-3 font-medium hover:text-blue-800 ${isActive && 'text-blue-700'}`}>
+                                                className={({isActive})=>`px-3 font-bold hover:text-blue-800 ${isActive && 'text-blue-700 max-lg:border-b max-lg:py-3 relative lg:after:absolute lg:after:block lg:after:bg-pink-500 lg:after:w-full lg:after:h-[3px] lg:after:-bottom-4'}`}>
                                                 {nav.title}
                                             </NavLink>
                                         </div>
@@ -154,9 +171,19 @@ const Header = ({ isAdmin }) => {
                                 })
                             }
                         </nav>
+
                         {/* Search  */}
-                        <div className='hidden lg:block'>
-                            <Search />
+                        <div className='min-w-[220px] lg:min-w-[330px] h-12 rounded-md border overflow-hidden focus-within:border-orange-600'>
+                            <button className='flex items-center justify-between ml-auto w-full h-full p-3 text-neutral-500'>
+                                <input type='text'
+                                    value={searchText.text}
+                                    name='text'
+                                    onChange={handleInputChange}
+                                    placeholder='Tìm kiếm...' 
+                                    className='w-full h-full bg-transparent outline-none'
+                                />
+                                <GrSearch onClick={redirectToSearchPage} className='fill-gray-600'/>
+                            </button>                       
                         </div>
 
                         {/* Cart and Login  */}

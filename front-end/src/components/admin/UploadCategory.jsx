@@ -6,6 +6,7 @@ import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
 import checkImageExistence from '@/utils/checkImageFromCloudinary'
+import { CgSpinner } from 'react-icons/cg'
 
 const UploadCategory = ({ close, fetchData }) => {
     const [categoryData, setCategoryData] = useState({
@@ -60,13 +61,16 @@ const UploadCategory = ({ close, fetchData }) => {
             })
         } catch (error) {
             axiosErrorAnnounce(error)
-        }       
+        } finally {
+            setIsLoading(false)
+        }      
     }
 
     {/** Xử lý khi bấm nút Submit */}
     const handleSubmitCreateCategory = async(e) => {
         e.preventDefault()
         try {
+            setIsLoading(true)
             const responseData = await Axios({
                 ...connectApi.createNewCategory,
                 data: categoryData
@@ -102,11 +106,13 @@ const UploadCategory = ({ close, fetchData }) => {
             }
         } catch (error) {
             axiosErrorAnnounce(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
-        <section className='fixed top-0 bottom-0 left-0 right-0 p-20 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
+        <section className='fixed top-0 bottom-0 left-0 right-0 p-20 z-50 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
             <div className='bg-white max-w-4xl w-[600px] p-5 rounded-md'>
                 <div className='flex items-center justify-between'>
                     <h2 className='font-semibold'>Thêm mới danh mục sản phẩm</h2>
@@ -149,7 +155,16 @@ const UploadCategory = ({ close, fetchData }) => {
                             <label htmlFor='uploadCateImg'>
                                 <div className={`${!categoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                     {
-                                        isLoading ? 'Đang tải ảnh...' : 'Tải hình ảnh'
+                                        isLoading ? (
+                                            <div className='w-[110px] h-[42px] flex items-center justify-center'>
+                                                <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
+                                            </div>
+                                        ) : (
+                                            <div className='px-3 py-2'>
+                                                <p>Tải hình ảnh</p>
+                                            </div>
+                                            
+                                        )
                                     }                              
                                 </div>
                                 <input 
@@ -162,10 +177,18 @@ const UploadCategory = ({ close, fetchData }) => {
                             </label>
                             
                         </div>
-                        <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
-                            : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
-                            Thêm mới
-                        </button>
+                        {
+                            isLoading ? (
+                                <button className='w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
+                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                </button>
+                            ) : (
+                                <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                                    : 'w-full flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
+                                    Thêm mới
+                                </button>
+                            )
+                        }                      
                     </div>
                 </form>                
             </div>

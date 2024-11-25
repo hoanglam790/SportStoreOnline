@@ -5,13 +5,17 @@ import { Link } from 'react-router-dom'
 import { FaPhoneAlt, FaFacebookSquare } from 'react-icons/fa'
 import { FaInstagram } from 'react-icons/fa6'
 import { IoLogoYoutube } from 'react-icons/io5'
+import { useSelector } from 'react-redux'
 
 const Footer = ({ isAdmin }) => {
+  const user = useSelector(state => state.user_data)
+
   return (
-    <footer className='bg-gray-800 font-sans tracking-wide md:justify-between'>
-      {isAdmin ? (
+    <footer className='bg-gray-800 font-sans  tracking-wide md:justify-between'>
+      {
+        user.role === 'Admin' ? (
         <>
-          <div className='fixed bottom-0 left-0 w-full bg-gray-800 text-white py-5 text-center'>
+          <div className='w-full bg-gray-800 text-white py-5 text-center'>
             <p className='text-gray-400 text-base text-center'>© Copyright 2024 by Hoang Lam. All rights reserved. Please don't copy and re-up.</p>
           </div>
         </>

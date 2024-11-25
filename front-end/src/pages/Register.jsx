@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import { Link, useNavigate } from 'react-router-dom'
+import { CgSpinner } from 'react-icons/cg'
 //import axios from 'axios'
 
 const Register = () => {
@@ -20,6 +21,7 @@ const Register = () => {
     
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -38,7 +40,7 @@ const Register = () => {
     const registerNewUser = async(e) => {
         {/** Ngừng hành động gửi form mặc định khi nhấn nút Đăng ký */}
         e.preventDefault()
-
+        
         {/** Kiểm tra mật khẩu và xác nhận mật khẩu khi nhập vào */}
         if(userData.password !== userData.confirmPassword){
             Swal.fire({
@@ -55,6 +57,7 @@ const Register = () => {
         }
 
         try {
+            setIsLoading(true)
             {/** Gọi API từ Backend */}
             //const responseData = await axios.post('http://localhost:5000/api/users/register', userData)
             const responseData = await Axios({
@@ -102,15 +105,17 @@ const Register = () => {
         } catch (error) {
             {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
+        } finally {
+            setIsLoading(false)
         }
         
     }
 
     return (
-        <section id='register' className='py-8'>
+        <section id='register' className='py-2'>
             <div className='font-[sans-serif] bg-gray-100 max-w-4xl flex items-center mx-auto md:h-screen p-4 rounded-lg'>
-                <div className='grid md:grid-cols-3 items-center rounded-xl overflow-hidden'>
-                    <div className='max-md:order-1 flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4'>
+                <div className='grid md:grid-cols-3 items-center rounded-xl overflow-hidden mb-8'>
+                    <div className='flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4'>
                         <div>
                             <h4 className='text-white text-lg font-semibold'>Create Your Account</h4>
                             <p className='text-[13px] text-gray-300 mt-3 leading-relaxed'>Welcome to our registration page! Get started by creating your account.</p>
@@ -121,7 +126,7 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <form onSubmit={registerNewUser} className='md:col-span-2 w-full py-6 px-6 sm:px-16'>
+                    <form onSubmit={registerNewUser} className='md:col-span-2 w-full py-6 px-4 sm:px-16'>
                         <div className='mb-6'>
                             <h3 className='text-gray-800 text-2xl font-bold'>Tạo tài khoản</h3>
                         </div>
@@ -197,10 +202,20 @@ const Register = () => {
                                 </div>
                             </div>
                             <div className='mt-12'>
-                                <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none' 
-                                    : 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
-                                Đăng ký
-                                </button>
+                                {
+                                    isLoading ? (
+                                        <button disabled={!changeColorValue} className='w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none'>
+                                            <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]'/>
+                                        </button>
+                                    ) : (
+                                        <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none' 
+                                            : 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                                        Đăng ký
+                                        </button>
+                                    )
+                                }
+
+                                
                             </div>
                         </div>
                         <div className='mt-8'>

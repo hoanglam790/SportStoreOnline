@@ -83,68 +83,56 @@ const UserMenu = ({ close }) => {
 
             <div className='text-[15px] grid gap-4 py-5'>
                 {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <FaUserTie size={20}/>
-                            <Link onClick={handleClose} to='/admin/all-users'>Thông tin tài khoản</Link>
-                        </div>
-                    )
-                }
+                    user.role === 'Admin' ? (
+                        <>
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <FaUserTie size={20}/>
+                                <Link onClick={handleClose} to='/admin/all-users'>Thông tin tài khoản</Link>
+                            </div>
 
-                {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <TbCategory size={20}/>
-                            <Link onClick={handleClose} to='/admin/category'>Danh mục sản phẩm</Link>
-                        </div>
-                    )
-                }
-                
-                {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <MdCategory size={20}/>
-                            <Link onClick={handleClose} to='/admin/sub-category'>Danh mục sản phẩm phụ</Link>
-                        </div>
-                    )
-                }
-                
-                {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <MdProductionQuantityLimits size={20}/>
-                            <Link onClick={handleClose} to={''}>Sản phẩm</Link>
-                        </div>
-                    )
-                }
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <TbCategory size={20}/>
+                                <Link onClick={handleClose} to='/admin/categories'>Danh mục sản phẩm</Link>
+                            </div>
 
-                {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <IoNewspaperSharp size={20}/>
-                            <Link onClick={handleClose} to={''}>Tin tức</Link>
-                        </div>
-                    )
-                }
-                
-                <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                    <TiShoppingCart size={20}/>
-                    <Link onClick={handleClose} to={''}>Đơn hàng</Link>
-                </div>
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <MdCategory size={20}/>
+                                <Link onClick={handleClose} to='/admin/sub-categories'>Danh mục sản phẩm phụ</Link>
+                            </div>
 
-                {
-                    checkIsAdmin(user.role) && (
-                        <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                            <TbReportAnalytics size={20}/>
-                            <Link onClick={handleClose} to={''}>Thống kê</Link>
-                        </div>
-                    )
-                }
-                             
-                <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                    <BiLogOut size={22}/>
-                    <button onClick={handleLogout}>Đăng xuất</button>
-                </div>               
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <MdProductionQuantityLimits size={20}/>
+                                <Link onClick={handleClose} to='/admin/products'>Sản phẩm</Link>
+                            </div>
+
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <IoNewspaperSharp size={20}/>
+                                <Link onClick={handleClose} to={''}>Tin tức</Link>
+                            </div>
+
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <TbReportAnalytics size={20}/>
+                                <Link onClick={handleClose} to={''}>Thống kê</Link>
+                            </div>
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <BiLogOut size={22}/>
+                                <button onClick={handleLogout}>Đăng xuất</button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <TiShoppingCart size={20}/>
+                                <Link onClick={handleClose} to={''}>Đơn hàng</Link>
+                            </div>
+                                        
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <BiLogOut size={22}/>
+                                <button onClick={handleLogout}>Đăng xuất</button>
+                            </div>                          
+                        </>
+                    )                   
+                }                                 
             </div>
         </div>
     )

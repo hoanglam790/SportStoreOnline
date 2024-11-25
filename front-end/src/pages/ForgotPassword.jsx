@@ -77,7 +77,7 @@ const ForgotPassword = () => {
     return (
         <section id='login'>
             <div className='container mx-auto p-8'>
-                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto'>
+                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto mt-28'>
                     <form onSubmit={handleForgotPassword}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Thông tin xác thực</h3>

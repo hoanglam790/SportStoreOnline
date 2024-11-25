@@ -7,14 +7,15 @@ import ForgotPassword from "@/pages/ForgotPassword"
 import VerifyByOTP from "@/pages/VerifyByOTP"
 import ResetPassword from "@/pages/ResetPassword"
 import Dashboard from "@/pages_admin/Dashboard"
-import Category from '@/pages_admin/Category'
-import SubCategory from "@/pages_admin/SubCategory"
+import CategoryAdmin from '@/pages_admin/CategoryAdmin'
+import SubCategoryAdmin from "@/pages_admin/SubCategoryAdmin"
 import AdminPermission from "@/pages_admin/AdminPermission"
 import Home from "@/pages/Home"
 import AllUsers from "@/pages_admin/AllUsers"
 import Product from "@/pages/Product"
 import NoItemInCart from "@/components/user/NoItemInCart"
 import PageNotFound from "@/pages/PageNotFound"
+import ProductAdmin from "@/pages_admin/ProductAdmin"
 
 const router = createBrowserRouter([
     {
@@ -22,36 +23,12 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: '*',
-                element: <PageNotFound />
-            },
-            {
                 path: '',
                 element: <Home />
-            },
+            },           
             {
-                path: 'login',
-                element: <Login />
-            },
-            {
-                path: 'register',
-                element: <Register />
-            },
-            {
-                path: 'search',
+                path: 'search/:text',
                 element: <SearchPage />
-            },
-            {
-                path: 'forgot-password',
-                element: <ForgotPassword />
-            },
-            {
-                path: 'verification-password',
-                element: <VerifyByOTP />
-            },
-            {
-                path: 'reset-password',
-                element: <ResetPassword />
             },
             {
                 path: 'product',
@@ -74,18 +51,45 @@ const router = createBrowserRouter([
                         element: <AdminPermission><AllUsers /></AdminPermission>
                     },
                     {
-                        path: 'category',
-                        element: <AdminPermission><Category /></AdminPermission>
+                        path: 'categories',
+                        element: <AdminPermission><CategoryAdmin /></AdminPermission>
                     },
                     {
-                        path: 'sub-category',
-                        element: <AdminPermission><SubCategory /></AdminPermission>
+                        path: 'sub-categories',
+                        element: <AdminPermission><SubCategoryAdmin /></AdminPermission>
+                    },
+                    {
+                        path: 'products',
+                        element: <AdminPermission><ProductAdmin /></AdminPermission>
                     }
                 ]
             }            
         ]
+    },
+    {
+        path: '*',
+        element: <PageNotFound />
+    },
+    {
+        path: 'login',
+        element: <Login />
+    },
+    {
+        path: 'register',
+        element: <Register />
+    },
+    {
+        path: 'forgot-password',
+        element: <ForgotPassword />
+    },
+    {
+        path: 'verification-password',
+        element: <VerifyByOTP />
+    },
+    {
+        path: 'reset-password',
+        element: <ResetPassword />
     }
-    
 ])
 
 export default router

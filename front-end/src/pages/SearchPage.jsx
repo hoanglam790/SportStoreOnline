@@ -1,9 +1,12 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
 const SearchPage = () => {
+    const params = useParams()
+
     return (
         <div>
-        Hello
+        Search ({ params.text })
         </div>
     )
 }

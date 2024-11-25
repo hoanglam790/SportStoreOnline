@@ -36,7 +36,11 @@ const productSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'subCategory'
         }
-    ]
+    ],
+    publish: {
+        type: Boolean,
+        default: true
+    }
 },
 {
     timestamps: true

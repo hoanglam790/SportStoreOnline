@@ -5,6 +5,7 @@ import Axios from '../../utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
+import { CgSpinner } from 'react-icons/cg'
 
 const EditCategory = ({close, fetchData, data : cateData}) => {
     const [categoryData, setCategoryData] = useState({
@@ -93,7 +94,7 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
     }
 
     return (
-        <section className='fixed top-0 bottom-0 left-0 right-0 p-20 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
+        <section className='fixed top-0 bottom-0 left-0 right-0 z-50 p-20 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
             <div className='bg-white max-w-4xl w-[600px] p-5 rounded-md'>
                 <div className='flex items-center justify-between'>
                     <h2 className='font-semibold'>Chỉnh sửa danh mục sản phẩm</h2>
@@ -148,13 +149,21 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
                                     disabled={!categoryData.name}
                                     onChange={handleUploadImage}
                                 />
-                            </label>
-                            
+                            </label>                           
                         </div>
-                        <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.name ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
-                            : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
-                            Cập nhật
-                        </button>
+                        {
+                            isLoading ? (
+                                <button className='w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'>
+                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                </button>
+                            ) : (
+                                <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.name ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
+                                    : 'w-full flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
+                                    Cập nhật
+                                </button>
+                            )
+                        }
+                        
                     </div>
                 </form>
             </div>

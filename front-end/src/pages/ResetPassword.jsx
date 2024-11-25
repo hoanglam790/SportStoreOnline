@@ -116,8 +116,8 @@ const ResetPassword = () => {
 
     return (
         <section id='register' className='py-12'>
-            <div className='font-[sans-serif] bg-gray-100 max-w-2xl flex items-center mx-auto p-4 rounded-lg'>
-                <form onSubmit={handleSubmit} className='w-full p-12 sm:px-12 '>
+            <div className='font-[sans-serif] bg-gray-100 max-w-2xl flex items-center mx-auto p-4 rounded-lg mt-28'>
+                <form onSubmit={handleSubmit} className='w-full p-12 sm:px-12'>
                     <div className='mb-2'>
                         <h3 className='text-gray-800 text-2xl font-bold'>Tạo mật khẩu mới</h3>
                     </div>

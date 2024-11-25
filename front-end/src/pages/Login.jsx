@@ -10,6 +10,7 @@ import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import fetchUser from '@/utils/FetchUser'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUserDetails } from '@/redux/userSlice'
+import { CgSpinner } from 'react-icons/cg'
 
 const Login = () => {
     const [userData, setUserData] = useState({
@@ -17,6 +18,7 @@ const Login = () => {
         password: ''
     })
     const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -35,8 +37,9 @@ const Login = () => {
 
     const handleSubmitLogin = async(e) => {
         {/** Ngừng hành động gửi form mặc định khi nhấn nút Đăng nhập */}
-        e.preventDefault() 
+        e.preventDefault()
         try {
+            setIsLoading(true)
             {/** Gọi API từ Backend */}
             const responseData = await Axios({
                 ...connectApi.login,
@@ -93,16 +96,18 @@ const Login = () => {
                     navigate('/')
                 }             
             }
-
+            
         } catch (error) {
             {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
         <section id='login'>
-            <div className='container mx-auto p-8'>
+            <div className='container mx-auto p-8 m-8'>
                 <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
                     <form onSubmit={handleSubmitLogin}>
                         <div className='mb-12'>
@@ -154,11 +159,21 @@ const Login = () => {
                             </div>
                         </div>
                         <div className='mt-8'>
-                            <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none' 
-                            : 
-                            'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
-                            Đăng nhập
-                            </button>
+                            {
+                                isLoading ? (
+                                    <button className='w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'>
+                                        <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]'/>
+                                        
+                                    </button>
+                                ) : (
+                                    <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none' 
+                                    : 
+                                    'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                                    Đăng nhập
+                                    </button>
+                                )
+                            }
+                            
                         </div>
                         <div className='my-4 flex items-center gap-4'>
                             <hr className='w-full border-gray-300' />

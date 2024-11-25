@@ -27,7 +27,7 @@ const Dashboard = () => {
                 </div>
 
                 {/** Nội dung bên phải */}
-                <div className='flex-1 bg-white min-h-screen'>
+                <div className='flex-1 bg-white min-h-[75vh]'>
                     <Outlet />
                 </div>
             </div>
