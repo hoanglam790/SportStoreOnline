@@ -13,8 +13,8 @@ import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 
 const Category = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [openUploadCate, setOpenUploadCate] = useState(false)   
     const [categoryData, setCategoryData] = useState([])
+    const [openUploadCate, setOpenUploadCate] = useState(false)      
     const [openEditCate, setOpenEditCate] = useState(false)
     const [editCateData, setEditCategory] = useState({
         name: '',
@@ -124,7 +124,7 @@ const Category = () => {
                     {
                         categoryData.map((c) => {
                             return (
-                                <div key={c._id} className='w-32 h-60 px-3 shadow-md rounded'>
+                                <div key={c._id} className='w-32 h-72 px-3 shadow-md rounded'>
                                     <img 
                                         alt={c.name}
                                         src={c.image}

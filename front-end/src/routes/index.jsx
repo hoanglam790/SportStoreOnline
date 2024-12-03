@@ -16,6 +16,8 @@ import Product from "@/pages/Product"
 import NoItemInCart from "@/components/user/NoItemInCart"
 import PageNotFound from "@/pages/PageNotFound"
 import ProductAdmin from "@/pages_admin/ProductAdmin"
+import ProductDisplayPage from "@/pages/ProductDisplayPage"
+import ProductDisplayListPage from "@/pages/ProductDisplayListPage"
 
 const router = createBrowserRouter([
     {
@@ -31,7 +33,7 @@ const router = createBrowserRouter([
                 element: <SearchPage />
             },
             {
-                path: 'product',
+                path: 'products',
                 element: <Product />
             },
             {
@@ -63,6 +65,19 @@ const router = createBrowserRouter([
                         element: <AdminPermission><ProductAdmin /></AdminPermission>
                     }
                 ]
+            },
+            {
+                path : ':category',
+                children : [
+                    {
+                        path : ':subCategory',
+                        element : <ProductDisplayPage/>
+                    }
+                ]
+            },
+            {
+                path : 'product/:product',
+                element : <ProductDisplayListPage/>
             }            
         ]
     },

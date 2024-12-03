@@ -83,6 +83,35 @@ const connectApi = {
     deleteSubCate: {
         url: '/api/sub-categories/delete-sub-category',
         method: 'DELETE'
+    },
+
+    createProduct: {
+        url: '/api/products/create-product',
+        method: 'POST'
+    },
+    getProduct: {
+        url: '/api/products',
+        method: 'POST'
+    },
+    getProductDetails: {
+        url: '/api/products/get-product-details',
+        method: 'POST'
+    },
+    getProductByCategory: {
+        url: '/api/products/get-product-by-category',
+        method: 'POST'
+    },
+    getProductByCateAndSubCate: {
+        url: '/api/products/get-product-by-cate-and-subcate',
+        method: 'POST'
+    },
+    updateProduct: {
+        url: '/api/products/update-product',
+        method: 'PUT'
+    },
+    deleteProduct: {
+        url: '/api/products/delete-product',
+        method: 'DELETE'
     }
 }
 

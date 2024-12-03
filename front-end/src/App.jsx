@@ -5,15 +5,12 @@ import fetchUser from './utils/FetchUser'
 import { setUserDetails } from './redux/userSlice'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setAllCategories, setAllSubCategories } from './redux/productSlice'
+import { setAllCategories, setAllSubCategories, setAllProducts, setLoadingCategories } from './redux/productSlice'
 import Axios from './utils/AxiosConfig'
 import connectApi from './common/ApiBackend'
 
 function App() {
   const dispatch = useDispatch()
-
-  const checkIsAdminHeader = window.location.pathname.includes('admin')
-  const checkIsAdmin = window.location.pathname.includes('admin')
   
   const fetchUsers = async() => {
     const userData = await fetchUser()
@@ -22,18 +19,19 @@ function App() {
 
   const fetchCategoryData = async() => {
     try {
-        const responseData = await Axios({
-            ...connectApi.getCategory
-        })
+      dispatch(setLoadingCategories(true))
+      const responseData = await Axios({
+          ...connectApi.getCategory
+      })
 
-        if(responseData.data.success){
-          dispatch(setAllCategories(responseData.data.data))
-        }
+      if(responseData.data.success){
+        dispatch(setAllCategories(responseData.data.data))
+      }
 
     } catch (error) {
         
     } finally{
-
+      dispatch(setLoadingCategories(false))
     }
   }
 
@@ -54,10 +52,28 @@ function App() {
     }
   }
 
+  const fetchProductData = async() => {
+    try {
+        const responseData = await Axios({
+            ...connectApi.getProduct
+        })
+
+        if(responseData.data.success){
+          dispatch(setAllProducts(responseData.data.data))
+        }
+
+    } catch (error) {
+        
+    } finally{
+
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
     fetchCategoryData()
     fetchSubCategoryData()
+    fetchProductData()
   }, [])
 
   return (

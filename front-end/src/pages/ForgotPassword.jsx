@@ -77,7 +77,7 @@ const ForgotPassword = () => {
     return (
         <section id='login'>
             <div className='container mx-auto p-8'>
-                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto mt-28'>
+                <div className='font-[sans-serif] bg-white border border-b max-w-md w-full px-4 py-8 mx-auto mt-28'>
                     <form onSubmit={handleForgotPassword}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Thông tin xác thực</h3>
@@ -98,9 +98,9 @@ const ForgotPassword = () => {
                         </div>
 
                         <div className='mt-8'>
-                            <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none' 
+                            <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 px-5 py-3 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none' 
                             : 
-                            'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                            'w-full flex items-center justify-center gap-4 px-5 py-3 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                             Xác nhận
                             </button>
                         </div>

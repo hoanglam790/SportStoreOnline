@@ -11,7 +11,7 @@ const Footer = ({ isAdmin }) => {
   const user = useSelector(state => state.user_data)
 
   return (
-    <footer className='bg-gray-800 font-sans  tracking-wide md:justify-between'>
+    <footer className='bg-gray-800 font-sans tracking-wide md:justify-between'>
       {
         user.role === 'Admin' ? (
         <>

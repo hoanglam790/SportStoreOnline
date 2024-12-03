@@ -20,7 +20,7 @@ const Dashboard = () => {
     return (
         <>
         <section className='bg-white'>
-            <div className='p-3 grid grid-cols-[300px,1fr] gap-2'>
+            <div className='p-3 grid grid-cols-[330px,1fr] gap-2'>
                 {/** Nội dung bên trái */}
                 <div className='bg-slate-500 p-3 sticky top-[128px] max-h-[calc(88vh-120px)] border-r'>
                     <UserMenu />

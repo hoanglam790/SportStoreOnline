@@ -1,10 +1,12 @@
-const CategoryModel = require('../models/category.model')
 const mongoose = require('mongoose')
+const CategoryModel = require('../models/category.model')
+const SubCategoryModel = require('../models/subCategory.model')
+const ProductModel = require('../models/product.model')
 
 {/** Tìm tất cả các danh mục sản phẩm */}
 const getCategoryController = async (req,res) => {
     try {
-        const getAllCate = await CategoryModel.find().sort({ createdAt : -1 }) // Hiển thị danh mục sản phẩm mới nhất
+        const getAllCate = await CategoryModel.find() // Hiển thị danh mục sản phẩm mới nhất - .sort({ createdAt : -1 })
 
         // Thông báo khi tìm thành công
         return res.status(200).json({
@@ -144,12 +146,33 @@ const deleteCategoryController = async (req,res) => {
     try {
         const { _id } = req.body
 
+        const checkSubCategory = await SubCategoryModel.find({
+            category: {
+                '$in': [ _id ]
+            }
+        }).countDocuments()
+
+        const checkProduct = await ProductModel.find({
+            category: {
+                '$in': [ _id ]
+            }
+        }).countDocuments()
+
         // Kiểm tra id có tồn tại hay không?
         if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
                 success: false,
                 error: true,
                 message: `Không tìm thấy danh mục sản phẩm có mã số: ${_id}`
+            })
+        }
+
+        // Kiểm tra nếu có danh mục sản phẩm phụ và sản phẩm liên quan đến danh mục sản phẩm thì không được phép xóa.
+        if(checkSubCategory > 0 || checkProduct > 0){
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Danh mục sản phẩm này đang được sử dụng, không thể xóa.'
             })
         }
 

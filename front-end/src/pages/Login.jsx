@@ -108,7 +108,7 @@ const Login = () => {
     return (
         <section id='login'>
             <div className='container mx-auto p-8 m-8'>
-                <div className='font-[sans-serif] bg-gray-50 max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
+                <div className='font-[sans-serif] bg-white border border-b max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
                     <form onSubmit={handleSubmitLogin}>
                         <div className='mb-12'>
                             <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Đăng nhập</h3>
@@ -168,7 +168,7 @@ const Login = () => {
                                 ) : (
                                     <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none' 
                                     : 
-                                    'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                                    'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                                     Đăng nhập
                                     </button>
                                 )

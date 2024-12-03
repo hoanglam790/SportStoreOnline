@@ -7,8 +7,12 @@ import ViewImage from './ViewImage'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
+import Axios from '@/utils/AxiosConfig'
+import connectApi from '@/common/ApiBackend'
+import Swal from 'sweetalert2'
+import { CgSpinner } from 'react-icons/cg'
 
-const UploadProduct = ({ back }) => {
+const UploadProduct = ({ back, fetchData }) => {
     const [productData, setProductData] = useState({
         name: '',
         image: [],
@@ -21,8 +25,7 @@ const UploadProduct = ({ back }) => {
         publish: true
     })
 
-    const dispatch = useDispatch()
-
+    const [isLoading, setIsLoading] = useState(false)
     const [isImageLoading, setIsImageLoading] = useState(false)
     const [viewFullImage, setViewFullImage] = useState('')
     const [selectCategory, setSelectCategory] = useState('')
@@ -33,6 +36,7 @@ const UploadProduct = ({ back }) => {
 
     const changeColorValue = Object.values(productData).every(p => p)
 
+    // Xử lý dữ liệu đầu vào
     const handleInputChange = (e) => {
         const { name, value } = e.target
         setProductData((prev) => {
@@ -46,7 +50,7 @@ const UploadProduct = ({ back }) => {
     // Xử lý khi chọn ô dữ liệu trong Dropdown list
     const handleChangeSelectCate = (e) => {
         const value = e.target.value
-        const category = allCategories.find(el=> el._id === value)
+        const category = allCategories.find(c => c._id === value)
 
         setProductData((prev) => {
             return {
@@ -82,12 +86,12 @@ const UploadProduct = ({ back }) => {
         setIsImageLoading(true)
         const responseImage = await uploadNewImage(file)
         const { data: responseNewImage } = responseImage
-        const imageURL = responseNewImage.data.url
+        const imageUrl = responseNewImage.data.url
 
         setProductData((prev) => {
             return {
                 ...prev,
-                image: [...prev.image, imageURL]
+                image: [...prev.image, imageUrl]
             }
         })
         setIsImageLoading(false)
@@ -107,9 +111,54 @@ const UploadProduct = ({ back }) => {
     const handleSubmitCreateProduct = async(e) => {
         e.preventDefault()
         try {
-            
+            setIsLoading(true)
+            const responseData = await Axios({
+                ...connectApi.createProduct,
+                data: productData
+            })
+
+            if(responseData.data.error){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: responseData.data.message,                   
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+            }
+
+            if(responseData.data.success){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: responseData.data.message,                   
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        title: 'text-xl font-semibold'
+                    }
+                })
+                setProductData({
+                    name: '',
+                    image: [],
+                    description: '',
+                    price: '',
+                    discount: '',
+                    quantity_in_stock: '',
+                    category: [],
+                    subCategory: []
+                })
+            }
+            back()
+            fetchData()
+                      
         } catch (error) {
             axiosErrorAnnounce(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -122,7 +171,7 @@ const UploadProduct = ({ back }) => {
                 <h2 className='font-semibold text-center flex-1'>Thêm mới sản phẩm</h2>
             </div>
             <form onSubmit={handleSubmitCreateProduct}>
-                <div className='grid py-4 mx-2'>
+                <div className='grid pt-4 pb-2 mx-2'>
                     <label className='py-2'>Tên:</label>
                     <input 
                         type='text'
@@ -178,7 +227,7 @@ const UploadProduct = ({ back }) => {
 
                         {/** Hiển thị hình ảnh */}
                         <div className='flex flex-wrap gap-4'>
-                        {
+                        {   
                             productData.image.map((img, index) => {
                                 return(
                                     <div key={img + index} className='w-20 h-20 min-w-20 mt-2 bg-blue-50 border '>
@@ -244,7 +293,7 @@ const UploadProduct = ({ back }) => {
                 </div>
 
                 <div className='grid py-1 mx-2'>
-                    <label className='py-2'>Giá:</label>
+                    <label className='py-2'>Giá gốc:</label>
                     <input 
                         type='number'
                         id='price'
@@ -258,7 +307,7 @@ const UploadProduct = ({ back }) => {
                 </div>
 
                 <div className='grid py-1 mx-2'>
-                    <label className='py-2'>Giá khuyến mãi:</label>
+                    <label className='py-2'>Giảm giá (%):</label>
                     <input 
                         type='number'
                         id='discount'
@@ -276,7 +325,7 @@ const UploadProduct = ({ back }) => {
                     <input 
                         type='number'
                         id='quantity_in_stock'
-                        placeholder='Nhập giá sản phẩm khuyến mãi'
+                        placeholder='Nhập số lượng tồn kho'
                         value={productData.quantity_in_stock}
                         name='quantity_in_stock'
                         onChange={handleInputChange}
@@ -284,18 +333,19 @@ const UploadProduct = ({ back }) => {
                         className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                     />
                 </div>
-                <button disabled={!changeColorValue} 
-                    className={`${productData.name && 
-                                productData.description && 
-                                productData.image && 
-                                productData.category[1] && 
-                                productData.subCategory[1] &&
-                                productData.price &&
-                                productData.discount &&
-                                productData.quantity_in_stock ? 'w-[200px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
-                    : 'w-[200px] flex items-center justify-center gap-4 px-5 py-3.5 mt-5 ml-2 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
-                    Thêm mới
-                </button>
+                {
+                    isLoading ? (
+                        <button className='w-[200px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
+                            <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                        </button>
+                    ) : (
+                        <button  
+                            className='w-[200px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                            >
+                            Thêm mới
+                        </button>
+                    )
+                }                
             </form>
 
             {

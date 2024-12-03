@@ -53,7 +53,7 @@ const addSubCategoryController = async (req,res) => {
 {/** Lấy danh mục sản phẩm phụ */}
 const getSubCategoryController = async (req,res) => {
     try {
-        const getAllSubCate = await SubCategoryModel.find().sort({ createdAt: -1 }).populate('category') // Hiển thị danh mục sản phẩm mới nhất
+        const getAllSubCate = await SubCategoryModel.find().populate('category') // Lấy danh mục sản phẩm phụ bao gồm danh mục sản phẩm chính
         
         // Thông báo khi tìm thành công
         return res.status(200).json({

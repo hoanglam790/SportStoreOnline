@@ -7,7 +7,6 @@ import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import Swal from 'sweetalert2'
 import { CgSpinner } from 'react-icons/cg'
-import { X } from 'lucide-react'
 
 const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
     const [subCategoryData, setSubCategoryData] = useState({
@@ -21,7 +20,7 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
 
     const allCategories = useSelector(state => state.product_data?.allCategory)
 
-    const changeColorValue = Object.values(subCategoryData).every(e => e !== '' && e != null)
+    const changeColorValue = Object.values(subCategoryData).every(e => e)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -164,10 +163,9 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
                                     isLoading ? (
                                         <div className='w-[110px] h-[42px] flex items-center justify-center'>
                                             <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
-                                            Đang tải ảnh...
                                         </div>
                                     ) : (
-                                        <div> 
+                                        <div className='px-3 py-2'> 
                                             <p>Tải hình ảnh</p>
                                         </div>
                                     )

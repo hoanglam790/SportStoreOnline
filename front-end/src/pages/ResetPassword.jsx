@@ -99,7 +99,6 @@ const ResetPassword = () => {
                         title: 'text-xl font-semibold'
                     }
                 })
-
                 navigate('/login')
                 setUserData({
                     email: '',
@@ -116,7 +115,7 @@ const ResetPassword = () => {
 
     return (
         <section id='register' className='py-12'>
-            <div className='font-[sans-serif] bg-gray-100 max-w-2xl flex items-center mx-auto p-4 rounded-lg mt-28'>
+            <div className='font-[sans-serif] bg-white border border-b max-w-2xl flex items-center mx-auto p-4 rounded-lg mt-28'>
                 <form onSubmit={handleSubmit} className='w-full p-12 sm:px-12'>
                     <div className='mb-2'>
                         <h3 className='text-gray-800 text-2xl font-bold'>Tạo mật khẩu mới</h3>
@@ -165,8 +164,8 @@ const ResetPassword = () => {
                             </div>
                         </div>
                         <div className='mt-12'>
-                            <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none' 
-                                : 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                            <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 px-5 py-3 text-sm tracking-wide text-white bg-orange-700 hover:bg-orange-500 rounded-md focus:outline-none' 
+                                : 'w-full flex items-center justify-center gap-4 px-5 py-3 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                             Đồng ý
                             </button>
                         </div>

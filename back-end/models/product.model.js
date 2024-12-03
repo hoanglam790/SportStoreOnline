@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     image: {
-        type: String,
+        type: Array,
         default: []
     },
     description: {
@@ -44,6 +44,16 @@ const productSchema = new mongoose.Schema({
 },
 {
     timestamps: true
+})
+
+
+// Tạo index
+productSchema.index({
+    name: 'text',
+    description: 'text'
+},{
+    name: 10,
+    description: 5
 })
 
 module.exports = mongoose.model('product', productSchema)

@@ -7,9 +7,12 @@
     @apply text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500
 } */
 
+html{
+    scroll-behavior: smooth;
+}
 
 body{
-    @apply bg-slate-200
+    @apply bg-slate-50 scroll-smooth
 }
 
 /* Ẩn hai nút mũi tên lên xuống của thẻ input */
@@ -36,4 +39,8 @@ body{
 
 .userTable td{
     @apply border border-b text-base text-center p-1
+}
+
+.scrollbar-none::-webkit-scrollbar{
+    display: none;
 }

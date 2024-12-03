@@ -21,7 +21,7 @@ axiosConfig.interceptors.request.use(
      }
  )
  
- //extend the life span of access token with 
+ // extend the life span of access token with 
  // the help refresh
 axiosConfig.interceptors.request.use(
      (response)=>{

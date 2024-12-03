@@ -113,7 +113,7 @@ const Register = () => {
 
     return (
         <section id='register' className='py-2'>
-            <div className='font-[sans-serif] bg-gray-100 max-w-4xl flex items-center mx-auto md:h-screen p-4 rounded-lg'>
+            <div className='font-[sans-serif] bg-gray-200 border border-b max-w-4xl flex items-center mx-auto md:h-screen p-4 rounded-lg'>
                 <div className='grid md:grid-cols-3 items-center rounded-xl overflow-hidden mb-8'>
                     <div className='flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4'>
                         <div>
@@ -209,7 +209,7 @@ const Register = () => {
                                         </button>
                                     ) : (
                                         <button disabled={!changeColorValue} className={`${changeColorValue ? 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none' 
-                                            : 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                                            : 'w-full flex items-center justify-center gap-4 py-3.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                                         Đăng ký
                                         </button>
                                     )

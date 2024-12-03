@@ -9,10 +9,10 @@ const VerifyPasswordByOtp = () => {
     const [userData, setUserData] = useState(['','','','','',''])
 
     const navigate = useNavigate()
-
-    const inputNumber = useRef([])
     const currentLocation = useLocation()
+    const inputNumber = useRef([])  
     console.log('location', currentLocation)
+
     useEffect(() => {
         if(!currentLocation?.state?.email){
             navigate('/forgot-password')
@@ -67,7 +67,6 @@ const VerifyPasswordByOtp = () => {
                         title: 'text-xl font-semibold'
                     }
                 })
-
                 setUserData(['','','','','',''])
                 navigate('/reset-password', {
                     state: {
@@ -76,7 +75,6 @@ const VerifyPasswordByOtp = () => {
                     }
                 })
             }
-
         } catch (error) {
             axiosErrorAnnounce(error)
         }

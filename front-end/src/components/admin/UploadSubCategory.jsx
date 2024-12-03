@@ -159,7 +159,6 @@ const UploadSubCategory = ({ close, fetchData }) => {
                                     isLoading ? (
                                         <div className='w-[110px] h-[42px] flex items-center justify-center'>
                                             <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
-                                            Đang tải ảnh...
                                         </div>
                                     ) : (
                                         <div className='px-3 py-2'>

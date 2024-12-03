@@ -138,7 +138,16 @@ const EditCategory = ({close, fetchData, data : cateData}) => {
                             <label htmlFor='uploadCateImg'>
                                 <div className={`${!categoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                 {
-                                    isLoading ? 'Đang tải ảnh...' : 'Tải hình ảnh'
+                                    isLoading ? (
+                                        <div className='w-[110px] h-[42px] flex items-center justify-center'>
+                                            <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
+                                        </div>
+                                    ) : (
+                                        <div className='px-3 py-2'>
+                                            <p>Tải hình ảnh</p>
+                                        </div>
+                                        
+                                    )
                                 }
                                 
                                 </div>

@@ -27,7 +27,7 @@ const Header = () => {
         },
         {
             title: 'Sản phẩm',
-            href: 'product'
+            href: 'products'
         },
         {
             title: 'Tin tức',
