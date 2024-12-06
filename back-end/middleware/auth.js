@@ -4,7 +4,7 @@ require('dotenv').config()
 // Middleware xác thực refresh token
 const auth = async (req, res, next) => {
     try {
-        const token = req.body.refreshToken || req.cookies.refreshToken 
+        const token = req?.body?.refreshToken || req?.cookies?.refreshToken 
 
         if (!token) {
             return res.status(401).json({

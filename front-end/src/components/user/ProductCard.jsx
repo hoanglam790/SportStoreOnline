@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-//import { useGlobalContext } from '../provider/GlobalProvider';
-//import AddToCartButton from './AddToCartButton';
 import urlConvert from '@/utils/urlConvert'
 import displayCurrencyToVND from '@/utils/FormatCurrency'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'

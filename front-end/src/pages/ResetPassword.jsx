@@ -114,7 +114,7 @@ const ResetPassword = () => {
     }
 
     return (
-        <section id='register' className='py-12'>
+        <section id='register' className='py-8'>
             <div className='font-[sans-serif] bg-white border border-b max-w-2xl flex items-center mx-auto p-4 rounded-lg mt-28'>
                 <form onSubmit={handleSubmit} className='w-full p-12 sm:px-12'>
                     <div className='mb-2'>

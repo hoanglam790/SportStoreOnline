@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerUser, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
+const { registerUser, sendVerifyEmailOtp, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
         updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, 
         refreshTokenAPI, getUserToDisplay, getAllUsersToDisplay } = require('../controllers/user.controller')
 const auth = require('../middleware/auth')
@@ -8,9 +8,10 @@ const upload = require('../middleware/multer')
 const userRouter = express.Router()
 
 userRouter.post('/register', registerUser)
-userRouter.post('/verify-email', verifyEmailUser)
 userRouter.post('/login', loginUser)
 userRouter.get('/logout', auth, logoutUser)
+userRouter.post('/send-verify-otp', sendVerifyEmailOtp)
+userRouter.post('/verify-email', verifyEmailUser)
 userRouter.put('/upload-image', auth, upload.single('avatar'), uploadImageUser)
 userRouter.put('/update-user', auth, updateUser)
 userRouter.put('/forgot-password', forgotPassword)

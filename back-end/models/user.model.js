@@ -30,6 +30,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    verify_otp: {
+        type: String,
+        default: null
+    },
+    verify_otp_expire: {
+        type: Date,
+        default: ''
+    },
     verify_email: {
         type: Boolean,
         default: false

@@ -56,7 +56,7 @@ const registerUser = async (req,res) => {
         const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save._id}`
         const verify_Email = await resendEmail({
             sendTo: email,
-            subject: 'Xác nhận email từ Hoàng Lâm',
+            subject: 'Chào mừng bạn đến với trang web thể thao của chúng tôi.',
             html: verifyEmail(name, verifyEmailUrl)
         })
 
@@ -77,31 +77,105 @@ const registerUser = async (req,res) => {
     }
 }
 
+{/** Gửi mã OTP để xác thực email khi đăng ký thành công */}
+const sendVerifyEmailOtp = async (req,res) => {
+    try {
+        const { userId } = req.body
+
+        const user = await UserModel.findById(userId)
+        if(user.verify_email){
+            return res.status(401).json({
+                success: false,
+                error: true,
+                message: 'Email đã được xác thực rồi'
+            })
+        }
+
+        // Tạo mã OTP và thời gian hiệu lực tương ứng
+        const generateNewOtp = await generateOtp()
+        const expireTime = new Date(Date.now() + 30 * 60 * 1000) // Cộng thêm 30 phút vào thời gian hiện tại = Hết hạn: 30 phút
+
+        // Thực hiện cập nhật dữ liệu dựa vào id
+        await UserModel.findByIdAndUpdate(user._id, {
+            verify_otp: generateNewOtp,
+            verify_otp_expire: new Date(expireTime).toISOString()
+        })
+
+        // Xác nhận email
+        await resendEmail({
+            sendTo: user.email,
+            subject: 'Xác nhận email từ Hoàng Lâm',
+            html: `<p>Mã OTP của bạn là: <span className='text-base font-semibold'>${generateNewOtp}</span>. Vui lòng xác thực trước khi đăng nhập.</p>`
+        })
+
+        return res.status(201).json({
+            success: true,
+            error: false,
+            message: 'Mã OTP đã được gửi thành công'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error || error.message
+        })
+    }
+}
+
 {/** Xác thực tài khoản */}
 const verifyEmailUser = async (req,res) => {
     try {
-        const { code } = req.body
+        const { userId, otp } = req.body
 
-        // Kiểm tra mã code khi người dùng nhập vào
-        const user = await UserModel.findOne({ _id: code })
+        if(!userId || !otp){
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Vui lòng nhập đầy đủ thông tin'
+            })
+        }
+
+        // Kiểm tra email khi người dùng nhập vào
+        const user = await UserModel.findById(userId)
         if(!user){
             return res.status(400).json({
                 success: false,
                 error: true,
-                message: 'Mã code không đúng.'
+                message: 'Email không tồn tại.'
+            })
+        }
+
+        if(user.verify_otp === '' || user.verify_otp !== otp){
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Mã OTP không đúng. Vui lòng kiểm tra lại'
+            })
+        }
+
+        // Kiểm tra hiệu lực của mã OTP
+        const expireTime = new Date(user.verify_otp_expire)
+        const currentTime = new Date().toISOString()
+        if(expireTime < currentTime){
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Mã OTP bạn vừa nhập đã hết hạn'
             })
         }
 
         // Cập nhật vào cơ sở dữ liệu
-        const updateUser = await UserModel.updateOne({ _id: code },{
-            verify_email: true
+        const updateUser = await UserModel.findByIdAndUpdate(user._id,{
+            verify_email: true,
+            verify_otp: '',
+            verify_otp_expire: ''
         })
 
         // Thông báo khi xác thực thành công
         return res.status(201).json({
             success: true,
             error: false,
-            message: 'Tài khoản đã được xác thực thành công.',
+            message: 'Email đã được xác thực thành công.',
             data: updateUser
         })
     } catch (error) {
@@ -327,7 +401,7 @@ const forgotPassword = async (req,res) => {
             return res.status(404).json({
                 success: false,
                 error: true,
-                message: 'Người dùng không tồn tại'
+                message: 'Email này không tồn tại'
             })
         }
 
@@ -588,5 +662,5 @@ const getAllUsersToDisplay = async (req,res) => {
     }
 }
 
-module.exports = { registerUser, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
+module.exports = { registerUser, sendVerifyEmailOtp, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
     updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, refreshTokenAPI, getUserToDisplay, getAllUsersToDisplay }

@@ -3,12 +3,14 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const helmet = require('helmet')
+const session = require('express-session')
 const connectDatabase = require('./config/database')
 const categoryRouter = require('./routes/category.route')
 const userRouter = require('./routes/user.route')
 const uploadImageRouter = require('./routes/uploadImage.route')
 const subCategoryRouter = require('./routes/subCategory.route')
 const productRouter = require('./routes/product.route')
+const cartRouter = require('./routes/cart.route')
 require('dotenv').config()
 
 
@@ -27,13 +29,19 @@ app.use(morgan())
 app.use(helmet({
     crossOriginResourcePolicy : false
 }))
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY,  // Mã bí mật để mã hóa session
+    resave: false,
+    saveUninitialized: true
+}))
 
-// Routes
+// API Endpoints
 app.use('/api/categories', categoryRouter)
 app.use('/api/users', userRouter)
 app.use('/api/file', uploadImageRouter)
 app.use('/api/sub-categories', subCategoryRouter)
 app.use('/api/products', productRouter)
+app.use('/api/cart', cartRouter)
 
 // Connection
 app.listen(PORT, () => {

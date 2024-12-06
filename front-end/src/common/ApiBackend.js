@@ -112,6 +112,15 @@ const connectApi = {
     deleteProduct: {
         url: '/api/products/delete-product',
         method: 'DELETE'
+    },
+
+    addToCart: {
+        url: '/api/cart/add-to-cart',
+        method: 'POST'
+    },
+    getItemsInCart: {
+        url: '/api/cart/get-cart',
+        method: 'GET'
     }
 }
 

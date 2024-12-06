@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux'
 import { setAllCategories, setAllSubCategories, setAllProducts, setLoadingCategories } from './redux/productSlice'
 import Axios from './utils/AxiosConfig'
 import connectApi from './common/ApiBackend'
+import { Toaster } from 'react-hot-toast'
+import GlobalProvider from './provider/GlobalProvider'
 
 function App() {
   const dispatch = useDispatch()
@@ -29,7 +31,7 @@ function App() {
       }
 
     } catch (error) {
-        
+        console.log(error)
     } finally{
       dispatch(setLoadingCategories(false))
     }
@@ -44,9 +46,8 @@ function App() {
         if(responseData.data.success){
           dispatch(setAllSubCategories(responseData.data.data))
         }
-
     } catch (error) {
-        
+        console.log(error)
     } finally{
 
     }
@@ -63,7 +64,7 @@ function App() {
         }
 
     } catch (error) {
-        
+        console.log(error)
     } finally{
 
     }
@@ -78,11 +79,14 @@ function App() {
 
   return (
     <>
-      <Header />
-      <main className='max-w-screen-2xl mx-auto mt-[125px]'>
-        <Outlet />
-      </main>      
-      <Footer />
+      <GlobalProvider>
+        <Header />
+        <main className='max-w-screen-2xl mx-auto mt-[125px]'>
+          <Outlet />
+        </main>      
+        <Footer />
+        <Toaster />
+      </GlobalProvider>        
     </>
   )
 }
