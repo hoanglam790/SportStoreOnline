@@ -255,7 +255,7 @@ const Product = () => {
 
             {
                 openProductDetail && (
-                    <ProductDetails fetchData={fetchProductData} data={editProduct} close={() => setOpenProductDetail(false)}/>
+                    <ProductDetails data={editProduct} close={() => setOpenProductDetail(false)}/>
                 )
             }
 

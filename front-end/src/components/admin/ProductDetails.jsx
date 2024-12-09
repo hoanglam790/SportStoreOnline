@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 
-const ProductDetails = ({ close, fetchData, data: productData }) => {
+const ProductDetails = ({ close, data: productData }) => {
     const [productDataDetail, setProductDataDetail] = useState({
         _id: productData._id,
         name: productData.name,
@@ -11,7 +11,7 @@ const ProductDetails = ({ close, fetchData, data: productData }) => {
         price: productData.price,
         discount: productData.discount,
         quantity_in_stock: productData.quantity_in_stock,
-        category: productData.category.name,
+        category: productData.category,
         subCategory: productData.subCategory
     })
 
@@ -58,7 +58,7 @@ const ProductDetails = ({ close, fetchData, data: productData }) => {
                     </div>
 
                     <div className='grid gap-2 mt-2'>
-                        <label className='py-2'>Giảm giá:</label>
+                        <label className='py-2'>Giảm giá (%):</label>
                         <input 
                             type='text'
                             value={productDataDetail.discount}
@@ -68,13 +68,15 @@ const ProductDetails = ({ close, fetchData, data: productData }) => {
                     </div>
 
                     <div className='grid gap-2 mt-2'>
-                        <label className='py-2'>Số lượng trong kho:</label>
-                        <input 
-                            type='text'
-                            value={productDataDetail.quantity_in_stock}
-                            disabled
-                            className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
-                        />                       
+                        <label className='py-2'>Danh mục sản phẩm: <span className='font-semibold'>{productDataDetail.category[0].name}</span></label>                       
+                    </div>
+
+                    <div className='grid gap-2 mt-2'>
+                        <label className='py-2'>Danh mục sản phẩm phụ: <span className='font-semibold'>{productDataDetail.subCategory[0].name}</span></label>                       
+                    </div>
+
+                    <div className='grid gap-2 mt-2'>
+                        <label className='py-2'>Số lượng trong kho: <span className='font-semibold'>{productDataDetail.quantity_in_stock}</span></label>                      
                     </div>                 
                 </form>
             </div>

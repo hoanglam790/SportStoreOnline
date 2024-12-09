@@ -77,7 +77,10 @@ const getAllProduct = async(req,res) => {
         const skipPage = (page - 1) * limit
 
         const [data, totalCountPage] = await Promise.all([
-            ProductModel.find(query).sort({ createdAt : -1}).skip(skipPage).limit(limit),
+            ProductModel.find(query)
+            .populate('category')
+            .populate('subCategory')
+            .sort({ createdAt : -1}).skip(skipPage).limit(limit),
             ProductModel.countDocuments(query)
         ])
 

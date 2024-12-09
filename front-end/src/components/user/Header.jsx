@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go'
 import { GrSearch } from 'react-icons/gr'
 import UserMenu from './UserMenu'
+import { useGlobalContext } from '@/provider/GlobalProvider'
+import DisplayCartItems from './DisplayCartItems'
 
 const Header = () => {
     const [isOpenMenu, setIsOpenMenu] = useState(false)
@@ -15,7 +17,9 @@ const Header = () => {
     const [searchText, setSearchText] = useState({
         text: ''
     })
-    const [totalQuantity, setTotalQuantity] = useState(0)
+    const [openViewCart, setOpenViewCart] = useState(false)
+
+    const { totalQuantity } = useGlobalContext()
 
     const user = useSelector((state) => state?.user_data)
     const cartItem = useSelector((state) => state?.cart_data?.cart?.cartItems)
@@ -57,15 +61,6 @@ const Header = () => {
     const redirectToSearchPage = () => {
         navigate(`/search/${searchText}`)
     }
-
-    useEffect(() => {
-        if(Array.isArray(cartItem)) {
-            const quantity = cartItem.reduce((pre, cur) => {
-                return pre + cur.quantity
-            },0)
-            setTotalQuantity(quantity)
-        }
-    }, [cartItem])
 
     return (
         <header className='h-32 border-b fixed top-0 left-0 w-full bg-white z-50'>
@@ -231,7 +226,7 @@ const Header = () => {
                                     )
                                 }
                                 
-                                <button className='flex items-center relative'>
+                                <button onClick={() => setOpenViewCart(true)} className='flex items-center relative'>
                                     <div>
                                         <TiShoppingCart size={30}/>
                                     </div>
@@ -252,7 +247,12 @@ const Header = () => {
                     </div>
                 </>
                 )
-            }           
+            }    
+            {
+                openViewCart && (
+                    <DisplayCartItems close={() => setOpenViewCart(false)}/>
+                )
+            }       
         </header>
     )
 }

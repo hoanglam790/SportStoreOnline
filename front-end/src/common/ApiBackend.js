@@ -121,6 +121,14 @@ const connectApi = {
     getItemsInCart: {
         url: '/api/cart/get-cart',
         method: 'GET'
+    },
+    updateItemsInCart: {
+        url: '/api/cart/update-cart',
+        method: 'PUT'
+    },
+    deleteItemsInCart: {
+        url: '/api/cart/delete-items-cart',
+        method: 'DELETE'
     }
 }
 
