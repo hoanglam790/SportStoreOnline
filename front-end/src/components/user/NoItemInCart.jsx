@@ -11,13 +11,13 @@ const NoItemInCart = () => {
 
     return (
         <>
-            <div className='my-6'>
+            <div className='my-3'>
                 <div className='p-6 flex items-center justify-center'>
                     <img src={NoItem} className='w-[450px] h-[300px] mix-blend-multiply'/> {/** Hòa trộn ảnh với nền */}
                     {/*  */}
                 </div>
                 <p className='text-2xl font-medium text-center p-1 mx-auto'>Giỏ hàng trống</p>
-                <p className='text-red-700 text-center font-medium p-3 mx-auto'>Không có sản phẩm nào trong giỏ hàng.</p>
+                <p className='text-red-700 text-center font-medium p-3 mx-auto'>Không có sản phẩm nào trong giỏ hàng</p>
             </div>
             
             <div className='flex items-center justify-center mb-5 pb-5'>

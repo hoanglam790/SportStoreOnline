@@ -18,7 +18,7 @@ import PageNotFound from "@/pages/PageNotFound"
 import ProductAdmin from "@/pages_admin/ProductAdmin"
 import ProductDisplayPage from "@/pages/ProductDisplayPage"
 import ProductDisplayListPage from "@/pages/ProductDisplayListPage"
-import CartMobile from "@/components/user/CartMobile"
+import Cart from "@/components/user/Cart"
 
 const router = createBrowserRouter([
     {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
             },
             {
                 path : 'cart',
-                element : <CartMobile/>
+                element : <Cart/>
             }            
         ]
     },

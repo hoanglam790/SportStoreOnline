@@ -3,7 +3,7 @@ import { useGlobalContext } from '@/provider/GlobalProvider'
 import Axios from '@/utils/AxiosConfig'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'react-toastify'
 import Loading from '../admin/Loading'
 import { useSelector } from 'react-redux'
 import { FiMinus, FiPlus } from 'react-icons/fi'
@@ -51,7 +51,9 @@ const AddToCartButton = ({ data }) => {
             })
             
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                toast.success(responseData.data.message, {
+                    position: 'top-center'
+                })
                 if(fetchCartItems){
                     fetchCartItems()
                 }
@@ -68,6 +70,8 @@ const AddToCartButton = ({ data }) => {
     }
 
     useEffect(() => {
+        // Kiểm tra sản phẩm có tồn tại trong giỏ hàng hay không?
+        // Nếu có: cập nhật số lượng
         if(Array.isArray(cartItem)){
             const checkItem = cartItem.some(item => item.productId._id === data._id)
             setIsAvailableCart(checkItem)
@@ -99,8 +103,7 @@ const AddToCartButton = ({ data }) => {
                         }    
                         </button>
                     )
-                }
-                
+                }               
             </div>
         </div>
     )

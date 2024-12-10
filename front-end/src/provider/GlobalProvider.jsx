@@ -4,7 +4,7 @@ import Axios from '@/utils/AxiosConfig'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import { createContext, useContext, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const GlobalContext = createContext(null)
@@ -44,7 +44,9 @@ const GlobalProvider = ({ children }) => {
             })
 
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                toast.success(responseData.data.message, {
+                    position: 'top-center'
+                })
                 fetchCartItems()
             }
         } catch (error) {
@@ -63,7 +65,9 @@ const GlobalProvider = ({ children }) => {
             })
     
             if(responseData.data.success){
-                toast.success(responseData.data.message)
+                toast.success(responseData.data.message, {
+                    position: 'top-center'
+                })
                 fetchCartItems()
             }
         } catch (error) {

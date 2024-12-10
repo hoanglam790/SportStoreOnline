@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux'
 import { setAllCategories, setAllSubCategories, setAllProducts, setLoadingCategories } from './redux/productSlice'
 import Axios from './utils/AxiosConfig'
 import connectApi from './common/ApiBackend'
-import { Toaster } from 'react-hot-toast'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import GlobalProvider from './provider/GlobalProvider'
 
 function App() {
@@ -85,7 +86,7 @@ function App() {
           <Outlet />
         </main>      
         <Footer />
-        <Toaster />
+        <ToastContainer />
       </GlobalProvider>        
     </>
   )

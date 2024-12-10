@@ -102,7 +102,13 @@ const getCartItem = async (req,res) => {
 
         if(cart){
             const cartItems = await CartItemModel.find({ cartId: cart._id })
-            .populate('productId')
+            .populate({
+                path: 'productId',
+                populate: [
+                    { path: 'category'},
+                    { path: 'subCategory'}
+                ]
+            })
 
             const cartWithItems = {
                 userId: cart.userId, // Lấy userId từ Cart

@@ -10,7 +10,8 @@ const auth = async (req, res, next) => {
             return res.status(401).json({
                 success: false,
                 error: true,
-                message: 'Không tìm thấy token hoặc token đã hết hạn'
+                //message: 'Không tìm thấy token hoặc token đã hết hạn'
+                message: 'Vui lòng đăng nhập để thực hiện chức năng này'
             }) 
         }
 
