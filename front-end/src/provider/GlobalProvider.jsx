@@ -55,12 +55,12 @@ const GlobalProvider = ({ children }) => {
     }
 
     {/** Xóa số lượng sản phẩm trong giỏ hàng */}
-    const deleteCartItems = async(cartId) => {
+    const deleteCartItems = async(id) => {
         try {
             const responseData = await Axios({
                 ...connectApi.deleteItemsInCart,
                 data: {
-                    _id: cartId
+                    _id: id
                 }
             })
     

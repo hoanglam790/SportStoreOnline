@@ -7,14 +7,15 @@ import { toast } from 'react-toastify'
 import Loading from '../admin/Loading'
 import { useSelector } from 'react-redux'
 import { FiMinus, FiPlus } from 'react-icons/fi'
+import { TiShoppingCart } from 'react-icons/ti'
 
 const AddToCartButton = ({ data }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [quantity, setQuantity] = useState(0)
     const [cartItemDetails, setCartItemDetails] = useState()
+    const [isAvailableCart, setIsAvailableCart] = useState(false)
 
     const { fetchCartItems, updateCartItems, deleteCartItems } = useGlobalContext()
-    const [isAvailableCart, setIsAvailableCart] = useState(false)
     const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
     //console.log('addtocartbtn', cartItem)
 
@@ -73,10 +74,10 @@ const AddToCartButton = ({ data }) => {
         // Kiểm tra sản phẩm có tồn tại trong giỏ hàng hay không?
         // Nếu có: cập nhật số lượng
         if(Array.isArray(cartItem)){
-            const checkItem = cartItem.some(item => item.productId._id === data._id)
+            const checkItem = cartItem.some(item => item?.productId?._id === data?._id)
             setIsAvailableCart(checkItem)
 
-            const quantityCartItems = cartItem.find(item => item.productId._id === data._id)
+            const quantityCartItems = cartItem.find(item => item?.productId?._id === data?._id)
             setQuantity(quantityCartItems?.quantity)
             setCartItemDetails(quantityCartItems)
         }           
@@ -97,10 +98,11 @@ const AddToCartButton = ({ data }) => {
                             className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded'><FiPlus /></button>
                         </div>
                     ) : (
-                        <button onClick={handleAddToCart} className='bg-green-600 hover:bg-green-700 text-white px-2 lg:px-4 py-1 rounded'>
-                        {
-                            isLoading ? <Loading /> : 'Thêm'
-                        }    
+                        <button onClick={handleAddToCart} className='bg-green-600 hover:bg-green-700 text-white text-base px-2 lg:px-4 py-1 rounded flex items-center justify-center gap-1'>
+                            <TiShoppingCart size={20} />
+                            {
+                                isLoading ? <Loading /> : 'Thêm'
+                            }    
                         </button>
                     )
                 }               

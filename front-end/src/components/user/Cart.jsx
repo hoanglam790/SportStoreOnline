@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { IoTrashBinSharp } from 'react-icons/io5'
 import { FaUser, FaPhone, FaAddressBook } from 'react-icons/fa'
 import { TfiEmail } from 'react-icons/tfi'
 import { useSelector } from 'react-redux'
@@ -8,61 +7,12 @@ import NoItemInCart from './NoItemInCart'
 import AddToCartButton from './AddToCartButton'
 import displayCurrencyToVND from '@/utils/FormatCurrency'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
-import { toast } from 'react-toastify'
+import RemoveCartItemButton from './RemoveCartItemButton'
 
-const Cart = ({ data }) => {
-    const [cartItemDetails, setCartItemDetails] = useState()
-    const [quantity, setQuantity] = useState(0)
-    const [isAvailableCart, setIsAvailableCart] = useState(false)
-
-    const {deleteCartItems, totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
+const Cart = () => {
+    const {totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
     const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
     //console.log(cartItem)
-    
-    // Xóa sản phẩm trong giỏ hàng
-    const handleRemoveItemsInCart = async(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        //console.log(cartItemDetails?._id)
-
-        // Hiển thị confirm toast để hỏi người dùng
-        toast(
-            <div>
-              <p className='text-base font-semibold'>Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng không?</p>
-              <div className='flex items-center justify-center gap-5 mt-6'>
-                <button onClick={() => {deleteCartItems(cartItemDetails?._id), toast.dismiss()}}
-                    className='bg-transparent hover:bg-green-700 hover:text-white border border-green-600 outline-none rounded-md w-[70px] text-black text-xl font-normal p-2'>
-                    Có
-                </button>
-                <button onClick={() => toast.dismiss()}
-                    className='bg-transparent hover:bg-red-700 hover:text-white border border-red-600 outline-none rounded-md w-[90px] text-black text-xl font-normal p-2'>Không</button>
-              </div>              
-            </div>,
-            {
-              position: 'top-center',
-              autoClose: false,  // Không tự động đóng toast
-              closeOnClick: false,  // Ngừng đóng khi click vào toast
-              pauseOnHover: true,  // Dừng khi hover chuột vào
-              draggable: false,  // Không cho kéo thả
-              hideProgressBar: true,  // Ẩn thanh tiến trình
-            }
-        )
-    }
-
-    useEffect(() => {
-        // Kiểm tra sản phẩm có tồn tại trong giỏ hàng hay không?
-        // Nếu có: cập nhật số lượng
-        if(Array.isArray(cartItem)){
-            const checkItem = cartItem.some(item => item.productId?._id)
-            //console.log('check',checkItem)
-            setIsAvailableCart(checkItem)
-
-            const quantityCartItems = cartItem.find(item => item.productId?._id)
-            //console.log('see-qty',quantityCartItems)
-            setQuantity(quantityCartItems?.quantity)
-            setCartItemDetails(quantityCartItems)
-        }           
-    },[data, cartItem])
 
     return (
         <section className='container mx-auto py-12'>           
@@ -87,7 +37,7 @@ const Cart = ({ data }) => {
 
                                             <div>
                                                 <h3 className='text-base font-bold text-gray-800 text-ellipsis line-clamp-2'>{item?.productId?.name}</h3>
-                                                <h4 className='text-sm text-gray-500 mt-1'>{item?.productId?.subCategory[0].name}</h4>
+                                                <h4 className='text-sm text-gray-500 mt-1'>{item?.productId?.subCategory?.[0].name}</h4>
                                             </div>
                                         </div>
 
@@ -109,10 +59,8 @@ const Cart = ({ data }) => {
                                                 )
                                             }                                                                                       
                                         </div>
-                                        <div className='flex items-center ml-7'>
-                                            <button onClick={handleRemoveItemsInCart}>
-                                                <IoTrashBinSharp size={20}/>
-                                            </button>
+                                        <div className='flex items-center lg:ml-7 md:ml-6'>
+                                            <RemoveCartItemButton data={item?.productId}/>
                                         </div>                                        
                                     </div>
                                 </>

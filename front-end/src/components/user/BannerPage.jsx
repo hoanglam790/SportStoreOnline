@@ -37,13 +37,12 @@ const BannerPage = () => {
             else{
                 setCurrentImage(0)
             }
-        }, 5000) // 5 giây
-
+        }, 5000) // Tự động đổi hình ảnh sau 5 giây
         return () => clearInterval(interval)
     }, [currentImage])
 
     return (
-        <div className='w-full max-h-screen overflow-hidden relative'>
+        <div className='w-full max-h-screen overflow-hidden relative rounded-lg'>
             <div className='absolute z-10 w-full h-full items-center md:flex hidden'>
                 <div className='flex justify-between w-full'>
                     <button onClick={prevImage} className='bg-white shadow-md rounded-full m-2 p-2'><FaAngleLeft size={25}/></button>
@@ -54,12 +53,13 @@ const BannerPage = () => {
             {
                 bannerImages.map((imageUrl, index) => {
                     return (
-                        <>
-                            <div className='w-full h-[450px] min-w-full min-h-full transition-all' key={imageUrl} style={{transform: `translateX(-${currentImage * 100}%)`}}>
-                                <img src={imageUrl} className='w-full h-[450px] object-cover'></img>
-                            </div>
-                        </>
-                                               
+                    <>
+                        <div key={imageUrl} 
+                            style={{transform: `translateX(-${currentImage * 100}%)`}}
+                            className='w-full h-[450px] min-w-full min-h-full transition-all'>
+                            <img src={imageUrl} className='w-full h-[450px] object-cover'/>
+                        </div>
+                    </>                                              
                     )
                 })
             }

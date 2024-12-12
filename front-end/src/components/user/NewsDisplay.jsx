@@ -15,7 +15,7 @@ const NewsDisplay = () => {
                 </p>
             </div>
 
-            <div className='font-[sans-serif] py-4 mx-auto lg:max-w-6xl max-w-lg md:max-w-full'>
+            <div className='container mx-auto py-4 lg:max-w-6xl max-w-lg md:max-w-full'>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                     <div className='bg-white rounded-xl cursor-pointer hover:scale-[1.03] transition-all relative overflow-hidden mx-auto'>
                         <div className='p-6'>
