@@ -10,7 +10,7 @@ import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import RemoveCartItemButton from './RemoveCartItemButton'
 
 const Cart = () => {
-    const {totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
+    const { totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
     const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
     //console.log(cartItem)
 
@@ -125,16 +125,26 @@ const Cart = () => {
                             <hr className='border-gray-300'/>
                             <li className='flex items-center justify-between gap-2 text-base font-semibold'>
                                 <p>Tổng cộng:</p>
-                                <p className='flex items-center gap-3'>
-                                    <span className='text-gray-500 font-semibold text-base'>
-                                        <strike>
+                                {
+                                    !Object.is(totalPrice, totalPriceNotDiscount) ? (
+                                        <>
+                                            <p className='flex items-center gap-3'>
+                                                <span className='text-gray-500 font-semibold text-base'>
+                                                    <strike>
+                                                        {displayCurrencyToVND(totalPriceNotDiscount)}
+                                                    </strike>                                            
+                                                </span>
+                                                <span className='font-bold'>
+                                                    {displayCurrencyToVND(totalPrice)}
+                                                </span>
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <span className='font-bold'>
                                             {displayCurrencyToVND(totalPriceNotDiscount)}
-                                        </strike>                                            
-                                    </span>
-                                    <span className='font-bold'>
-                                        {displayCurrencyToVND(totalPrice)}
-                                    </span>
-                                </p>                          
+                                        </span>
+                                    )
+                                }                                                         
                             </li>
                         </ul>
 

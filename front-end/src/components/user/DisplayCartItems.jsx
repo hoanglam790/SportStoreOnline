@@ -88,14 +88,24 @@ const DisplayCartItems = ({ close }) => {
                             </div>
                             <div className='flex justify-between gap-4 mt-5'>
                                 <p>Tổng cộng:</p>
-                                <p className='flex items-center gap-3'>
-                                    <span className='text-gray-500 font-normal text-base'>
-                                        <strike>
+                                {
+                                    !Object.is(totalPrice, totalPriceNotDiscount) ? (
+                                    <>
+                                        <p className='flex items-center gap-3'>
+                                            <span className='text-gray-500 font-normal text-base'>
+                                                <strike>
+                                                    {displayCurrencyToVND(totalPriceNotDiscount)}
+                                                </strike>                                            
+                                            </span>
+                                            <span className='font-bold'>{displayCurrencyToVND(totalPrice)}</span>
+                                        </p>
+                                    </>
+                                    ) : (
+                                        <span className='font-bold'>
                                             {displayCurrencyToVND(totalPriceNotDiscount)}
-                                        </strike>                                            
-                                    </span>
-                                    <span className='font-semibold'>{displayCurrencyToVND(totalPrice)}</span>
-                                </p>
+                                        </span>
+                                    )
+                                }                                
                             </div>
                         </div>
                     </>

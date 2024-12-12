@@ -11,6 +11,7 @@ const uploadImageRouter = require('./routes/uploadImage.route')
 const subCategoryRouter = require('./routes/subCategory.route')
 const productRouter = require('./routes/product.route')
 const cartRouter = require('./routes/cart.route')
+const orderRouter = require('./routes/order.route')
 require('dotenv').config()
 
 
@@ -42,6 +43,7 @@ app.use('/api/file', uploadImageRouter)
 app.use('/api/sub-categories', subCategoryRouter)
 app.use('/api/products', productRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/order', orderRouter)
 
 // Connection
 app.listen(PORT, () => {
