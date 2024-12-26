@@ -1,7 +1,7 @@
-
 export const baseURL = 'http://localhost:5000'
 
 const connectApi = {
+    // API người dùng
     register: {
         url: '/api/users/register',
         method: 'POST'
@@ -43,6 +43,7 @@ const connectApi = {
         method: 'GET'
     },
     
+    // API tải hình ảnh lên Cloudinary
     uploadImage: {
         url: '/api/file/upload-image',
         method: 'POST'
@@ -51,6 +52,8 @@ const connectApi = {
         url: '/api/file/check-image',
         method: 'GET'
     },
+
+    // API danh mục sản phẩm
     getCategory: {
         url: '/api/categories',
         method: 'GET'
@@ -68,6 +71,7 @@ const connectApi = {
         method: 'DELETE'
     },
 
+    // API danh mục sản phẩm phụ
     getAllSubCate: {
         url: '/api/sub-categories',
         method: 'GET'
@@ -85,6 +89,7 @@ const connectApi = {
         method: 'DELETE'
     },
 
+    // API sản phẩm
     createProduct: {
         url: '/api/products/create-product',
         method: 'POST'
@@ -114,6 +119,7 @@ const connectApi = {
         method: 'DELETE'
     },
 
+    // API giỏ hàng
     addToCart: {
         url: '/api/cart/add-to-cart',
         method: 'POST'
@@ -129,6 +135,26 @@ const connectApi = {
     deleteItemsInCart: {
         url: '/api/cart/delete-items-cart',
         method: 'DELETE'
+    },
+
+    // API đơn hàng
+    createNewOrder: {
+        url: '/api/order/pay-in-cash',
+        method: 'POST'
+    },
+    getAllOrders: {
+        url: '/api/order/get-all-orders',
+        method: 'GET'
+    },
+    getOrderDetails: {
+        url: '/api/order/get-order-details',
+        method: 'POST'
+    },
+
+    // API giao hàng
+    createNewDeliveryAddress: {
+        url: '/api/delivery-address/add-delivery-address',
+        method: 'POST'
     }
 }
 

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 // Middleware xác thực refresh token
-const auth = async (req, res, next) => {
+const auth = async(req, res, next) => {
     try {
         const token = req?.body?.refreshToken || req?.cookies?.refreshToken 
 
@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
 
         // Xác thực refresh token
         jwt.verify(token, process.env.SECRET_KEY_REFRESH_TOKEN, (error, decoded) => {
-            if (error) {
+            if(error) {
                 return res.status(403).json({
                     success: false,
                     error: true,
@@ -35,9 +35,40 @@ const auth = async (req, res, next) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         }) 
     }
 }
 
-module.exports = auth 
+const checkLogin = async(req, res, next) => {
+    try {
+        const token = req?.body?.refreshToken || req?.cookies?.refreshToken
+        if(token){
+            jwt.verify(token, process.env.SECRET_KEY_REFRESH_TOKEN, (error, decoded) => {
+                if (error) {
+                    return res.status(403).json({
+                        success: false,
+                        error: true,
+                        message: 'Refresh token không hợp lệ'
+                    }) 
+                }   
+                // req.user chứa thông tin người dùng đã giải mã từ token JWT trong Middleware.
+                // Lưu thông tin user từ token vào request object để sử dụng trong các bước tiếp theo.
+                // 'decoded' chứa payload của token (thông tin người dùng) & Lưu thông tin người dùng vào req.userId
+                req.user = decoded
+                return next()  // Tiến hành vào bước tiếp theo (route handler)
+            })
+        }
+        else{
+            next()
+        }
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+module.exports = { auth, checkLogin } 

@@ -22,7 +22,7 @@ const Header = () => {
     const { totalQuantity } = useGlobalContext()
 
     const user = useSelector((state) => state?.user_data)
-    const cartItem = useSelector((state) => state?.cart_data?.cart?.cartItems)
+    const cartItem = useSelector((state) => state?.cart_data?.cart?.cart_items)
     
     // Tạo thanh menu
     const navigation = [
@@ -134,8 +134,7 @@ const Header = () => {
                                     )
                                 }
                             </div>
-                        </div>
-                
+                        </div>               
                     </div>
                 </>
                 ) : (
@@ -168,7 +167,7 @@ const Header = () => {
                                     return (
                                         <div>
                                             <NavLink key={nav.title} to={nav.href} 
-                                                className={({isActive})=>`px-3 font-bold hover:text-blue-800 ${isActive && 'text-blue-700 max-lg:border-b max-lg:py-3 relative lg:after:absolute lg:after:block lg:after:bg-pink-500 lg:after:w-full lg:after:h-[3px] lg:after:-bottom-4'}`}>
+                                                className={({ isActive })=>`px-3 font-bold hover:text-blue-800 ${isActive && 'text-blue-700 max-lg:border-b max-lg:py-3 relative lg:after:absolute lg:after:block lg:after:bg-pink-500 lg:after:w-full lg:after:h-[3px] lg:after:-bottom-4'}`}>
                                                 {nav.title}
                                             </NavLink>
                                         </div>
@@ -231,7 +230,7 @@ const Header = () => {
                                         <TiShoppingCart size={30}/>
                                     </div>
                                     {
-                                        Array.isArray(cartItem) && cartItem.length > 0 ? (
+                                        cartItem?.[0] ? (
                                         <>
                                             <div className='bg-red-600 text-white w-5 h-5 p-1 flex items-center justify-center rounded-full absolute -top-2 -right-2'>
                                                 <p className='text-xs text-white'>{totalQuantity}</p>           
@@ -247,7 +246,8 @@ const Header = () => {
                     </div>
                 </>
                 )
-            }    
+            }
+
             {
                 openViewCart && (
                     <DisplayCartItems close={() => setOpenViewCart(false)}/>

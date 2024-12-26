@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom'
 
 const DisplayCartItems = ({ close }) => {
     const { totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
+    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    //console.log(cartItem)
     const navigate = useNavigate()
 
     const handleNavigate = () => {
@@ -39,24 +40,24 @@ const DisplayCartItems = ({ close }) => {
                             cartItem?.[0] && (cartItem.map((item, index) => {
                                 return(
                                 <>
-                                    <div className='flex w-full gap-2'>
+                                    <div className='flex w-full gap-1'>
                                         <div className='w-20 h-20 min-h-20 min-w-20 border rounded'>
                                             <img 
-                                                src={item?.productId?.image[0]}
+                                                src={item?.product_id?.image[0]}
                                                 className='object-scale-down'                                           
                                             />                                           
                                         </div>
                                         
                                         <div className='ml-2 w-full max-w-sm'>
-                                            <p className='text-[13px] text-ellipsis line-clamp-2'>{item?.productId?.name}</p>
+                                            <p className='text-[13px] text-ellipsis line-clamp-2'>{item?.product_id?.name}</p>
                                             <div className='flex justify-between mt-3'>
-                                                <p className='text-sm'>{displayCurrencyToVND(displayDiscountPrice(item?.productId?.price, item?.productId?.discount))}</p>
-                                                <p className='text-sm font-semibold'>{displayCurrencyToVND(displayDiscountPrice(item?.productId?.price, item?.productId?.discount) * (item?.quantity))}</p>
+                                                <p className='text-sm'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount))}</p>
+                                                <p className='text-sm font-semibold'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount) * (item?.quantity))}</p>
                                             </div>                                           
                                         </div>
                                         
                                         <div>
-                                            <AddToCartButton data={item?.productId}/>
+                                            <AddToCartButton data={item?.product_id}/>
                                         </div>                                        
                                     </div>
                                     <hr className='mt-0'/>
@@ -132,7 +133,7 @@ const DisplayCartItems = ({ close }) => {
                 </div>
 
                 {
-                    cartItem[0] && (
+                    cartItem?.[0] && (
                         <div className='p-2'>
                             <div className='bg-green-600 hover:bg-green-800 hover:text-black text-neutral-100 text-xl font-bold p-4 rounded static bottom-3 flex items-center justify-center'>
                                 <button onClick={() => {

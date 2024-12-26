@@ -1,28 +1,28 @@
 const mongoose = require('mongoose')
 
 const orderSchema = new mongoose.Schema({
-    sessionId: {
+    session_id: {
         type: String,
         required: false
     },
-    userId: {
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false
     },
-    totalAmount: {
+    total_amount: {
         type: Number,
         default: null
     },
-    totalQuantity: {
+    total_quantity: {
         type: Number,
         default: null
     },
-    deliveryAddress: {
-        type: String,
-        default: ''
+    delivery_address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'deliveryAddressDetails'
     },
-    paymentMethod: {
+    payment_method: {
         type: String,
         default: 'Thanh toán bằng tiền mặt'
     },

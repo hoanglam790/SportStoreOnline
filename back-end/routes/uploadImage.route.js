@@ -1,5 +1,5 @@
 const express = require('express')
-const auth = require('../middleware/auth')
+const { auth } = require('../middleware/auth')
 const { uploadImageController, checkImageCloudinaryController } = require('../controllers/uploadImage.controller')
 const upload = require('../middleware/multer')
 

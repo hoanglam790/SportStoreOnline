@@ -6,6 +6,7 @@ import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
+import { setOrders } from '@/redux/orderSlice'
 
 export const GlobalContext = createContext(null)
 export const useGlobalContext = () => useContext(GlobalContext)
@@ -15,7 +16,8 @@ const GlobalProvider = ({ children }) => {
     const [totalQuantity, setTotalQuantity] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
     const [totalPriceNotDiscount, setTotalPriceNotDiscount] = useState(0)
-    const cartItem = useSelector((state) => state?.cart_data?.cart?.cartItems)
+    const cartItem = useSelector((state) => state?.cart_data?.cart?.cart_items)
+    const user = useSelector(state => state?.user_data)
 
     {/** Lấy thông tin của giỏ hàng */}
     const fetchCartItems = async() => {
@@ -33,7 +35,7 @@ const GlobalProvider = ({ children }) => {
     }
 
     {/** Cập nhật số lượng sản phẩm trong giỏ hàng */}
-    const updateCartItems = async(id,quantity) => {
+    const updateCartItems = async(id, quantity) => {
         try {
             const responseData = await Axios({
                 ...connectApi.updateItemsInCart,
@@ -75,6 +77,20 @@ const GlobalProvider = ({ children }) => {
         }        
     }
 
+    const fetchOrder = async() => {
+        try {
+            const responseData = await Axios({
+                ...connectApi.getAllOrders
+            })
+
+            if(responseData.data.success){
+                dispatch(setOrders(responseData.data.data))
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
     useEffect(() => {
         fetchCartItems()
     }, [])
@@ -87,17 +103,29 @@ const GlobalProvider = ({ children }) => {
             setTotalQuantity(quantity)
 
             const price = cartItem.reduce((pre, cur) => {
-                const priceAfterDiscount = displayDiscountPrice(cur?.productId?.price, cur?.productId?.discount)
+                const priceAfterDiscount = displayDiscountPrice(cur?.product_id?.price, cur?.product_id?.discount)
                 return pre + (priceAfterDiscount * cur.quantity)
             },0)
             setTotalPrice(price)
 
             const notDiscount = cartItem.reduce((pre, cur) => {
-                return pre + (cur?.productId?.price * cur.quantity)
+                return pre + (cur?.product_id?.price * cur.quantity)
             },0)
             setTotalPriceNotDiscount(notDiscount)
         }
     }, [cartItem])
+
+    // Xử lý sự kiện khi đăng xuất tài khoản: Xóa thông tin giỏ hàng được hiển thị trên web
+    const handleLogout = () => {
+        localStorage.clear()
+        dispatch(setAllItemsInCart())
+    }
+
+    useEffect(() => {
+        fetchCartItems()
+        //fetchOrder()
+        handleLogout()
+    },[user])
 
     return(
         <GlobalContext.Provider value={{
@@ -106,7 +134,8 @@ const GlobalProvider = ({ children }) => {
             deleteCartItems,
             totalQuantity,
             totalPrice,
-            totalPriceNotDiscount
+            totalPriceNotDiscount,
+            fetchOrder
         }}>
             {children}
         </GlobalContext.Provider>

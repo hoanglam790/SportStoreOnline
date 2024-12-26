@@ -9,7 +9,7 @@ const RemoveCartItemButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
 
     const { deleteCartItems } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
+    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
 
     // Xử lý xóa sản phẩm khỏi giỏ hàng
     const handleRemoveItemsInCart = async(e) => {
@@ -45,10 +45,10 @@ const RemoveCartItemButton = ({ data }) => {
         // Kiểm tra sản phẩm có tồn tại trong giỏ hàng hay không?
         // Nếu có: xóa khỏi giỏ hàng
         if(Array.isArray(cartItem)){
-            const checkItem = cartItem.some(item => item?.productId?._id === data?._id)
+            const checkItem = cartItem.some(item => item?.product_id?._id === data?._id)
             setIsAvailableCart(checkItem)
 
-            const quantityCartItems = cartItem.find(item => item?.productId?._id === data?._id)
+            const quantityCartItems = cartItem.find(item => item?.product_id?._id === data?._id)
             setCartItemDetails(quantityCartItems)
         }           
     },[data, cartItem])

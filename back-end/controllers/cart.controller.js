@@ -6,13 +6,13 @@ const ProductModel = require('../models/product.model')
 {/** Tạo mới giỏ hàng */}
 const addToCart = async (req,res) => {
     try {
-        const userId = req?.user?.id // Middleware
-        const sessionId = req.sessionID
-        const { productId } = req.body
-
+        const user_id = req?.user?.id // Middleware
+        const session_id = req.sessionID
+        const { product_id } = req.body
+        // console.log(`User ID: ${userId}`)
         //console.log(`Session ID: ${sessionId}`)
         // Kiểm tra xem ID sản phẩm có hợp lệ không?
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
+        if(!mongoose.Types.ObjectId.isValid(product_id)) {
             return res.status(400).json({
                 success: false,
                 error: true,
@@ -21,8 +21,8 @@ const addToCart = async (req,res) => {
         }
 
         // Kiểm tra xem sản phẩm có tồn tại không?
-        const product = await ProductModel.findById(productId)
-        if (!product) {
+        const product = await ProductModel.findById(product_id)
+        if(!product) {
             return res.status(404).json({
                 success: false,
                 error: true,
@@ -30,27 +30,25 @@ const addToCart = async (req,res) => {
             })
         }
 
-        // Tìm giỏ hàng của khách, dùng sessionId cho khách vãng lai và userId cho khách đã đăng nhập
-        let cart = null
-        if(userId) {
-            // Nếu người dùng đã đăng nhập, tìm giỏ hàng bằng userId
-            cart = await CartModel.findOne({ userId })
-        } else if(sessionId) {
-            // Nếu người dùng chưa đăng nhập (khách vãng lai), tìm giỏ hàng bằng sessionId
-            cart = await CartModel.findOne({ sessionId })
-        }
+        // Tìm giỏ hàng của khách, dùng session_id cho khách vãng lai và user_id cho khách đã đăng nhập
+        let cart = await CartModel.findOne({ 
+            $or: [
+                { user_id },  // Tìm theo user_id nếu đã đăng nhập
+                { session_id } // Tìm theo session_id nếu chưa đăng nhập
+            ]
+        })
 
         // Nếu giỏ hàng chưa có, tạo mới
-        if(!cart) {
+        if(!cart){
             cart = new CartModel({
-                userId: userId || null,
-                sessionId: userId ? null : sessionId // Nếu đã đăng nhập, không lưu sessionId
+                user_id: user_id || null,
+                session_id: user_id ? null : session_id // Nếu đã đăng nhập, không lưu sessionId
             })
             await cart.save()
         }
         
         // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa?
-        let cartItem = await CartItemModel.findOne({ cartId: cart._id, productId })
+        let cartItem = await CartItemModel.findOne({ cartId: cart._id, product_id })
         
         if(cartItem) {
             // Nếu sản phẩm đã có trong giỏ, cập nhật số lượng
@@ -69,8 +67,8 @@ const addToCart = async (req,res) => {
 
             // Nếu sản phẩm chưa có trong giỏ, tạo mới
             cartItem = new CartItemModel({
-                cartId: cart._id,
-                productId,
+                cart_id: cart._id,
+                product_id,
                 quantity: 1,
                 price: actualPrice // Lưu giá tại thời điểm thêm vào giỏ
             })
@@ -87,7 +85,7 @@ const addToCart = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error || error.message
+            message: error.message
         })
     }
 }
@@ -95,15 +93,22 @@ const addToCart = async (req,res) => {
 {/** Lấy thông tin giỏ hàng */}
 const getCartItem = async (req,res) => {
     try {
-        const userId = req?.user?.id // Middleware
+        const user_id = req?.user?.id // Middleware
+        // Kiểm tra nếu không có userId, sử dụng sessionId
+        const session_id = req.sessionID
 
-        // Tìm user ID trong giỏ hàng
-        const cart = await CartModel.findOne({ userId })
+        // Tìm userId hoặc sessionId trong giỏ hàng
+        const cart = await CartModel.findOne({ 
+            $or: [
+                { user_id },  // Tìm theo userId nếu đã đăng nhập
+                { session_id } // Tìm theo sessionId nếu chưa đăng nhập
+            ]
+        })
 
         if(cart){
-            const cartItems = await CartItemModel.find({ cartId: cart._id })
+            const cartItems = await CartItemModel.find({ cart_id: cart._id })
             .populate({
-                path: 'productId',
+                path: 'product_id',
                 populate: [
                     { path: 'category'},
                     { path: 'subCategory'}
@@ -111,8 +116,9 @@ const getCartItem = async (req,res) => {
             })
 
             const cartWithItems = {
-                userId: cart.userId, // Lấy userId từ Cart
-                cartItems: cartItems   // Lấy các CartItem
+                user_id: cart.user_id, // Lấy userId từ Cart
+                session_id: cart.session_id,
+                cart_items: cartItems   // Lấy các CartItem
             }
 
             return res.status(200).json({
@@ -123,7 +129,7 @@ const getCartItem = async (req,res) => {
             })
         }
         else{
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 error: true,
                 message: 'Không tìm thấy giỏ hàng'
@@ -133,7 +139,7 @@ const getCartItem = async (req,res) => {
         return res.status(500).json({
             success: true,
             error: false,
-            message: error || error.message
+            message: error.message
         })
     }
 }
@@ -141,18 +147,17 @@ const getCartItem = async (req,res) => {
 {/** Cập nhật giỏ hàng */}
 const updateCart = async (req,res) => {
     try {
-        const userId = req?.user?.id // Middleware
+        const user_id = req?.user?.id // Middleware
+        const session_id = req.sessionID
         const { _id, quantity } = req.body       
 
-        // Tìm giỏ hàng của khách, dùng sessionId cho khách vãng lai và userId cho khách đã đăng nhập
-        let cart = null
-        if(userId) {
-            // Nếu người dùng đã đăng nhập, tìm giỏ hàng bằng userId
-            cart = await CartModel.findOne({ userId })
-        } else if(sessionId) {
-            // Nếu người dùng chưa đăng nhập (khách vãng lai), tìm giỏ hàng bằng sessionId
-            cart = await CartModel.findOne({ sessionId })
-        }
+        // Tìm userId hoặc sessionId trong giỏ hàng
+        const cart = await CartModel.findOne({ 
+            $or: [
+                { user_id },  // Tìm theo userId nếu đã đăng nhập
+                { session_id } // Tìm theo sessionId nếu chưa đăng nhập
+            ]
+        })
 
         if(!cart){
             return res.status(400).json({
@@ -182,7 +187,7 @@ const updateCart = async (req,res) => {
         // Cập nhật giỏ hàng
         let updateCartItem = await CartItemModel.updateOne({ 
             _id: _id, 
-            cartId: cart._id 
+            cart_id: cart._id 
         },{
             quantity: quantity
         })
@@ -206,26 +211,17 @@ const updateCart = async (req,res) => {
 {/** Xóa sản phẩm trong giỏ hàng */}
 const deleteItemsInCart = async (req,res) => {
     try {
-        const userId = req?.user?.id // Middleware
+        const user_id = req?.user?.id // Middleware
+        const session_id = req.sessionID
         const { _id } = req.body
 
-        // Tìm giỏ hàng của khách, dùng sessionId cho khách vãng lai và userId cho khách đã đăng nhập
-        let cart = null
-        if(userId) {
-            // Nếu người dùng đã đăng nhập, tìm giỏ hàng bằng userId
-            cart = await CartModel.findOne({ userId })
-        } else if(sessionId) {
-            // Nếu người dùng chưa đăng nhập (khách vãng lai), tìm giỏ hàng bằng sessionId
-            cart = await CartModel.findOne({ sessionId })
-        }
-
-        if(!cart){
-            return res.status(400).json({
-                success: false,
-                error: true,
-                message: 'Không tìm thấy giỏ hàng'
-            })
-        }
+        // Tìm userId hoặc sessionId trong giỏ hàng
+        const cart = await CartModel.findOne({ 
+            $or: [
+                { user_id },  // Tìm theo userId nếu đã đăng nhập
+                { session_id } // Tìm theo sessionId nếu chưa đăng nhập
+            ]
+        })
 
         if(!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(404).json({
@@ -235,18 +231,27 @@ const deleteItemsInCart = async (req,res) => {
             })
         }
 
-        await CartItemModel.deleteOne({ _id: _id })
+        if(!cart){
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: 'Không tìm thấy giỏ hàng'
+            })
+        }
+        else{
+            await CartItemModel.deleteOne({ _id: _id })
 
-        return res.status(200).json({
-            success: true,
-            error: false,
-            message: 'Xóa sản phẩm trong giỏ hàng thành công'
-        })
+            return res.status(200).json({
+                success: true,
+                error: false,
+                message: 'Xóa sản phẩm trong giỏ hàng thành công'
+            })
+        }
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error || error.message
+            message: error.message
         })
     }
 }

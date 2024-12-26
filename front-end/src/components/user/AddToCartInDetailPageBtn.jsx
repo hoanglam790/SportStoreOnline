@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { FiMinus, FiPlus } from 'react-icons/fi'
 import { TiShoppingCart } from 'react-icons/ti'
 
-const AddToCartButton = ({ data }) => {
+const AddToCartInDetailPageButton = ({ data }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [quantity, setQuantity] = useState(0)
     const [cartItemDetails, setCartItemDetails] = useState()
@@ -39,13 +39,23 @@ const AddToCartButton = ({ data }) => {
     }
 
     // Xử lý thay đổi số lượng thông qua ô nhập liệu
-    {/** const handleQuantityChange = (e) => {
-        const newQuantity = parseInt(e.target.value, 10)
-        if (!isNaN(newQuantity) && newQuantity >= 1) {
-            setQuantity(newQuantity) // Cập nhật số lượng mới
-            updateCartItems(cartItemDetails?._id, newQuantity) // Cập nhật lên server hoặc state
+    {/**  */}
+    const handleQuantityChange = (e) => {
+        const newQuantity = e.target.value
+
+        // Nếu người dùng xóa hoàn toàn, set giá trị quantity là rỗng hoặc null
+        if (newQuantity === '') {
+            setQuantity('')
+        } else {
+            const parsedQuantity = parseInt(newQuantity, 10)
+            
+            // Kiểm tra xem giá trị nhập vào có phải là số và >= 1 không
+            if (!isNaN(parsedQuantity) && parsedQuantity >= 1) {
+                setQuantity(parsedQuantity) // Cập nhật số lượng mới
+                updateCartItems(cartItemDetails?._id, parsedQuantity) // Cập nhật lên server hoặc state
+            }
         }
-    } */}
+    }
     
     // Xử lý thêm sản phẩm mới vào giỏ hàng
     const handleAddToCart = async(e) => {
@@ -99,18 +109,18 @@ const AddToCartButton = ({ data }) => {
                     isAvailableCart ? (
                         <div className='flex items-center justify-center gap-2'>
                             <button onClick={decreaseQuantity}
-                            className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded'><FiMinus /></button>
+                            className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded flex items-center justify-center'><FiMinus /></button>
                             
-                            {/* <input
-                                type="number"
+                            <input
+                                type='number'
                                 value={quantity}
                                 onChange={handleQuantityChange}
-                                className="flex-1 font-semibold w-full text-center p-1"
-                                min="1" // Đảm bảo số lượng không nhỏ hơn 1
-                            /> */}
-                            <p>{quantity}</p>
+                                className='flex-1 w-full font-semibold px-1 text-center flex items-center justify-center'
+                                min='1' // Đảm bảo số lượng không nhỏ hơn 1
+                            />
+                            
                             <button onClick={increaseQuantity}
-                            className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded'><FiPlus /></button>
+                            className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded flex items-center justify-center'><FiPlus /></button>
                         </div>
                     ) : (
                         <button onClick={handleAddToCart} className='bg-green-600 hover:bg-green-700 text-white text-base px-2 lg:px-4 py-1 rounded flex items-center justify-center gap-1'>
@@ -126,4 +136,4 @@ const AddToCartButton = ({ data }) => {
     )
 }
 
-export default AddToCartButton
+export default AddToCartInDetailPageButton

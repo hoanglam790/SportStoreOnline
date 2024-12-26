@@ -353,7 +353,7 @@ const uploadImageUser = async (req,res) => {
 const updateUser = async (req, res) => {
     try {
         // const userId = req.user.id // Middleware auth
-        const { _id, name, email, password, phone_number, role } = req.body
+        const { _id, name, email, password, phone_number, address, role } = req.body
                
         let hashPassword = ''
 
@@ -369,6 +369,7 @@ const updateUser = async (req, res) => {
             ...(email && { email: email }),
             ...(password && { password: hashPassword }),
             ...(phone_number && { phone_number: phone_number }),
+            ...(address && { address: address }),
             ...(role && { role: role })
         })
 

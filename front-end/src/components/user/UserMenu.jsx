@@ -13,8 +13,6 @@ import { TbCategory } from 'react-icons/tb'
 import { MdCategory, MdProductionQuantityLimits } from 'react-icons/md'
 import { IoNewspaperSharp } from 'react-icons/io5'
 import { TbReportAnalytics } from 'react-icons/tb'
-import checkIsAdmin from '@/utils/checkIsAdmin'
-
 
 const UserMenu = ({ close }) => {
     const user = useSelector((state) => state.user_data)
@@ -122,12 +120,17 @@ const UserMenu = ({ close }) => {
                     ) : (
                         <>
                             <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <FaUserTie size={18}/>
+                                <Link onClick={handleClose} to='/my-account'>Thông tin tài khoản</Link>
+                            </div>
+
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
                                 <TiShoppingCart size={20}/>
-                                <Link onClick={handleClose} to={''}>Đơn hàng</Link>
+                                <Link onClick={handleClose} to={'/my-cart'}>Đơn hàng</Link>
                             </div>
                                         
                             <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <BiLogOut size={22}/>
+                                <BiLogOut size={20}/>
                                 <button onClick={handleLogout}>Đăng xuất</button>
                             </div>                          
                         </>

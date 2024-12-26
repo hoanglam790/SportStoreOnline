@@ -12,6 +12,7 @@ const subCategoryRouter = require('./routes/subCategory.route')
 const productRouter = require('./routes/product.route')
 const cartRouter = require('./routes/cart.route')
 const orderRouter = require('./routes/order.route')
+const deliveryAddressRouter = require('./routes/deliveryAddress.route')
 require('dotenv').config()
 
 
@@ -33,7 +34,12 @@ app.use(helmet({
 app.use(session({
     secret: process.env.SESSION_SECRET_KEY,  // Mã bí mật để mã hóa session
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { 
+        httpOnly: true,
+        secure: false,  // True: HTTPS, False: HTTP
+        maxAge: 1000 * 60 * 60 * 24  // Giữ session trong 1 ngày
+    }
 }))
 
 // API Endpoints
@@ -44,6 +50,7 @@ app.use('/api/sub-categories', subCategoryRouter)
 app.use('/api/products', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/order', orderRouter)
+app.use('/api/delivery-address', deliveryAddressRouter)
 
 // Connection
 app.listen(PORT, () => {

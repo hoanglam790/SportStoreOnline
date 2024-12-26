@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const cartSchema = new mongoose.Schema({
-    sessionId: {
+    session_id: {
         type: String,
         required: false
     },
-    userId: {
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false

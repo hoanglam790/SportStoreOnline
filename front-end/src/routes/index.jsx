@@ -19,51 +19,54 @@ import ProductAdmin from "@/pages_admin/ProductAdmin"
 import ProductDisplayPage from "@/pages/ProductDisplayPage"
 import ProductDisplayListPage from "@/pages/ProductDisplayListPage"
 import Cart from "@/components/user/Cart"
+import MyCart from "@/pages/MyCart"
+import PaymentSuccess from "@/pages/PaymentSuccess"
+import MyAccount from "@/pages/MyAccount"
 
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <App />,
-        children: [
+        path : '/',
+        element : <App />,
+        children : [
             {
-                path: '',
-                element: <Home />
+                path : '',
+                element : <Home />
             },           
             {
-                path: 'search/:text',
-                element: <SearchPage />
+                path : 'search/:text',
+                element : <SearchPage />
             },
             {
-                path: 'products',
-                element: <Product />
+                path : 'products',
+                element : <Product />
             },
             {
-                path: 'no-item',
-                element: <NoItemInCart />
+                path : 'no-item',
+                element : <NoItemInCart />
             },
             {
-                path: 'admin',
-                element: <AdminPermission><Dashboard /></AdminPermission>,
-                children: [
+                path : 'admin',
+                element : <AdminPermission><Dashboard /></AdminPermission>,
+                children : [
                     {
-                        path: '*',
-                        element: <PageNotFound />
+                        path : '*',
+                        element : <PageNotFound />
                     },
                     {
-                        path: 'all-users',
-                        element: <AdminPermission><AllUsers /></AdminPermission>
+                        path : 'all-users',
+                        element : <AdminPermission><AllUsers /></AdminPermission>
                     },
                     {
-                        path: 'categories',
-                        element: <AdminPermission><CategoryAdmin /></AdminPermission>
+                        path : 'categories',
+                        element : <AdminPermission><CategoryAdmin /></AdminPermission>
                     },
                     {
-                        path: 'sub-categories',
-                        element: <AdminPermission><SubCategoryAdmin /></AdminPermission>
+                        path : 'sub-categories',
+                        element : <AdminPermission><SubCategoryAdmin /></AdminPermission>
                     },
                     {
-                        path: 'products',
-                        element: <AdminPermission><ProductAdmin /></AdminPermission>
+                        path : 'products',
+                        element : <AdminPermission><ProductAdmin /></AdminPermission>
                     }
                 ]
             },
@@ -77,38 +80,51 @@ const router = createBrowserRouter([
                 ]
             },
             {
-                path : 'product/:product',
+                path : 'product/:id',
                 element : <ProductDisplayListPage/>
+            },
+            {
+                path : 'my-account',
+                element : <MyAccount/>
             },
             {
                 path : 'cart',
                 element : <Cart/>
-            }            
+            },
+            {
+                path : 'my-cart',
+                element : <MyCart />
+            },
+            {
+                path : 'checkout/success',
+                element : <PaymentSuccess />
+            }
+
         ]
     },
     {
-        path: '*',
-        element: <PageNotFound />
+        path : '*',
+        element : <PageNotFound />
     },
     {
-        path: 'login',
-        element: <Login />
+        path : 'login',
+        element : <Login />
     },
     {
-        path: 'register',
-        element: <Register />
+        path : 'register',
+        element : <Register />
     },
     {
-        path: 'forgot-password',
-        element: <ForgotPassword />
+        path : 'forgot-password',
+        element : <ForgotPassword />
     },
     {
-        path: 'verification-password',
-        element: <VerifyByOTP />
+        path : 'verification-password',
+        element : <VerifyByOTP />
     },
     {
-        path: 'reset-password',
-        element: <ResetPassword />
+        path : 'reset-password',
+        element : <ResetPassword />
     }
 ])
 

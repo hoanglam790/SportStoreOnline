@@ -70,8 +70,7 @@ const AdminMenu = ({ close }) => {
                 <div className='flex items-center hover:text-blue-700 gap-2'>
                     <BiLogOut size={22}/>
                     <button onClick={handleLogout}>Đăng xuất</button>
-                </div>
-                
+                </div>                
             </div>
         </div>
     )

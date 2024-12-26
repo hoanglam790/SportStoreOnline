@@ -7,7 +7,7 @@ import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
 import { CgSpinner } from 'react-icons/cg'
 
-const EditCategory = ({close, fetchData, data : cateData}) => {
+const EditCategory = ({ close, fetchData, data : cateData }) => {
     const [categoryData, setCategoryData] = useState({
         _id: cateData._id,
         name: cateData.name,

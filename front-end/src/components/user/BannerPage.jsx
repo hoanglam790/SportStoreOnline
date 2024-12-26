@@ -45,8 +45,8 @@ const BannerPage = () => {
         <div className='w-full max-h-screen overflow-hidden relative rounded-lg'>
             <div className='absolute z-10 w-full h-full items-center md:flex hidden'>
                 <div className='flex justify-between w-full'>
-                    <button onClick={prevImage} className='bg-white shadow-md rounded-full m-2 p-2'><FaAngleLeft size={25}/></button>
-                    <button onClick={nextImage} className='bg-white shadow-md rounded-full m-2 p-2'><FaAngleRight size={25}/></button>
+                    <button onClick={prevImage} className='bg-white shadow-md rounded-full m-2 p-2 hover:bg-transparent hover:text-white'><FaAngleLeft size={25}/></button>
+                    <button onClick={nextImage} className='bg-white shadow-md rounded-full m-2 p-2 hover:bg-transparent hover:text-white'><FaAngleRight size={25}/></button>
                 </div>               
             </div>
             <div className='flex'>

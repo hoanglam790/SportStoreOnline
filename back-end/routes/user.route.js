@@ -2,7 +2,7 @@ const express = require('express')
 const { registerUser, sendVerifyEmailOtp, verifyEmailUser, loginUser, logoutUser, uploadImageUser, 
         updateUser, forgotPassword, verifyForgotPasswordByOTP, resetPassword, 
         refreshTokenAPI, getUserToDisplay, getAllUsersToDisplay } = require('../controllers/user.controller')
-const auth = require('../middleware/auth')
+const { auth } = require('../middleware/auth')
 const upload = require('../middleware/multer')
 
 const userRouter = express.Router()

@@ -5,7 +5,6 @@ import ProductDisplay from '@/components/user/ProductDisplay'
 import urlConvert from '@/utils/urlConvert'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
     //const loadingCategory = useSelector(state => state.product_data.loadingCategory)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { HiOutlineMailOpen } from 'react-icons/hi'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
@@ -8,9 +8,10 @@ import connectApi from '@/common/ApiBackend'
 import Swal from 'sweetalert2'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import fetchUser from '@/utils/FetchUser'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setUserDetails } from '@/redux/userSlice'
 import { CgSpinner } from 'react-icons/cg'
+import { HiArrowNarrowLeft } from 'react-icons/hi'
 
 const Login = () => {
     const [userData, setUserData] = useState({
@@ -19,10 +20,10 @@ const Login = () => {
     })
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    // Xử lý nhập dữ liệu đầu vào
     const handleChange = (e) => {
         const { name, value } = e.target
         setUserData((prev) => {
@@ -33,8 +34,13 @@ const Login = () => {
         })
     }
     
+    const handleNavigateHome = () => {
+        navigate('/')
+    }
+
     const changeColorValue = Object.values(userData).every(e => e)
 
+    // Xử lý sự kiện submit khi người dùng nhấn vào nút "Đăng nhập"
     const handleSubmitLogin = async(e) => {
         {/** Ngừng hành động gửi form mặc định khi nhấn nút Đăng nhập */}
         e.preventDefault()
@@ -95,8 +101,7 @@ const Login = () => {
                 else {
                     navigate('/')
                 }             
-            }
-            
+            }           
         } catch (error) {
             {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
@@ -105,13 +110,23 @@ const Login = () => {
         }
     }
 
+    // Xử lý sự kiện submit khi người dùng nhấn vào nút "Đăng nhập" thông qua phím Enter
+    const handleLoginKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            e.preventDefault()
+            handleSubmitLogin(e)
+        }      
+    }
     return (
         <section id='login'>
             <div className='container mx-auto p-8 m-8'>
                 <div className='font-[sans-serif] bg-white border border-b max-w-md w-full px-4 py-8 mx-auto rounded-lg'>
-                    <form onSubmit={handleSubmitLogin}>
+                    <form onSubmit={handleSubmitLogin} onKeyDown={handleLoginKeyDown}>
                         <div className='mb-12'>
-                            <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Đăng nhập</h3>
+                            <button onClick={handleNavigateHome}>
+                                <HiArrowNarrowLeft size={25} />
+                            </button>
+                            <h3 className='text-gray-800 text-4xl text-center font-extrabold'>Đăng nhập</h3>                           
                         </div>
                         <div>
                             <label className='text-gray-800 text-sm block mb-2 px-2 py-1'>Email: </label>

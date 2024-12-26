@@ -8,12 +8,80 @@ import AddToCartButton from './AddToCartButton'
 import displayCurrencyToVND from '@/utils/FormatCurrency'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import RemoveCartItemButton from './RemoveCartItemButton'
+import Axios from '@/utils/AxiosConfig'
+import connectApi from '@/common/ApiBackend'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const Cart = () => {
-    const { totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cartItems)
+    const { totalPrice, totalPriceNotDiscount, totalQuantity, fetchCartItems, fetchOrder } = useGlobalContext()
+    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
     //console.log(cartItem)
+    const user = useSelector(state => state?.user_data)
+    const navigate = useNavigate()
+    // const order = useSelector(state => state?.order_data)
+    // console.log(order)
+    const [userData, setUserData] = useState({
+        name: '',
+        email: '',
+        phone_number: '',
+        address: ''
+    })
 
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setUserData((prev) => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        })
+    }
+
+    // const handleSubmitUserData = async() => {
+    //     try {
+    //         const responseData = await Axios({
+    //             ...connectApi.createNewDeliveryAddress,
+    //             data: userData
+    //         })
+
+    //         if(responseData.data.success){
+    //             toast.success(responseData.data.message, {
+    //                 position: 'top-center'
+    //             })
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const handleCheckOut = async() => {
+        try {
+            const responseData = await Axios({
+                ...connectApi.createNewOrder,
+                data: cartItem
+            })
+
+            if(responseData.data.success){
+                toast.success(responseData.data.message, {
+                    position: 'top-center'
+                })
+                if(fetchCartItems){
+                    fetchCartItems()
+                }
+                if(fetchOrder){
+                    fetchOrder()
+                }
+                navigate('/checkout/success', {
+                    state: {
+                        text: 'Order'
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <section className='container mx-auto py-12'>           
         {
@@ -21,46 +89,46 @@ const Cart = () => {
             <>
                 <h2 className='text-3xl font-bold text-gray-800 mb-5'>GIỎ HÀNG</h2>
                 <div className='grid lg:grid-cols-3 gap-4 max-lg:max-w-3xl mx-auto'>
-                    <div className='lg:col-span-2 bg-white divide-y divide-gray-300 px-4 rounded'>
+                    <div className='lg:col-span-2 bg-white divide-y divide-gray-300 px-4 rounded overflow-auto'>
                         {
                             cartItem?.[0] && (cartItem.map((item, index) => {
                                 return(
                                 <>
-                                    <div className='grid md:grid-cols-4 items-center gap-4 py-2'>
+                                    <div className='grid md:grid-cols-4 items-center gap-4 py-5'>
                                         <div className='col-span-2 flex items-center gap-6'>
                                             <div className='w-24 h-20'>
                                                 <img 
-                                                    src={item?.productId?.image[0]}
+                                                    src={item?.product_id?.image[0]}
                                                     className='w-full h-full object-scale-down'
                                                 />
                                             </div>
 
                                             <div>
-                                                <h3 className='text-base font-bold text-gray-800 text-ellipsis line-clamp-2'>{item?.productId?.name}</h3>
-                                                <h4 className='text-sm text-gray-500 mt-1'>{item?.productId?.subCategory?.[0].name}</h4>
+                                                <h3 className='text-base font-bold text-gray-800 text-ellipsis line-clamp-2'>{item?.product_id?.name}</h3>
+                                                <h4 className='text-sm text-gray-500 mt-1'>{item?.product_id?.subCategory?.[0].name}</h4>
                                             </div>
                                         </div>
 
                                         <div className='flex items-center gap-3 ml-10'>
-                                            <AddToCartButton data={item?.productId}/>
+                                            <AddToCartButton data={item?.product_id}/>
                                         </div>
 
                                         <div className='flex items-center justify-center gap-4'>
                                             {
-                                                Boolean(item?.productId?.discount) ? (
+                                                Boolean(item?.product_id?.discount) ? (
                                                     <>
-                                                        <strike className='text-gray-500 font-semibold text-base'>{displayCurrencyToVND(item?.productId?.price)}</strike>
+                                                        <strike className='text-gray-500 font-semibold text-base'>{displayCurrencyToVND(item?.product_id?.price)}</strike>
                                                         <h4 className='text-base font-bold text-gray-800'>
-                                                            {displayCurrencyToVND(displayDiscountPrice(item?.productId?.price, item?.productId?.discount) * (item?.quantity))}
+                                                            {displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount) * (item?.quantity))}
                                                         </h4>
                                                     </>
                                                 ) : (
-                                                    <p className='text-base font-bold text-gray-800 ml-auto'>{displayCurrencyToVND(item?.productId?.price * item?.quantity)}</p>
+                                                    <p className='text-base font-bold text-gray-800 ml-auto'>{displayCurrencyToVND(item?.product_id?.price * item?.quantity)}</p>
                                                 )
                                             }                                                                                       
                                         </div>
                                         <div className='flex items-center lg:ml-7 md:ml-6'>
-                                            <RemoveCartItemButton data={item?.productId}/>
+                                            <RemoveCartItemButton data={item?.product_id}/>
                                         </div>                                        
                                     </div>
                                 </>
@@ -69,43 +137,104 @@ const Cart = () => {
                         }                       
                     </div>                    
 
-                    <div className='bg-gray-100 rounded-md p-4 h-max'>
+                    <div className='bg-gray-100 rounded-md p-3 h-max'>
                         <h3 className='text-lg max-sm:text-base font-bold text-gray-800 border-b border-gray-300 pb-2'>Thông tin đơn hàng</h3>
                         <form className='mt-6'>
-                            <h3 className='text-base text-gray-800  font-semibold mb-4'>Nhập thông tin của bạn:</h3>
+                            <h3 className='text-base text-gray-800 font-semibold mb-4'>Nhập thông tin của bạn:</h3>
                             <div className='space-y-3'>
-                                <div className='relative flex items-center'>
-                                    <input 
-                                        type='text'
-                                        placeholder='Họ và tên'
-                                        className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border-b focus:border-gray-800 outline-none'  
-                                    />
-                                    <FaUser className='absolute right-3'/>
-                                </div>
-                                <div className='relative flex items-center'>
-                                    <input 
-                                        type='email'
-                                        placeholder='Email'
-                                        className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border-b focus:border-gray-800 outline-none'  
-                                    />
-                                    <TfiEmail className='absolute right-3' />
-                                </div>
-                                <div className='relative flex items-center'>
-                                    <input 
-                                        type='number'
-                                        placeholder='Số điện thoại'
-                                        className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border-b focus:border-gray-800 outline-none'  
-                                    />
-                                    <FaPhone className='absolute right-3 rotate-90' />
-                                </div>
-                                <div className='relative flex items-center'>
-                                    <input 
-                                        type='text'
-                                        placeholder='Địa chỉ'
-                                        className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border-b focus:border-gray-800 outline-none'  
-                                    />
-                                    <FaAddressBook className='absolute right-3' />
-                                </div>
+                                {
+                                    user?._id ? (
+                                        <>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='text'
+                                                    value={user.name}
+                                                    placeholder='Họ và tên'
+                                                    className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'
+                                                    disabled 
+                                                />
+                                                <FaUser className='absolute right-3'/>
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='email'
+                                                    value={user.email}
+                                                    placeholder='Email'
+                                                    className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                                    disabled
+                                                />
+                                                <TfiEmail className='absolute right-3' />
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='number'
+                                                    value={`0${user.phone_number}`}
+                                                    name='phone_number'
+                                                    onChange={handleChange}
+                                                    placeholder='Số điện thoại'
+                                                    className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                                    disabled
+                                                />
+                                                <FaPhone className='absolute right-3 rotate-90' />
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='text'
+                                                    value={user.address}
+                                                    name='deliveryAddress'
+                                                    onChange={handleChange}
+                                                    placeholder='Địa chỉ giao hàng'
+                                                    className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                                    disabled
+                                                />
+                                                <FaAddressBook className='absolute right-3' />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='text'
+                                                    value={userData.name}
+                                                    placeholder='Họ và tên'
+                                                    className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'                               
+                                                />
+                                                <FaUser className='absolute right-3'/>
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='email'
+                                                    value={userData.email}
+                                                    placeholder='Email'
+                                                    className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'                                                   
+                                                />
+                                                <TfiEmail className='absolute right-3' />
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='number'
+                                                    value={userData.phone_number}
+                                                    name='phone_number'
+                                                    onChange={handleChange}
+                                                    placeholder='Số điện thoại'
+                                                    className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                                />
+                                                <FaPhone className='absolute right-3 rotate-90' />
+                                            </div>
+                                            <div className='relative flex items-center'>
+                                                <input 
+                                                    type='text'
+                                                    value={userData.address}
+                                                    name='address'
+                                                    onChange={handleChange}
+                                                    placeholder='Địa chỉ giao hàng'
+                                                    className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                                />
+                                                <FaAddressBook className='absolute right-3' />
+                                            </div>
+                                        </>
+                                    )
+                                }                               
                             </div>
                         </form>
 
@@ -151,10 +280,11 @@ const Cart = () => {
                         {/** Button */}
                         <div className='mt-6 space-y-3'>
                             <button type='button'
-                                className='w-full text-sm px-4 py-2.5 font-semibold tracking-wide bg-gray-800 hover:bg-gray-900 text-white rounded-md'>
+                                onClick={handleCheckOut}
+                                className='w-full text-sm px-4 py-3 font-semibold tracking-wide bg-gray-800 hover:bg-gray-900 text-white rounded-md'>
                                 Thanh toán
                             </button>
-                            <button className='w-full text-sm px-4 py-2.5 font-semibold tracking-wide bg-transparent text-gray-800 border border-gray-300 rounded-md'>
+                            <button className='w-full text-sm px-4 py-3 font-semibold tracking-wide bg-transparent hover:bg-blue-700 hover:text-white text-gray-800 border border-gray-300 rounded-md transition-all duration-200'>
                                 Tiếp tục mua sắm
                             </button>
                         </div>

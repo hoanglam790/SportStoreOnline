@@ -6,7 +6,6 @@ import displayCurrencyToVND from '@/utils/FormatCurrency'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import AddToCartButton from './AddToCartButton'
 
-
 const ProductCard = ({ data }) => {
     const url = `/product/${urlConvert(data.name)}-${data._id}`
     const [loading, setLoading] = useState(false)

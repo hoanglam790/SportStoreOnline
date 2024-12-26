@@ -103,7 +103,6 @@ const UploadSubCategory = ({ close, fetchData }) => {
                     }
                 })
             }
-
         } catch (error) {
             axiosErrorAnnounce(error)
         } finally {

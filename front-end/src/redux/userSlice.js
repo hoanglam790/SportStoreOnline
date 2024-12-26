@@ -21,6 +21,7 @@ export const userSlice = createSlice({
             state.name = action.payload?.name
             state.avatar = action.payload?.avatar
             state.phone_number = action.payload?.phone_number
+            state.address = action.payload?.address
             state.last_login = action.payload?.last_login
             state.role = action.payload?.role
         },
