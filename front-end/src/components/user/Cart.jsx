@@ -12,6 +12,7 @@ import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { loadStripe } from '@stripe/stripe-js'
 
 const Cart = () => {
     const { totalPrice, totalPriceNotDiscount, totalQuantity, fetchCartItems, fetchOrder } = useGlobalContext()
@@ -38,7 +39,7 @@ const Cart = () => {
         })
     }
 
-    // Xử lý sự kiện thanh toán
+    // Xử lý sự kiện thanh toán bằng tiền mặt
     const handleCheckOut = async() => {
         try {
             // Lưu thông tin địa chỉ vào bảng deliveryAddressDetails
@@ -79,17 +80,88 @@ const Cart = () => {
                     }
 
                     // Điều hướng tới trang thanh toán thành công
-                    navigate('/checkout/success', {
-                        state: {
-                            text: 'Order'
-                        }
-                    })
+                    navigate('/checkout/success')
                 }
             }            
+        } catch (error) {
+            toast.error('Có lỗi xảy ra khi thanh toán!', {
+                position: 'top-center',
+            })
+        }
+    }
+
+    const handleCheckOutOnline = async() => {
+        try {
+            toast.loading('Đang tải dữ liệu...', {
+                position: 'top-center'
+            })
+            const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+            const stripePromise = await loadStripe(stripePublicKey)
+            
+            // Lưu thông tin địa chỉ vào bảng deliveryAddressDetails
+            const saveDeliveryAddress = await Axios({
+                ...connectApi.createNewDeliveryAddress,
+                data: userData
+            })
+            //console.log(saveDeliveryAddress.data)
+
+            if(saveDeliveryAddress.data.success){
+                // Lấy Id của địa chỉ đã lưu
+                const deliveryAddressId = saveDeliveryAddress.data.data._id
+                //console.log("ID địa chỉ: ", deliveryAddressId)
+
+                // Lưu đơn hàng, gửi Id địa chỉ vào delivery_address
+                const orderData = {
+                    ...cartItem,  // Dữ liệu đơn hàng
+                    delivery_address: deliveryAddressId  // Id địa chỉ
+                }
+
+                const responseOrderData = await Axios({
+                    ...connectApi.createNewOrderOnline,
+                    data: orderData
+                })
+                
+                // Lấy session_id từ response để thanh toán qua Stripe
+                const sessionId = responseOrderData.data.data.session_id
+
+                if(sessionId) {
+                    // Chuyển hướng đến trang thanh toán của Stripe
+                    const stripe = await stripePromise
+
+                    // Kiểm tra xem Stripe đã được tải chưa
+                    if(stripe) {
+                        const { error } = await stripe.redirectToCheckout({
+                            sessionId: sessionId,  // Sử dụng session_id trả về từ backend
+                        })
+
+                        if(error) {
+                            toast.error(error.message, {
+                                position: 'top-center',
+                            })
+                        }
+                    }
+                }
+
+                if(responseOrderData.data.success){
+                    toast.success(responseOrderData.data.message, {
+                        position: 'top-center'
+                    })
+                    // Cập nhật lại giỏ hàng sau khi thanh toán
+                    if(fetchCartItems){
+                        fetchCartItems()
+                    }
+
+                    // Cập nhật lại đơn hàng sau khi tạo mới
+                    if(fetchOrder){
+                        fetchOrder()
+                    }
+                }
+            }
         } catch (error) {
             console.log(error)
         }
     }
+
     return (
         <section className='container mx-auto py-12'>           
         {
@@ -296,7 +368,12 @@ const Cart = () => {
                             <button type='button'
                                 onClick={handleCheckOut}
                                 className='w-full text-sm px-4 py-3 font-semibold tracking-wide bg-gray-800 hover:bg-gray-900 text-white rounded-md'>
-                                Thanh toán
+                                Thanh toán bằng tiền mặt
+                            </button>
+                            <button type='button'
+                                onClick={handleCheckOutOnline}
+                                className='w-full text-sm px-4 py-3 font-semibold tracking-wide bg-transparent border border-green-400 hover:bg-green-700 hover:text-white text-black rounded-md'>
+                                Thanh toán bằng thẻ tín dụng
                             </button>
                             <button className='w-full text-sm px-4 py-3 font-semibold tracking-wide bg-transparent hover:bg-blue-700 hover:text-white text-gray-800 border border-gray-300 rounded-md transition-all duration-200'>
                                 Tiếp tục mua sắm

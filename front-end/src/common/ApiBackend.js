@@ -142,6 +142,10 @@ const connectApi = {
         url: '/api/order/pay-in-cash',
         method: 'POST'
     },
+    createNewOrderOnline: {
+        url: '/api/order/pay-online',
+        method: 'POST'
+    },
     getAllOrders: {
         url: '/api/order/get-all-orders',
         method: 'GET'

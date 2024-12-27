@@ -4,6 +4,8 @@ const CartItemModel = require('../models/cartItem.model')
 const OrderModel = require('../models/order.model')
 const OrderDetailModel = require('../models/orderDetails.model')
 const DeliveryAddressModel = require('../models/deliveryAddressDetails.model')
+const UserModel = require('../models/user.model')
+const stripe = require('../config/stripeConfig')
 
 {/** Tạo mới đơn hàng thanh toán bằng tiền mặt */}
 const orderCheckOutInCash = async(req,res) => {
@@ -99,6 +101,142 @@ const orderCheckOutInCash = async(req,res) => {
     }
 }
 
+{/** Tạo mới đơn hàng thanh toán bằng thẻ tín dụng */}
+const orderCheckOutPaymentOnline = async(req,res) => {
+    try {
+        const user_id = req?.user?.id // Middleware
+        const session_id = req.sessionID
+        const { delivery_address } = req.body
+
+        const user = await UserModel.findById(user_id)
+        
+        const address = await DeliveryAddressModel.findById(delivery_address)
+        if(!address){
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: 'Địa chỉ không tồn tại'
+            })
+        }
+
+        // Xác định giỏ hàng của khách
+        let cart = await CartModel.findOne({ 
+            $or: [
+                { user_id },  // Tìm theo userId nếu đã đăng nhập
+                { session_id } // Tìm theo sessionId nếu chưa đăng nhập
+            ]
+        })
+
+        if (!cart) {
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: 'Giỏ hàng không tồn tại'
+            })
+        }
+
+        // Lấy các sản phẩm trong giỏ hàng
+        const cartItems = await CartItemModel.find({ cart_id: cart._id })
+            .populate('product_id', 'name image price')
+        
+        // Tính tổng giá trị đơn hàng và tổng số lượng
+        let totalAmount = 0
+        let totalQuantity = 0       
+        const orderDetails = []
+
+        cartItems.forEach(item => {
+            const discount = item.discount || 0
+            const actualPrice = discount > 0 ? item.price - ((item.price * item.discount) / 100) : item.price
+
+            totalQuantity += item.quantity
+            totalAmount += item.quantity * actualPrice
+            orderDetails.push({
+                product_id: item.product_id._id,
+                quantity: item.quantity,
+                price: actualPrice,
+                total: item.quantity * actualPrice
+            })
+        })
+
+        // Tạo đơn hàng mới
+        const order = new OrderModel({
+            user_id: user_id || null,
+            session_id: user_id ? null : session_id,
+            total_amount: totalAmount,
+            total_quantity: totalQuantity,
+            delivery_address,
+            payment_method: 'Thanh toán bằng Stripe',
+            status: 'Chờ xử lý'
+        })
+        await order.save()
+
+        // Tạo chi tiết đơn hàng
+        for (let detail of orderDetails) {
+            await OrderDetailModel.create({
+                order_id: order._id,
+                ...detail
+            })
+        }
+
+        // Xóa giỏ hàng sau khi thanh toán
+        await CartItemModel.deleteMany({ cart_id: cart._id })
+        await CartModel.deleteOne({ _id: cart._id })
+
+        // Tạo một session thanh toán với Stripe Checkout
+        const line_items = cartItems.map(item => ({
+            price_data: {
+                currency: 'vnd',
+                product_data: {
+                    name: item.product_id.name,
+                    images: item.product_id.image,
+                    metadata: {
+                        product_id: item.product_id._id.toString()
+                    }
+                },
+                unit_amount: Math.round(item.price)
+            },
+            adjustable_quantity : {
+                enabled : true,
+                minimum : 1
+            },
+            quantity: item.quantity
+        }))
+
+        const params = {
+            submit_type: 'pay',
+            mode: 'payment',
+            payment_method_types: ['card'],
+            customer_email: user.email, // Email của người dùng
+            metadata: {
+                user_id: user_id,
+                delivery_address: delivery_address
+            },
+            line_items: line_items,
+            success_url: `${process.env.FRONTEND_URL}/checkout/success`,
+            cancel_url: `${process.env.FRONTEND_URL}/cancel`
+        }
+
+        const session = await stripe.checkout.sessions.create(params)
+
+        // Trả về client_secret để frontend xử lý thanh toán với Stripe
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Thanh toán thành công',
+            data: {
+                order: order,
+                session_id: session.id // Trả về session Id của Stripe Checkout
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
 {/** Lấy tất cả các đơn hàng */}
 const getAllOrders = async(req,res) => {
     try {
@@ -181,4 +319,4 @@ const getOrderDetails = async(req,res) => {
     }
 }
 
-module.exports = { orderCheckOutInCash, getAllOrders, getOrderDetails }
+module.exports = { orderCheckOutInCash, orderCheckOutPaymentOnline, getAllOrders, getOrderDetails }

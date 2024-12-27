@@ -1,9 +1,8 @@
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const PaymentSuccess = () => {
     const navigate = useNavigate()
-    const currentLocation = useLocation()
 
     const handleBackHome = () => {
         navigate('/')
@@ -21,9 +20,6 @@ const PaymentSuccess = () => {
 
                 <div className='text-center'>
                     <h3 className='md:text-2xl text-base text-gray-900 font-semibold text-center'>
-                        {
-                            Boolean(currentLocation?.state?.text) ? location?.state?.text : 'Thanh toán'
-                        }
                         Thanh toán thành công!
                     </h3>
                     <p className='text-gray-600 my-2'>Cảm ơn bạn đã hoàn tất việc thanh toán đơn hàng.</p>
