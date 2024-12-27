@@ -12,7 +12,7 @@ require('dotenv').config()
 
 
 {/** Đăng ký tài khoản mới */}
-const registerUser = async (req,res) => {
+const registerUser = async(req,res) => {
     try {
         // req.body: chứa dữ liệu được gửi lên từ Client trong body của HTTP
         // Trích xuất các thuộc tính vào đối tượng req.body và gắn vào các biến riêng biệt
@@ -30,8 +30,8 @@ const registerUser = async (req,res) => {
         // Tìm email
         // Nếu email đã có trong cơ sở dữ liệu thì không cho đăng ký
         const user = await UserModel.findOne({ email })
-        if(user) {
-            return res.json({
+        if(user){
+            return res.status(400).json({
                 success: false,
                 error: true,
                 message: 'Địa chỉ email này đã được đăng ký. Vui lòng cung cấp email khác.'
@@ -67,18 +67,17 @@ const registerUser = async (req,res) => {
             message: 'Đăng ký tài khoản thành công',
             data: save
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Gửi mã OTP để xác thực email khi đăng ký thành công */}
-const sendVerifyEmailOtp = async (req,res) => {
+const sendVerifyEmailOtp = async(req,res) => {
     try {
         const { userId } = req.body
 
@@ -117,13 +116,13 @@ const sendVerifyEmailOtp = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error || error.message
+            message: error.message
         })
     }
 }
 
 {/** Xác thực tài khoản */}
-const verifyEmailUser = async (req,res) => {
+const verifyEmailUser = async(req,res) => {
     try {
         const { userId, otp } = req.body
 
@@ -182,13 +181,13 @@ const verifyEmailUser = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Đăng nhập tài khoản vào hệ thống */}
-const loginUser = async (req,res) => {
+const loginUser = async(req,res) => {
     try {
         const { email, password } = req.body
 
@@ -231,7 +230,6 @@ const loginUser = async (req,res) => {
             })
         }
 
-
         // Tạo token
         const accessToken = await generateAccessToken(user._id)
         const refreshToken = await generateRefreshAccessToken(user._id)
@@ -250,6 +248,7 @@ const loginUser = async (req,res) => {
             last_login: Date.now()
         })
 
+        // Thông báo khi đăng nhập thành công
         return res.status(200).json({
             success: true,
             error: false,
@@ -259,18 +258,17 @@ const loginUser = async (req,res) => {
                 refreshToken
             }
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Đăng xuất tài khoản khỏi hệ thống */}
-const logoutUser = async (req, res) => {
+const logoutUser = async(req,res) => {
     try {
         const userId = req.user.id  // Lấy userId từ thông tin người dùng đã xác thực từ Token trong Middleware
 
@@ -305,18 +303,17 @@ const logoutUser = async (req, res) => {
             error: false,
             message: 'Đăng xuất thành công'
         }) 
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         }) 
     }
 } 
 
 {/** Đăng tải hình ảnh lên Cloudinary */}
-const uploadImageUser = async (req,res) => {
+const uploadImageUser = async(req,res) => {
     try {
         const userId = req.user.id // Middleware
         const image = req.file
@@ -339,18 +336,17 @@ const uploadImageUser = async (req,res) => {
                 avatar: uploadImg.url
             }
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Cập nhật tài khoản */}
-const updateUser = async (req, res) => {
+const updateUser = async(req,res) => {
     try {
         // const userId = req.user.id // Middleware auth
         const { _id, name, email, password, phone_number, address, role } = req.body
@@ -374,24 +370,23 @@ const updateUser = async (req, res) => {
         })
 
         // Thông báo khi cập nhật thành công
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             error: false,
             message: 'Cập nhật tài khoản thành công',
             data: updateUser
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Quên mật khẩu */}
-const forgotPassword = async (req,res) => {
+const forgotPassword = async(req,res) => {
     try {
         const { email } = req.body
 
@@ -419,7 +414,7 @@ const forgotPassword = async (req,res) => {
         // Gửi email xác nhận
         await resendEmail({
             sendTo: email,
-            subject: 'Quên mật khẩu từ Hoang Lam',
+            subject: 'Quên mật khẩu từ Hoang Lam Sport Store',
             html: forgotPasswordTemp({
                 name: user.name,
                 otp: otpPass
@@ -430,19 +425,18 @@ const forgotPassword = async (req,res) => {
         return res.status(201).json({
             success: true,
             error: false,
-            message: 'Hãy kiểm tra email của bạn'
+            message: 'Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra tin nhắn'
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: false,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
-const verifyForgotPasswordByOTP = async (req,res) => {
+const verifyForgotPasswordByOTP = async(req,res) => {
     try {
         const { email, otp } = req.body
         if(!email || !otp){
@@ -455,7 +449,7 @@ const verifyForgotPasswordByOTP = async (req,res) => {
 
         const user = await UserModel.findOne({ email })
         if(!user){
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 error: true,
                 message: 'Không tìm thấy email người dùng'
@@ -494,18 +488,17 @@ const verifyForgotPasswordByOTP = async (req,res) => {
             error: false,
             message: 'Mã OTP hợp lệ. Bạn đã xác thực thành công'
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Khôi phục mật khẩu */}
-const resetPassword = async (req,res) => {
+const resetPassword = async(req,res) => {
     try {
         const { email, newPassword, confirmPassword } = req.body
 
@@ -556,13 +549,13 @@ const resetPassword = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Tạo token API mới */}
-const refreshTokenAPI = async (req,res) => {
+const refreshTokenAPI = async(req,res) => {
     try {
         const refreshToken = req.body.refreshToken || req.cookies.refreshToken
 
@@ -612,13 +605,13 @@ const refreshTokenAPI = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Hiển thị dữ liệu 1 tài khoản */}
-const getUserToDisplay = async (req,res) => {
+const getUserToDisplay = async(req,res) => {
     try {
         // req.user.id (req.user: decoded at Middleware)
         // console.log('decoded', decoded) => decoded { id: '6736137ab916eaa4457a0f1c', iat: 1732157732, exp: 1734749732 }
@@ -636,13 +629,13 @@ const getUserToDisplay = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Lấy dữ liệu tất cả các tài khoản hiện có - Admin */}
-const getAllUsersToDisplay = async (req,res) => {
+const getAllUsersToDisplay = async(req,res) => {
     try {
         // Tìm dữ liệu trong cơ sở dữ liệu
         const getAllUsers = await UserModel.find()
@@ -658,7 +651,7 @@ const getAllUsersToDisplay = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }

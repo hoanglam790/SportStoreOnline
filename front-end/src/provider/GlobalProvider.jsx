@@ -16,7 +16,7 @@ const GlobalProvider = ({ children }) => {
     const [totalQuantity, setTotalQuantity] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
     const [totalPriceNotDiscount, setTotalPriceNotDiscount] = useState(0)
-    const cartItem = useSelector((state) => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector((state) => state?.cart_data?.cart)
     const user = useSelector(state => state?.user_data)
 
     {/** Lấy thông tin của giỏ hàng */}
@@ -123,7 +123,7 @@ const GlobalProvider = ({ children }) => {
 
     useEffect(() => {
         fetchCartItems()
-        //fetchOrder()
+        fetchOrder()
         handleLogout()
     },[user])
 

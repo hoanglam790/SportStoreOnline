@@ -16,10 +16,6 @@ const deliveryAddressDetailSchema = new mongoose.Schema({
     address: {
         type: String,
         default: ''
-    },
-    orderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: ''
     }
 }, {
     timestamps: true

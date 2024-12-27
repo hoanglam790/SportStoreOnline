@@ -16,7 +16,7 @@ const AddToCartInDetailPageButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
 
     const { fetchCartItems, updateCartItems, deleteCartItems } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector(state => state?.cart_data?.cart)
     //console.log('addtocartbtn', cartItem)
 
     // Tăng số lượng sản phẩm trong giỏ hàng
@@ -39,17 +39,16 @@ const AddToCartInDetailPageButton = ({ data }) => {
     }
 
     // Xử lý thay đổi số lượng thông qua ô nhập liệu
-    {/**  */}
     const handleQuantityChange = (e) => {
         const newQuantity = e.target.value
 
-        // Nếu người dùng xóa hoàn toàn, set giá trị quantity là rỗng hoặc null
+        // Nếu người dùng xóa hoàn toàn, set giá trị quantity là rỗng
         if (newQuantity === '') {
             setQuantity('')
         } else {
             const parsedQuantity = parseInt(newQuantity, 10)
             
-            // Kiểm tra xem giá trị nhập vào có phải là số và >= 1 không
+            // Kiểm tra xem giá trị nhập vào có phải là số và >= 1 không ?
             if (!isNaN(parsedQuantity) && parsedQuantity >= 1) {
                 setQuantity(parsedQuantity) // Cập nhật số lượng mới
                 updateCartItems(cartItemDetails?._id, parsedQuantity) // Cập nhật lên server hoặc state
@@ -70,15 +69,19 @@ const AddToCartInDetailPageButton = ({ data }) => {
                 }
             })
             
+            // Thông báo thành công khi trả về dữ liệu
             if(responseData.data.success){
                 toast.success(responseData.data.message, {
                     position: 'top-center'
                 })
+
+                // Cập nhật lại giỏ hàng sau khi thanh toán
                 if(fetchCartItems){
                     fetchCartItems()
                 }
             }
 
+            // Thông báo lỗi khi không trả về được dữ liệu
             if(responseData.data.error){
                 toast.error(responseData.data.message)
             }

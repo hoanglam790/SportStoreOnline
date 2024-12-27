@@ -3,6 +3,7 @@ const CartModel = require('../models/cart.model')
 const CartItemModel = require('../models/cartItem.model')
 const OrderModel = require('../models/order.model')
 const OrderDetailModel = require('../models/orderDetails.model')
+const DeliveryAddressModel = require('../models/deliveryAddressDetails.model')
 
 {/** Tạo mới đơn hàng thanh toán bằng tiền mặt */}
 const orderCheckOutInCash = async(req,res) => {
@@ -10,6 +11,15 @@ const orderCheckOutInCash = async(req,res) => {
         const user_id = req?.user?.id // Middleware
         const session_id = req.sessionID
         const { delivery_address, payment_method } = req.body
+
+        const address = await DeliveryAddressModel.findById(delivery_address)
+        if(!address){
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: 'Địa chỉ không tồn tại'
+            })
+        }
 
         // Xác định giỏ hàng của khách
         let cart = await CartModel.findOne({ 
@@ -22,6 +32,7 @@ const orderCheckOutInCash = async(req,res) => {
         if (!cart) {
             return res.status(404).json({
                 success: false,
+                error: true,
                 message: 'Giỏ hàng không tồn tại'
             })
         }
@@ -91,13 +102,14 @@ const orderCheckOutInCash = async(req,res) => {
 {/** Lấy tất cả các đơn hàng */}
 const getAllOrders = async(req,res) => {
     try {
-        const user_id = req?.user?.id
+        const user_id = req?.user?.id // Middleware
         
         // Tìm tất cả các đơn hàng của người dùng
         const getOrder = await OrderModel.find({ user_id }).sort({ createdAt: -1 })
         if (getOrder.length === 0) {
             return res.status(404).json({
                 success: false,
+                error: true,
                 message: 'Không có đơn hàng nào'
             })
         }
@@ -107,7 +119,7 @@ const getAllOrders = async(req,res) => {
             order_id: { 
                 $in: getOrder.map(order => order._id) 
             }
-        }).populate('productId', 'name image price')
+        }).populate('product_id', 'name image price')
 
         // Tạo một đối tượng để gộp các chi tiết đơn hàng vào từng đơn hàng
         const ordersWithDetails = getOrder.map(order => {
@@ -124,7 +136,6 @@ const getAllOrders = async(req,res) => {
             message: 'Lịch sử đơn hàng',
             data: ordersWithDetails
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,

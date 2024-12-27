@@ -22,7 +22,7 @@ const Header = () => {
     const { totalQuantity } = useGlobalContext()
 
     const user = useSelector((state) => state?.user_data)
-    const cartItem = useSelector((state) => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector((state) => state?.cart_data?.cart)
     
     // Tạo thanh menu
     const navigation = [

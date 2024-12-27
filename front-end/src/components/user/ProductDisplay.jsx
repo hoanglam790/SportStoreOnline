@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Image from '@/assets/Banner/sports_sale_banner.png'
-import { TiShoppingCart } from 'react-icons/ti'
 import { useSelector } from 'react-redux'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Axios from '@/utils/AxiosConfig'

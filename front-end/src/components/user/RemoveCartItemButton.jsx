@@ -9,7 +9,7 @@ const RemoveCartItemButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
 
     const { deleteCartItems } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector(state => state?.cart_data?.cart)
 
     // Xử lý xóa sản phẩm khỏi giỏ hàng
     const handleRemoveItemsInCart = async(e) => {

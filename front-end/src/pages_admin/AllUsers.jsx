@@ -94,7 +94,7 @@ const AllUsers = () => {
                                                 </div>
                                             </label>
                                         </td>
-                                        <td>{(moment(u?.createdAt).format('lll'))}</td>
+                                        <td>{(moment(u?.createdAt).format('DD/MM/YYYY HH:mm'))}</td>
                                         <td className='flex justify-center gap-2'>
                                             <button 
                                                 onClick={() => {

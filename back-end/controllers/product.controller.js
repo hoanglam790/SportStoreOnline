@@ -50,7 +50,7 @@ const createNewProduct = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -84,7 +84,7 @@ const getAllProduct = async(req,res) => {
             ProductModel.countDocuments(query)
         ])
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             error: false,
             message: 'Lấy danh sách sản phẩm thành công',
@@ -96,7 +96,7 @@ const getAllProduct = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -117,18 +117,17 @@ const getProductDetails = async(req,res) => {
         
         const product = await ProductModel.findOne({ _id: id })
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             error: false,
             message: 'Lấy danh sách sản phẩm thành công',
             data: product
         })
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -151,7 +150,7 @@ const getProductByCategory = async(req,res) => {
             category : { $in : _id }
         }).limit(15)
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             error: false,
             message: 'Danh sách sản phẩm theo danh mục sản phẩm',
@@ -161,7 +160,7 @@ const getProductByCategory = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -203,7 +202,7 @@ const getProductByCateAndSubCate = async(req,res) => {
             ProductModel.countDocuments(query)
         ])
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             error: false,
             message: 'Lấy danh sách sản phẩm thành công',
@@ -216,7 +215,7 @@ const getProductByCateAndSubCate = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -250,7 +249,7 @@ const updateProduct = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
@@ -281,7 +280,7 @@ const deleteProduct = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }

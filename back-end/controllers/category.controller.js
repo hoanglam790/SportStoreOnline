@@ -4,7 +4,7 @@ const SubCategoryModel = require('../models/subCategory.model')
 const ProductModel = require('../models/product.model')
 
 {/** Tìm tất cả các danh mục sản phẩm */}
-const getCategoryController = async (req,res) => {
+const getCategoryController = async(req,res) => {
     try {
         const getAllCate = await CategoryModel.find() // Hiển thị danh mục sản phẩm mới nhất - .sort({ createdAt : -1 })
 
@@ -19,13 +19,13 @@ const getCategoryController = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Tìm danh mục sản phẩm theo id */}
-const getCategoryByIdController = async (req,res) => {
+const getCategoryByIdController = async(req,res) => {
     try {
         const { _id } = req.body
 
@@ -52,13 +52,13 @@ const getCategoryByIdController = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Tạo mới danh mục sản phẩm */}
-const createCategoryController = async (req,res) => {
+const createCategoryController = async(req,res) => {
     try {
         const { name, image } = req.body
 
@@ -100,13 +100,13 @@ const createCategoryController = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })   
     } 
 }
 
 {/** Sửa danh mục sản phẩm */}
-const updateCategoryController = async (req,res) => {
+const updateCategoryController = async(req,res) => {
     try {
         const { _id, name, image } = req.body
 
@@ -136,22 +136,24 @@ const updateCategoryController = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Xóa danh mục sản phẩm */}
-const deleteCategoryController = async (req,res) => {
+const deleteCategoryController = async(req,res) => {
     try {
         const { _id } = req.body
 
+        // Kiểm tra subCategory có đang sử dụng không ?
         const checkSubCategory = await SubCategoryModel.find({
             category: {
                 '$in': [ _id ]
             }
         }).countDocuments()
 
+        // Kiểm tra product có đang sử dụng không ?
         const checkProduct = await ProductModel.find({
             category: {
                 '$in': [ _id ]
@@ -167,7 +169,7 @@ const deleteCategoryController = async (req,res) => {
             })
         }
 
-        // Kiểm tra nếu có danh mục sản phẩm phụ và sản phẩm liên quan đến danh mục sản phẩm thì không được phép xóa.
+        // Kiểm tra: Nếu có danh mục sản phẩm phụ và sản phẩm liên quan đến danh mục sản phẩm thì không được phép xóa.
         if(checkSubCategory > 0 || checkProduct > 0){
             return res.status(400).json({
                 success: false,
@@ -189,7 +191,7 @@ const deleteCategoryController = async (req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }

@@ -2,7 +2,7 @@ const SubCategoryModel = require('../models/subCategory.model')
 const mongoose = require('mongoose')
 
 {/** Thêm danh mục sản phẩm phụ */}
-const addSubCategoryController = async (req,res) => {
+const addSubCategoryController = async(req,res) => {
     try {
         const { name, image, category } = req.body
 
@@ -43,15 +43,15 @@ const addSubCategoryController = async (req,res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            success: true,
-            error: false,
-            message: error.message || error
+            success: false,
+            error: true,
+            message: error.message
         })
     }
 }
 
 {/** Lấy danh mục sản phẩm phụ */}
-const getSubCategoryController = async (req,res) => {
+const getSubCategoryController = async(req,res) => {
     try {
         const getAllSubCate = await SubCategoryModel.find().populate('category') // Lấy danh mục sản phẩm phụ bao gồm danh mục sản phẩm chính
         
@@ -64,15 +64,15 @@ const getSubCategoryController = async (req,res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            success: true,
-            error: false,
-            message: error.message || error
+            success: false,
+            error: true,
+            message: error.message
         })
     }
 }
 
 {/** Chỉnh sửa danh mục sản phẩm phụ */}
-const updateSubCategoryController = async (req,res) => {
+const updateSubCategoryController = async(req,res) => {
     try {
         const { _id, name, image, category } = req.body
 
@@ -101,15 +101,15 @@ const updateSubCategoryController = async (req,res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            success: true,
-            error: false,
-            message: error.message || error
+            success: false,
+            error: true,
+            message: error.message
         })
     }
 }
 
 {/** Xóa danh mục sản phẩm phụ */}
-const deleteSubCategoryController = async (req,res) => {
+const deleteSubCategoryController = async(req,res) => {
     try {
         const { _id } = req.body
         
@@ -133,9 +133,9 @@ const deleteSubCategoryController = async (req,res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            success: true,
-            error: false,
-            message: error.message || error
+            success: false,
+            error: true,
+            message: error.message
         })
     }
 }

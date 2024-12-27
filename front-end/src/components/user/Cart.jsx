@@ -15,17 +15,17 @@ import { useNavigate } from 'react-router-dom'
 
 const Cart = () => {
     const { totalPrice, totalPriceNotDiscount, totalQuantity, fetchCartItems, fetchOrder } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector(state => state?.cart_data?.cart)
     //console.log(cartItem)
     const user = useSelector(state => state?.user_data)
     const navigate = useNavigate()
     // const order = useSelector(state => state?.order_data)
     // console.log(order)
     const [userData, setUserData] = useState({
-        name: '',
-        email: '',
-        phone_number: '',
-        address: ''
+        name: user.name || '',
+        email: user.email || '',
+        phone_number: user.phone_number || '',
+        address: user.address || ''
     })
 
     const handleChange = (e) => {
@@ -38,46 +38,54 @@ const Cart = () => {
         })
     }
 
-    // const handleSubmitUserData = async() => {
-    //     try {
-    //         const responseData = await Axios({
-    //             ...connectApi.createNewDeliveryAddress,
-    //             data: userData
-    //         })
-
-    //         if(responseData.data.success){
-    //             toast.success(responseData.data.message, {
-    //                 position: 'top-center'
-    //             })
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
+    // Xử lý sự kiện thanh toán
     const handleCheckOut = async() => {
         try {
-            const responseData = await Axios({
-                ...connectApi.createNewOrder,
-                data: cartItem
+            // Lưu thông tin địa chỉ vào bảng deliveryAddressDetails
+            const saveDeliveryAddress = await Axios({
+                ...connectApi.createNewDeliveryAddress,
+                data: userData
             })
+            //console.log(saveDeliveryAddress.data)
 
-            if(responseData.data.success){
-                toast.success(responseData.data.message, {
-                    position: 'top-center'
+            if(saveDeliveryAddress.data.success){
+                // Lấy Id của địa chỉ đã lưu
+                const deliveryAddressId = saveDeliveryAddress.data.data._id
+                //console.log("ID địa chỉ: ", deliveryAddressId)
+
+                // Lưu đơn hàng, gửi Id địa chỉ vào delivery_address
+                const orderData = {
+                    ...cartItem,  // Dữ liệu đơn hàng
+                    delivery_address: deliveryAddressId  // Id địa chỉ
+                }
+
+                const responseOrderData = await Axios({
+                    ...connectApi.createNewOrder,
+                    data: orderData
                 })
-                if(fetchCartItems){
-                    fetchCartItems()
-                }
-                if(fetchOrder){
-                    fetchOrder()
-                }
-                navigate('/checkout/success', {
-                    state: {
-                        text: 'Order'
+    
+                if(responseOrderData.data.success){
+                    toast.success(responseOrderData.data.message, {
+                        position: 'top-center'
+                    })
+                    // Cập nhật lại giỏ hàng sau khi thanh toán
+                    if(fetchCartItems){
+                        fetchCartItems()
                     }
-                })
-            }
+
+                    // Cập nhật lại đơn hàng sau khi tạo mới
+                    if(fetchOrder){
+                        fetchOrder()
+                    }
+
+                    // Điều hướng tới trang thanh toán thành công
+                    navigate('/checkout/success', {
+                        state: {
+                            text: 'Order'
+                        }
+                    })
+                }
+            }            
         } catch (error) {
             console.log(error)
         }
@@ -148,7 +156,8 @@ const Cart = () => {
                                             <div className='relative flex items-center'>
                                                 <input 
                                                     type='text'
-                                                    value={user.name}
+                                                    value={userData.name}
+                                                    onChange={handleChange}
                                                     placeholder='Họ và tên'
                                                     className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'
                                                     disabled 
@@ -158,7 +167,8 @@ const Cart = () => {
                                             <div className='relative flex items-center'>
                                                 <input 
                                                     type='email'
-                                                    value={user.email}
+                                                    value={userData.email}
+                                                    onChange={handleChange}
                                                     placeholder='Email'
                                                     className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
                                                     disabled
@@ -168,7 +178,7 @@ const Cart = () => {
                                             <div className='relative flex items-center'>
                                                 <input 
                                                     type='number'
-                                                    value={`0${user.phone_number}`}
+                                                    value={`0${userData.phone_number}`}
                                                     name='phone_number'
                                                     onChange={handleChange}
                                                     placeholder='Số điện thoại'
@@ -180,8 +190,8 @@ const Cart = () => {
                                             <div className='relative flex items-center'>
                                                 <input 
                                                     type='text'
-                                                    value={user.address}
-                                                    name='deliveryAddress'
+                                                    value={userData.address}
+                                                    name='address'
                                                     onChange={handleChange}
                                                     placeholder='Địa chỉ giao hàng'
                                                     className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
@@ -196,6 +206,8 @@ const Cart = () => {
                                                 <input 
                                                     type='text'
                                                     value={userData.name}
+                                                    name='name'
+                                                    onChange={handleChange}
                                                     placeholder='Họ và tên'
                                                     className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'                               
                                                 />
@@ -205,6 +217,8 @@ const Cart = () => {
                                                 <input 
                                                     type='email'
                                                     value={userData.email}
+                                                    name='email'
+                                                    onChange={handleChange}
                                                     placeholder='Email'
                                                     className='bg-white text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'                                                   
                                                 />

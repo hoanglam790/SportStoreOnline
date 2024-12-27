@@ -16,7 +16,7 @@ const AddToCartButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
 
     const { fetchCartItems, updateCartItems, deleteCartItems } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector(state => state?.cart_data?.cart)
     //console.log('addtocartbtn', cartItem)
 
     // Tăng số lượng sản phẩm trong giỏ hàng
@@ -60,15 +60,19 @@ const AddToCartButton = ({ data }) => {
                 }
             })
             
+            // Thông báo thành công khi trả về dữ liệu
             if(responseData.data.success){
                 toast.success(responseData.data.message, {
                     position: 'top-center'
                 })
+
+                // Cập nhật lại giỏ hàng sau khi thanh toán
                 if(fetchCartItems){
                     fetchCartItems()
                 }
             }
 
+            // Thông báo lỗi khi không trả về được dữ liệu
             if(responseData.data.error){
                 toast.error(responseData.data.message)
             }
@@ -101,14 +105,8 @@ const AddToCartButton = ({ data }) => {
                             <button onClick={decreaseQuantity}
                             className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded'><FiMinus /></button>
                             
-                            {/* <input
-                                type="number"
-                                value={quantity}
-                                onChange={handleQuantityChange}
-                                className="flex-1 font-semibold w-full text-center p-1"
-                                min="1" // Đảm bảo số lượng không nhỏ hơn 1
-                            /> */}
                             <p>{quantity}</p>
+                            
                             <button onClick={increaseQuantity}
                             className='bg-green-700 hover:bg-green-800 text-white w-full flex-1 p-1 rounded'><FiPlus /></button>
                         </div>

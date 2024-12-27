@@ -81,7 +81,7 @@ const UpdateUserData = ({ close, fetchUserData }) => {
                                 type='email'
                                 value={userData.email}
                                 placeholder='Email'
-                                className='bg-transparent text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
+                                className='bg-gray-200 text-gray-800 px-4 py-2.5 rounded-md w-full text-sm border border-gray-400'  
                                 disabled
                             />
                             <TfiEmail className='absolute right-3' />
@@ -112,7 +112,7 @@ const UpdateUserData = ({ close, fetchUserData }) => {
                     </div>
                     <div className='flex items-center justify-center mt-8'>
                         <button
-                            className='bg-transparent border border-gray-400 hover:bg-orange-500 hover:border-white hover:text-white font-semibold p-3 rounded-md w-[200px] uppercase'>
+                            className='bg-transparent border border-gray-400 hover:bg-blue-600 hover:border-white hover:text-white font-semibold p-3 rounded-md w-[200px] uppercase'>
                             Xác nhận
                         </button>
                     </div>

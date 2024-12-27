@@ -17,13 +17,13 @@ const uploadImageController = async(req,res) => {
         return res.status(500).json({
             success: false,
             error: true,
-            message: error.message || error
+            message: error.message
         })
     }
 }
 
 {/** Kiểm tra ảnh trên Cloudinary */}
-const checkImageCloudinaryController = async (req,res) => {
+const checkImageCloudinaryController = async(req,res) => {
     const { public_id } = req.query  // Lấy public_id từ query string
 
     try {
@@ -40,7 +40,7 @@ const checkImageCloudinaryController = async (req,res) => {
             return res.status(200).json({
                 success: true,
                 error: false,
-                message: "Ảnh đã tồn tại trên Cloudinary",
+                message: "Hình ảnh đã tồn tại trên Cloudinary",
                 data: response.data.resources[0] // Trả về thông tin ảnh
             })
         } else {
@@ -50,13 +50,12 @@ const checkImageCloudinaryController = async (req,res) => {
                 message: "Không tìm thấy ảnh với public_id này"
             })
         }
-
     } catch (error) {
         return res.status(500).json({
             success: false,
             error: true,
             exists: false,
-            message: error.message || error
+            message: error.message
         })
     }
 }

@@ -2,9 +2,17 @@ const mongoose = require('mongoose')
 const DeliveryAddressModel = require('../models/deliveryAddressDetails.model')
 const OrderModel = require('../models/order.model')
 
-const addNewDeliveryAddress = async (req,res) => {
+const addNewDeliveryAddress = async(req,res) => {
     try {
-        const { name, email, phone_number, address, orderId } = req.body
+        const { name, email, phone_number, address } = req.body
+
+        if(!name || !email || !phone_number || !address){
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Vui lòng cung cấp đầy đủ các trường dữ liệu'
+            })
+        }
 
         let deliveryAddress = await DeliveryAddressModel.findOne({
             name,
@@ -18,22 +26,16 @@ const addNewDeliveryAddress = async (req,res) => {
                 name: name,
                 email: email,
                 phone_number: phone_number,
-                address: address,
-                orderId: orderId
+                address: address
             })
             await deliveryAddress.save()
         }
 
-        const addOrderAddress = await OrderModel.findByIdAndUpdate(orderId, {
-            $push: {
-                deliveryAddress: deliveryAddress._id
-            }
-        })
-        
         // Thông báo khi lưu dữ liệu thành công
         return res.status(201).json({
             success: true,
-            message: 'Thêm địa chỉ mới thành công',
+            error: false,
+            message: 'Lưu dữ liệu địa chỉ thành công',
             data: deliveryAddress
         })
     } catch (error) {

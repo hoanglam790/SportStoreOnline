@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 
 const DisplayCartItems = ({ close }) => {
     const { totalPrice, totalPriceNotDiscount, totalQuantity } = useGlobalContext()
-    const cartItem = useSelector(state => state?.cart_data?.cart?.cart_items)
+    const cartItem = useSelector(state => state?.cart_data?.cart)
     //console.log(cartItem)
     const navigate = useNavigate()
 
