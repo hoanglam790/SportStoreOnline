@@ -15,13 +15,18 @@ const orderRouter = require('./routes/order.route')
 const deliveryAddressRouter = require('./routes/deliveryAddress.route')
 require('dotenv').config()
 
-
 const app = express()
 const PORT = process.env.PORT
 const corsOptions = {
     origin: `${process.env.FRONTEND_URL}`, // Địa chỉ frontend
     credentials: true // Cho phép gửi cookie
 }
+
+app.get('/', (req,res) => {
+    res.status(200).json({
+        message: 'Server is running on port: ' + PORT
+    })
+})
 
 // Middleware
 app.use(express.json()) // Cho phép chấp nhận dữ liệu JSON trong req.body

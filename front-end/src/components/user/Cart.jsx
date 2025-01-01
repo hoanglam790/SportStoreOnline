@@ -91,13 +91,13 @@ const Cart = () => {
     }
 
     const handleCheckOutOnline = async() => {
+        const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+        const stripePromise = await loadStripe(stripePublicKey)
         try {
             toast.loading('Đang tải dữ liệu...', {
                 position: 'top-center'
             })
-            const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
-            const stripePromise = await loadStripe(stripePublicKey)
-            
+                       
             // Lưu thông tin địa chỉ vào bảng deliveryAddressDetails
             const saveDeliveryAddress = await Axios({
                 ...connectApi.createNewDeliveryAddress,
@@ -122,39 +122,18 @@ const Cart = () => {
                 })
                 
                 // Lấy session_id từ response để thanh toán qua Stripe
+                // Chuyển hướng đến trang thanh toán của Stripe
                 const sessionId = responseOrderData.data.data.session_id
-
-                if(sessionId) {
-                    // Chuyển hướng đến trang thanh toán của Stripe
-                    const stripe = await stripePromise
-
-                    // Kiểm tra xem Stripe đã được tải chưa
-                    if(stripe) {
-                        const { error } = await stripe.redirectToCheckout({
-                            sessionId: sessionId,  // Sử dụng session_id trả về từ backend
-                        })
-
-                        if(error) {
-                            toast.error(error.message, {
-                                position: 'top-center',
-                            })
-                        }
-                    }
+                stripePromise.redirectToCheckout({ sessionId: sessionId })
+                
+                // Cập nhật lại giỏ hàng sau khi thanh toán
+                if(fetchCartItems){
+                    fetchCartItems()
                 }
 
-                if(responseOrderData.data.success){
-                    toast.success(responseOrderData.data.message, {
-                        position: 'top-center'
-                    })
-                    // Cập nhật lại giỏ hàng sau khi thanh toán
-                    if(fetchCartItems){
-                        fetchCartItems()
-                    }
-
-                    // Cập nhật lại đơn hàng sau khi tạo mới
-                    if(fetchOrder){
-                        fetchOrder()
-                    }
+                // Cập nhật lại đơn hàng sau khi tạo mới
+                if(fetchOrder){
+                    fetchOrder()
                 }
             }
         } catch (error) {
@@ -162,6 +141,17 @@ const Cart = () => {
         }
     }
 
+    // Cập nhật lại userData mỗi khi redux state thay đổi (Ví dụ: tải lại trang)
+    useEffect(() => {
+        if(user) {
+            setUserData({
+                name: user.name || '',
+                email: user.email || '',
+                phone_number: user.phone_number || '',
+                address: user.address || ''
+            })
+        }
+    }, [user])
     return (
         <section className='container mx-auto py-12'>           
         {

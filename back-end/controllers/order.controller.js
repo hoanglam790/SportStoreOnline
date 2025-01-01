@@ -137,51 +137,8 @@ const orderCheckOutPaymentOnline = async(req,res) => {
 
         // Lấy các sản phẩm trong giỏ hàng
         const cartItems = await CartItemModel.find({ cart_id: cart._id })
-            .populate('product_id', 'name image price')
+            .populate('product_id', 'name image')
         
-        // Tính tổng giá trị đơn hàng và tổng số lượng
-        let totalAmount = 0
-        let totalQuantity = 0       
-        const orderDetails = []
-
-        cartItems.forEach(item => {
-            const discount = item.discount || 0
-            const actualPrice = discount > 0 ? item.price - ((item.price * item.discount) / 100) : item.price
-
-            totalQuantity += item.quantity
-            totalAmount += item.quantity * actualPrice
-            orderDetails.push({
-                product_id: item.product_id._id,
-                quantity: item.quantity,
-                price: actualPrice,
-                total: item.quantity * actualPrice
-            })
-        })
-
-        // Tạo đơn hàng mới
-        const order = new OrderModel({
-            user_id: user_id || null,
-            session_id: user_id ? null : session_id,
-            total_amount: totalAmount,
-            total_quantity: totalQuantity,
-            delivery_address,
-            payment_method: 'Thanh toán bằng Stripe',
-            status: 'Chờ xử lý'
-        })
-        await order.save()
-
-        // Tạo chi tiết đơn hàng
-        for (let detail of orderDetails) {
-            await OrderDetailModel.create({
-                order_id: order._id,
-                ...detail
-            })
-        }
-
-        // Xóa giỏ hàng sau khi thanh toán
-        await CartItemModel.deleteMany({ cart_id: cart._id })
-        await CartModel.deleteOne({ _id: cart._id })
-
         // Tạo một session thanh toán với Stripe Checkout
         const line_items = cartItems.map(item => ({
             price_data: {
@@ -201,33 +158,111 @@ const orderCheckOutPaymentOnline = async(req,res) => {
             },
             quantity: item.quantity
         }))
-
+        
+        // Tạo parameter truyền vào session thanh toán
         const params = {
             submit_type: 'pay',
+            line_items: line_items,
             mode: 'payment',
             payment_method_types: ['card'],
-            customer_email: user.email, // Email của người dùng
+            customer_email: user?.email, // Email của người dùng
             metadata: {
                 user_id: user_id,
-                delivery_address: delivery_address
-            },
-            line_items: line_items,
+                session_id: user_id ? null : session_id,
+                delivery_address: delivery_address,
+                cart_id: cart._id.toString()
+            },           
             success_url: `${process.env.FRONTEND_URL}/checkout/success`,
             cancel_url: `${process.env.FRONTEND_URL}/cancel`
         }
 
         const session = await stripe.checkout.sessions.create(params)
 
-        // Trả về client_secret để frontend xử lý thanh toán với Stripe
+        // Thông báo xử lý thành công khi tạo session thanh toán với Stripe
         return res.status(200).json({
             success: true,
             error: false,
-            message: 'Thanh toán thành công',
             data: {
-                order: order,
                 session_id: session.id // Trả về session Id của Stripe Checkout
             }
         })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+// http://localhost:5000/api/order/webhook
+const webhookStripeOrder = async(req,res) => {
+    try {
+        const event = req.body
+        const webhookSecretKey = process.env.STRIPE_WEBHOOK_SECRET_KEY
+        
+        // Handle the event
+        switch(event.type){
+            case 'checkout.session.completed':
+                const session = event.data.object // session data
+                const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
+                const user_id = session.metadata.user_id
+                const session_id = session.metadata.session_id
+                const delivery_address = session.metadata.delivery_address
+                const totalAmount = session.amount_total               
+                //console.dir(lineItems.data)
+                
+                // Tính tổng số lượng
+                // Tạo mảng orderDetails để lấy dữ liệu và lưu vào chi tiết đơn hàng
+                let totalQuantity = 0
+                const orderDetails = []
+
+                // Duyệt qua từng sản phẩm trong lineItems và tạo chi tiết đơn hàng
+                for(const item of lineItems.data){
+                    // Retrieve: truy xuất Id của sản phẩm trong hệ thống Stripe
+                    const product = await stripe.products.retrieve(item.price.product) // item.price.product: lấy trong session stripe
+                    totalQuantity += item.quantity
+
+                    orderDetails.push({
+                        product_id: product.metadata.product_id,  // Lưu product_id metadata
+                        quantity: item.quantity,    // Số lượng của từng sản phẩm
+                        price: item.price.unit_amount, // Giá của từng sản phẩm
+                        total: item.price.unit_amount * item.quantity // Tổng tiền cho sản phẩm này
+                    })
+                }
+                
+                // Tạo đơn hàng mới
+                const order = new OrderModel({
+                    user_id: user_id || null,
+                    session_id: user_id ? null : session_id,
+                    total_amount: totalAmount,
+                    total_quantity: totalQuantity,
+                    delivery_address,
+                    payment_method: 'Thanh toán bằng Stripe',
+                    status: 'Chờ xử lý'
+                })
+                await order.save()
+
+                // Tạo chi tiết đơn hàng
+                for(const detail of orderDetails) {
+                    await OrderDetailModel.create({
+                        order_id: order._id,                      
+                        ...detail
+                    })
+                }
+                
+                // Lấy cart_id từ metadata
+                const cart_id = session.metadata.cart_id
+
+                // Xóa các sản phẩm trong giỏ hàng sau khi thanh toán thành công
+                await CartItemModel.deleteMany({ cart_id: cart_id })
+                await CartModel.deleteOne({ _id: cart_id })
+                break
+            default:
+                console.log(`Unhandled event type ${event.type}`)
+        }
+        // Return a response to acknowledge receipt of the event
+        res.json({ received: true })
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -319,4 +354,4 @@ const getOrderDetails = async(req,res) => {
     }
 }
 
-module.exports = { orderCheckOutInCash, orderCheckOutPaymentOnline, getAllOrders, getOrderDetails }
+module.exports = { orderCheckOutInCash, orderCheckOutPaymentOnline, getAllOrders, getOrderDetails, webhookStripeOrder }
