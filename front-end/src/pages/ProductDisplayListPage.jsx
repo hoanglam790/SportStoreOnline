@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom'
 import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
+//import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
 import displayCurrencyToVND from '@/utils/FormatCurrency'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
-import AddToCartButton from '@/components/user/AddToCartButton'
 import AddToCartInDetailPageButton from '@/components/user/AddToCartInDetailPageBtn'
 
 const ProductDisplayListPage = () => {
@@ -24,7 +23,7 @@ const ProductDisplayListPage = () => {
     setActiveTab(tab)
   }
 
-  const fetchProductDetails = async () => {
+  const fetchProductDetails = async() => {
     try {
       setIsLoading(true)
       const responseData = await Axios({
@@ -43,14 +42,15 @@ const ProductDisplayListPage = () => {
       setIsLoading(false)
     }
   }
-
-  const handleScrollRight = () => {
-    imageContainer.current.scrollLeft += 100
+  {/**
+    const handleScrollRight = () => {
+      imageContainer.current.scrollLeft += 100
+    }
+    const handleScrollLeft = () => {
+      imageContainer.current.scrollLeft -= 100
   }
-  const handleScrollLeft = () => {
-    imageContainer.current.scrollLeft -= 100
-  }
-
+  */}
+  
   useEffect(() => {
     fetchProductDetails()
   }, [params])

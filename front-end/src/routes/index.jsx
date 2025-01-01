@@ -19,9 +19,10 @@ import ProductAdmin from "@/pages_admin/ProductAdmin"
 import ProductDisplayPage from "@/pages/ProductDisplayPage"
 import ProductDisplayListPage from "@/pages/ProductDisplayListPage"
 import Cart from "@/components/user/Cart"
-import MyCart from "@/pages/MyCart"
 import PaymentSuccess from "@/pages/PaymentSuccess"
 import MyAccount from "@/pages/MyAccount"
+import MyOrder from "@/pages/MyOrder"
+import MyOrderDetail from "@/pages/MyOrderDetail"
 
 const router = createBrowserRouter([
     {
@@ -92,14 +93,17 @@ const router = createBrowserRouter([
                 element : <Cart/>
             },
             {
-                path : 'my-cart',
-                element : <MyCart />
+                path : 'my-order',
+                element : <MyOrder />
+            },
+            {
+                path : 'my-order/:id',
+                element : <MyOrderDetail />
             },
             {
                 path : 'checkout/success',
                 element : <PaymentSuccess />
             }
-
         ]
     },
     {

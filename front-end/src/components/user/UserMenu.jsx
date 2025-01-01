@@ -126,7 +126,7 @@ const UserMenu = ({ close }) => {
 
                             <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
                                 <TiShoppingCart size={20}/>
-                                <Link onClick={handleClose} to={'/my-cart'}>Đơn hàng</Link>
+                                <Link onClick={handleClose} to={'/my-order'}>Đơn hàng</Link>
                             </div>
                                         
                             <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>

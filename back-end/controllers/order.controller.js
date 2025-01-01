@@ -279,7 +279,7 @@ const getAllOrders = async(req,res) => {
         
         // Tìm tất cả các đơn hàng của người dùng
         const getOrder = await OrderModel.find({ user_id }).sort({ createdAt: -1 })
-        if (getOrder.length === 0) {
+        if(getOrder.length === 0) {
             return res.status(404).json({
                 success: false,
                 error: true,
@@ -332,7 +332,8 @@ const getOrderDetails = async(req,res) => {
             })
         }
 
-        const order = await OrderModel.findOne({ _id: order_id })
+        const order = await OrderModel.find({ _id: order_id })
+            .populate('delivery_address')
         const orderDetails = await OrderDetailModel.find({ order_id })
             .populate('product_id', 'name image price')
 
