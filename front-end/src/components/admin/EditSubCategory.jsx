@@ -13,10 +13,11 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
         _id: subCateData._id,
         name: subCateData.name,
         image: subCateData.image,
-        category: subCateData.category
+        category: subCateData.category || []
     })
     const [selectCate, setSelectCate] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [isImageLoading, setIsImageLoading] = useState(false)
 
     const allCategories = useSelector(state => state.product_data?.allCategory)
 
@@ -34,12 +35,27 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
 
     // Xử lý khi chọn ô dữ liệu trong Dropdown list
     const handleChangeSelect = (e) => {
-        const handleSelectedCate = e.target.value
-        setSelectCate(handleSelectedCate)
+        const value = e.target.value
+        const category = allCategories.find(el=> el._id === value)
+
         setSubCategoryData((prev) => {
-            return{
+            return {
                 ...prev,
-                category: handleSelectedCate
+                category: [...prev.category, category]
+            }
+        })
+    }
+
+    const handleRemoveCategorySelected = (categoryId)=>{
+        const index = subCategoryData.category.findIndex(el => el._id === categoryId)
+        subCategoryData.category.splice(index,1)
+        if(subCategoryData.category.length === 1){
+            setSelectCate('')
+        }
+        
+        setSubCategoryData((prev)=>{
+            return {
+                ...prev
             }
         })
     }
@@ -50,10 +66,10 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
         if(!file){
             return
         }
-        setIsLoading(true)
+        setIsImageLoading(true)
         const responseImage = await uploadNewImage(file)
         const { data: responseNewImage } = responseImage
-        setIsLoading(false)
+        setIsImageLoading(false)
 
         setSubCategoryData((prev) => {
             return {
@@ -109,15 +125,9 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
         }
     }
 
-    useEffect(() => {
-        if(subCateData && subCateData.category){
-            setSelectCate(subCateData.category[1])
-        }
-    }, [subCateData])
-
     return (
         <section className='fixed top-0 bottom-0 left-0 right-0 z-50 p-10 bg-neutral-500 bg-opacity-60 flex items-center justify-center'>
-            <div className='bg-white max-w-2xl w-[600px] p-3 rounded-md'>
+            <div className='bg-white max-w-2xl w-[700px] p-3 rounded-md'>
                 <div className='flex items-center justify-between'>
                     <h2 className='font-semibold'>Chỉnh sửa danh mục sản phẩm phụ</h2>
                     <button onClick={close} className='w-fit block ml-auto'>
@@ -153,14 +163,13 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
                                     ) : (
                                         <p className='text-sm font-semibold'>Không có hình ảnh</p>
                                     )
-                                }
-                                
+                                }                               
                             </div>
 
                             <label htmlFor='uploadCateImg'>
                                 <div className={`${!subCategoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                 {
-                                    isLoading ? (
+                                    isImageLoading ? (
                                         <div className='w-[110px] h-[42px] flex items-center justify-center'>
                                             <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
                                         </div>
@@ -178,8 +187,7 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
                                     disabled={!subCategoryData.name}
                                     onChange={handleUploadImage}
                                 />
-                            </label>
-                            
+                            </label>                           
                         </div>                       
                     </div>
 
@@ -197,19 +205,39 @@ const EditSubCategory = ({ close, fetchData, data: subCateData }) => {
                                         )
                                     })
                                 }
-                            </select>
-                        </div>                       
+                            </select>                          
+                        </div>
+                        <div className='flex flex-wrap gap-1'>
+                            {
+                                subCategoryData.category.map((cate, index) => {
+                                    return(
+                                        <p key={cate?._id} 
+                                        className='bg-transparent border border-orange-400 p-2 m-1 flex items-center gap-2 rounded-sm'>
+                                            {cate?.name}
+                                            <div className='hover:text-green-600 cursor-pointer'
+                                                onClick={() => handleRemoveCategorySelected(cate?._id)}>
+                                                <IoMdClose size={20}/>
+                                            </div>
+                                        </p>
+                                    )                                      
+                                })
+                            }
+                        </div>                      
                     </div>
                     {
                         isLoading ? (
-                            <button className='w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'>
-                                <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
-                            </button>
+                            <div className='flex items-center justify-center'>
+                                <button className='w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'>
+                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                </button>
+                            </div>                            
                         ) : (
-                            <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image && subCategoryData.category[1] ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
-                                : 'w-full flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
-                                Chỉnh sửa
-                            </button>
+                            <div className='flex items-center justify-center'>
+                                <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image && subCategoryData.category[0] ? 'w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
+                                    : 'w-[150px] flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
+                                    Chỉnh sửa
+                                </button>
+                            </div>                           
                         )
                     }                   
                 </form>                

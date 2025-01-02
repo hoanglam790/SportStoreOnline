@@ -60,28 +60,34 @@ const getAllProduct = async(req,res) => {
     try {
         let { page, limit, search } = req.body
 
+        // Nếu page không có trong yêu cầu (người dùng không gửi), gán giá trị mặc định là 1
         if(!page){
             page = 1
         }
 
+        // Nếu limit không có, gán giá trị mặc định là 10
         if(!limit) {
             limit = 10
         }
 
+        // Nếu có tham số tìm kiếm (search), sẽ tạo ra một truy vấn MongoDB sử dụng $text để tìm kiếm văn bản trong các trường đã được chỉ định cho tìm kiếm văn bản
+        // Nếu không có từ khóa tìm kiếm, query sẽ là một đối tượng rỗng {}, tức là không có điều kiện tìm kiếm, sẽ lấy tất cả sản phẩm
         const query = search ? {
             $text: {
                 $search: search
             }
         } : {}
 
+        // Tính toán số sản phẩm cần bỏ qua để lấy đúng trang
         const skipPage = (page - 1) * limit
 
+        // Promise.all: dùng để truy vấn song song
         const [data, totalCountPage] = await Promise.all([
-            ProductModel.find(query)
-            .populate('category')
+            ProductModel.find(query)    // Truy vấn các sản phẩm từ cơ sở dữ liệu với điều kiện tìm kiếm (query)
+            .populate('category')   // Lấy dữ liệu bao gồm 2 trường quan hệ: category và subCategory
             .populate('subCategory')
-            .sort({ createdAt : -1}).skip(skipPage).limit(limit),
-            ProductModel.countDocuments(query)
+            .sort({ createdAt : -1}).skip(skipPage).limit(limit), // Thực hiện phân trang bằng cách bỏ qua số sản phẩm đã được tính toán ở bước trên và giới hạn số sản phẩm trả về mỗi trang
+            ProductModel.countDocuments(query) // Truy vấn đếm tổng số sản phẩm phù hợp với điều kiện tìm kiếm
         ])
 
         return res.status(200).json({
@@ -174,7 +180,7 @@ const getProductByCateAndSubCate = async(req,res) => {
             return res.status(404).json({
                 success: false,
                 error: true,
-                message: 'Vui lòng cung cấp CategoryID và Sub-CategoryID'
+                message: 'Vui lòng cung cấp CategoryId và Sub-CategoryId'
             })
         }
 

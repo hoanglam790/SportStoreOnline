@@ -1,28 +1,28 @@
-import { createBrowserRouter } from "react-router-dom"
+import { createBrowserRouter } from 'react-router-dom'
 import App from '../App'
-import Login from "@/pages/Login"
-import Register from "@/pages/Register"
-import SearchPage from "@/pages/SearchPage"
-import ForgotPassword from "@/pages/ForgotPassword"
-import VerifyByOTP from "@/pages/VerifyByOTP"
-import ResetPassword from "@/pages/ResetPassword"
-import Dashboard from "@/pages_admin/Dashboard"
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
+import SearchPage from '@/pages/SearchPage'
+import ForgotPassword from '@/pages/ForgotPassword'
+import VerifyByOTP from '@/pages/VerifyByOTP'
+import ResetPassword from '@/pages/ResetPassword'
+import Dashboard from '@/pages_admin/Dashboard'
 import CategoryAdmin from '@/pages_admin/CategoryAdmin'
-import SubCategoryAdmin from "@/pages_admin/SubCategoryAdmin"
-import AdminPermission from "@/pages_admin/AdminPermission"
-import Home from "@/pages/Home"
-import AllUsers from "@/pages_admin/AllUsers"
-import Product from "@/pages/Product"
-import NoItemInCart from "@/components/user/NoItemInCart"
-import PageNotFound from "@/pages/PageNotFound"
-import ProductAdmin from "@/pages_admin/ProductAdmin"
-import ProductDisplayPage from "@/pages/ProductDisplayPage"
-import ProductDisplayListPage from "@/pages/ProductDisplayListPage"
-import Cart from "@/components/user/Cart"
-import PaymentSuccess from "@/pages/PaymentSuccess"
-import MyAccount from "@/pages/MyAccount"
-import MyOrder from "@/pages/MyOrder"
-import MyOrderDetail from "@/pages/MyOrderDetail"
+import SubCategoryAdmin from '@/pages_admin/SubCategoryAdmin'
+import AdminPermission from '@/pages_admin/AdminPermission'
+import Home from '@/pages/Home'
+import AllUsers from '@/pages_admin/AllUsers'
+import Product from '@/pages/Product'
+import NoItemInCart from '@/components/user/NoItemInCart'
+import PageNotFound from '@/pages/PageNotFound'
+import ProductAdmin from '@/pages_admin/ProductAdmin'
+import ProductDisplayPage from '@/pages/ProductDisplayPage'
+import ProductDetailPage from '@/pages/ProductDetailPage'
+import Cart from '@/components/user/Cart'
+import PaymentSuccess from '@/pages/PaymentSuccess'
+import MyAccount from '@/pages/MyAccount'
+import MyOrder from '@/pages/MyOrder'
+import MyOrderDetail from '@/pages/MyOrderDetail'
 
 const router = createBrowserRouter([
     {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
             },
             {
                 path : 'product/:id',
-                element : <ProductDisplayListPage/>
+                element : <ProductDetailPage/>
             },
             {
                 path : 'my-account',

@@ -40,24 +40,23 @@ const DisplayCartItems = ({ close }) => {
                             cartItem?.[0] && (cartItem.map((item, index) => {
                                 return(
                                 <>
-                                    <div className='flex w-full gap-1'>
-                                        <div className='w-20 h-20 min-h-20 min-w-20 border rounded'>
+                                    <div className='flex gap-3'>
+                                        <div className='w-28 h-20 border rounded'>
                                             <img 
                                                 src={item?.product_id?.image[0]}
-                                                className='object-scale-down'                                           
+                                                className='w-full h-full object-cover'                                           
                                             />                                           
                                         </div>
                                         
-                                        <div className='ml-2 w-full max-w-sm'>
+                                        <div className='flex flex-col ml-2 w-full max-w-sm'>
                                             <p className='text-[13px] text-ellipsis line-clamp-2'>{item?.product_id?.name}</p>
-                                            <div className='flex justify-between mt-3'>
-                                                <p className='text-sm'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount))}</p>
-                                                <p className='text-sm font-semibold'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount) * (item?.quantity))}</p>
+                                            <div className='flex mt-4'>
+                                                <p className='text-sm'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount))}</p>                                               
                                             </div>                                           
-                                        </div>
-                                        
-                                        <div>
+                                        </div>                      
+                                        <div className='flex flex-col gap-8'>
                                             <AddToCartButton data={item?.product_id}/>
+                                            <p className='text-sm font-semibold'>{displayCurrencyToVND(displayDiscountPrice(item?.product_id?.price, item?.product_id?.discount) * (item?.quantity))}</p>
                                         </div>                                        
                                     </div>
                                     <hr className='mt-0'/>

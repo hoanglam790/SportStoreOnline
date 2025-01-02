@@ -18,7 +18,7 @@ const Product = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [productData, setProductData] = useState([])
     const [page, setPage] = useState(1)
-    const [totalPageCount,setTotalPageCount] = useState(1)
+    const [totalPageCount, setTotalPageCount] = useState(1)
     const [search, setSearch] = useState('')
     const [openUploadProduct, setOpenUploadProduct] = useState(false) // Mở trang thêm mới sản phẩm
     const [openProductDetail, setOpenProductDetail] = useState(false)
@@ -197,7 +197,7 @@ const Product = () => {
                                                                     className='w-full h-36 mt-3 object-scale-down cursor-pointer'
                                                                 />
                                                             </div>
-                                                            <p className='text-ellipsis line-clamp-2 font-normal mt-2'>{p?.name}</p>
+                                                            <p className='font-normal mt-2 truncate'>{p?.name}</p>
                                                             <div className='flex items-center h-10 mt-3 gap-3 text-sm'>
                                                                 <button onClick={() => 
                                                                     {   
@@ -224,12 +224,14 @@ const Product = () => {
                                     
                                     {/** Tạo 2 nút button trước và sau */}
                                     <div className='mt-3 flex justify-between'>
-                                        <button onClick={handlePreviousPage} className='border border-orange-500 hover:bg-blue-600 font-normal px-4 py-2 rounded flex items-center justify-center gap-2'>
+                                        <button onClick={handlePreviousPage} disabled={page === 1} 
+                                            className={`font-normal px-4 py-2 rounded flex items-center justify-center gap-2 ${page === 1 ? 'bg-gray-300 border-none text-white cursor-not-allowed' : 'border border-orange-500 hover:bg-blue-600'}`}>
                                             <HiArrowNarrowLeft size={20}/>
                                             Trang trước
                                         </button>
-                                        <button>{page} / {totalPageCount}</button>
-                                        <button onClick={handleNextPage} className='border border-orange-500 hover:bg-yellow-600 font-normal px-4 py-2 rounded flex items-center justify-center gap-2'>
+                                        <button disabled>Trang {page} / {totalPageCount}</button>
+                                        <button onClick={handleNextPage} disabled={page === totalPageCount} 
+                                            className={`font-normal px-4 py-2 rounded flex items-center justify-center gap-2 ${page === totalPageCount ? 'bg-gray-300 border-none text-white cursor-not-allowed' : 'border border-orange-500 hover:bg-yellow-600'}`}>
                                             Trang sau
                                             <HiArrowNarrowRight size={20}/>
                                         </button>

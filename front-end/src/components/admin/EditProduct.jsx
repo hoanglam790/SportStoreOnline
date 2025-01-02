@@ -31,6 +31,7 @@ const EditProduct = ({ close, fetchData, data: products }) => {
 
     const allCategories = useSelector(state => state.product_data?.allCategory)
     const allSubCategories = useSelector(state => state.product_data?.allSubCategory)
+    const changeColorValue = Object.values(productData).every(p => p)
 
     // Xử lý khi chọn ô dữ liệu Category trong Dropdown list
     const handleChangeSelectCate = (e) => {
@@ -95,6 +96,30 @@ const EditProduct = ({ close, fetchData, data: products }) => {
     // Xử lý xóa hình ảnh nếu không ưng ý
     const handleDeleteImage = async(index) => {
         productData.image.splice(index, 1)
+        setProductData((prev) => {
+            return {
+                ...prev
+            }
+        })
+    }
+
+    const handleRemoveCategorySelected = async(index)=>{
+        productData.category.splice(index, 1)
+        if(productData.category.length === 1){
+            setSelectCate('')
+        }
+        setProductData((prev) => {
+            return {
+                ...prev
+            }
+        })
+    }
+
+    const handleRemoveSubCategorySelected = async(index)=>{
+        productData.subCategory.splice(index, 1)
+        if(productData.subCategory.length === 1){
+            setSelectSubCate('')
+        }
         setProductData((prev) => {
             return {
                 ...prev
@@ -265,6 +290,22 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                                 }
                             </select>
                         </div>
+                        <div className='flex flex-wrap gap-1'>
+                            {
+                                productData.category.map((cate, index) => {
+                                    return(
+                                        <p key={cate?._id} 
+                                        className='bg-transparent border border-orange-400 p-2 m-1 flex items-center gap-2 rounded-sm'>
+                                            {cate?.name}
+                                            <div className='hover:text-green-600 cursor-pointer'
+                                                onClick={() => handleRemoveCategorySelected(index)}>
+                                                <IoMdClose size={20}/>
+                                            </div>
+                                        </p>
+                                    )                                      
+                                })
+                            }
+                        </div>
                     </div>
 
                     <div className='grid py-1 mx-2'>
@@ -286,6 +327,22 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                                     })
                                 }
                             </select>
+                        </div>
+                        <div className='flex flex-wrap gap-1'>
+                            {
+                                productData.subCategory.map((sc, index) => {
+                                    return(
+                                        <p key={sc?._id} 
+                                        className='bg-transparent border border-orange-400 p-2 m-1 flex items-center gap-2 rounded-sm'>
+                                            {sc?.name}
+                                            <div className='hover:text-green-600 cursor-pointer'
+                                                onClick={() => handleRemoveSubCategorySelected(index)}>
+                                                <IoMdClose size={20}/>
+                                            </div>
+                                        </p>
+                                    )                                      
+                                })
+                            }
                         </div>
                     </div>
 
@@ -332,15 +389,33 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                     </div>
                     {
                         isLoading ? (
-                            <button className='w-[200px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
-                                <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
-                            </button>
+                            <div className='flex items-center justify-center'>
+                                <button className='w-[150px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
+                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                </button>
+                            </div>                         
                         ) : (
-                            <button  
-                                className='w-[200px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
-                                >
-                                Cập nhật
-                            </button>
+                            <div className='flex items-center justify-center'>
+                                <button disabled={!changeColorValue}
+                                    className={`
+                                        ${
+                                            productData?.name && 
+                                            productData?.image[0] && 
+                                            productData?.description && 
+                                            productData?.price && 
+                                            productData?.discount && 
+                                            productData?.quantity_in_stock && 
+                                            productData?.category[0] && 
+                                            productData?.subCategory[0] ? 
+                                            'w-[150px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
+                                            :
+                                            'w-[150px] flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'
+                                        }
+                                    `}
+                                    >
+                                    Cập nhật
+                                </button>
+                            </div>                           
                         )
                     }                
                 </form>

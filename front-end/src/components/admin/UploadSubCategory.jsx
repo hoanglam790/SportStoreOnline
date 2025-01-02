@@ -15,6 +15,7 @@ const UploadSubCategory = ({ close, fetchData }) => {
         category: []
     })
     const [selectCate, setSelectCate] = useState('')
+    const [isImageLoading, setIsImageLoading] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
     const allCategories = useSelector(state => state.product_data?.allCategory)
@@ -39,10 +40,10 @@ const UploadSubCategory = ({ close, fetchData }) => {
         if(!file){
             return
         }
-        setIsLoading(true)
+        setIsImageLoading(true)
         const responseImage = await uploadNewImage(file)
         const { data: responseNewImage } = responseImage
-        setIsLoading(false)
+        setIsImageLoading(false)
 
         setSubCategoryData((prev) => {
             return {
@@ -62,8 +63,21 @@ const UploadSubCategory = ({ close, fetchData }) => {
                 ...prev,
                 category: [...prev.category, category]
             }
-        })
-        setSelectCate(value)
+        })        
+    }
+
+    const handleRemoveCategorySelected = (categoryId)=>{
+        const index = subCategoryData.category.findIndex(el => el._id === categoryId)
+        subCategoryData.category.splice(index,1)
+        if(subCategoryData.category.length === 1){
+            setSelectCate('')
+        }
+
+        setSubCategoryData((prev)=>{
+            return {
+                ...prev
+            }
+        })       
     }
 
     // Xử lý khi nhấn nút xác nhận
@@ -148,14 +162,13 @@ const UploadSubCategory = ({ close, fetchData }) => {
                                     ) : (
                                         <p className='text-sm font-semibold'>Không có hình ảnh</p>
                                     )
-                                }
-                                
+                                }                                
                             </div>
 
                             <label htmlFor='uploadCateImg'>
                                 <div className={`${!subCategoryData.name ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-400 cursor-pointer'} rounded px-3 py-2`}>
                                 {
-                                    isLoading ? (
+                                    isImageLoading ? (
                                         <div className='w-[110px] h-[42px] flex items-center justify-center'>
                                             <CgSpinner size={30} className='animate-[spin_0.8s_linear_infinite]' />
                                         </div>
@@ -173,15 +186,18 @@ const UploadSubCategory = ({ close, fetchData }) => {
                                     disabled={!subCategoryData.name}
                                     onChange={handleUploadImage}
                                 />
-                            </label>
-                            
+                            </label>                          
                         </div>                       
                     </div>
 
                     <div className='grid gap-2 mt-6'>
                         <label>Chọn danh mục sản phẩm:</label>
-                        <div className='border focus-within:border-orange-400 rounded'>
-                            <select value={selectCate} onChange={handleChangeSelect} className='w-full bg-transparent p-3 outline-none'>
+                        <div className='border focus-within:border-orange-400 rounded'>                            
+                            <select 
+                                value={selectCate}
+                                className='w-full bg-transparent p-3 outline-none border'
+                                onChange={handleChangeSelect}
+                            >
                                 <option value={''} >--- Hãy chọn 01 danh mục sản phẩm</option>
                                 {
                                     allCategories.map((category, index) => {
@@ -192,15 +208,41 @@ const UploadSubCategory = ({ close, fetchData }) => {
                                         )
                                     })
                                 }
-                            </select>
+                            </select>                        
                         </div>
-                        
-                    </div>
-
-                    <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image && subCategoryData.category[1] ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
-                        : 'w-full flex items-center justify-center gap-4 px-5 py-2.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
-                        Thêm mới
-                    </button>
+                        <div className='flex flex-wrap gap-2'>
+                            {
+                                subCategoryData.category.map((cate, index) => {
+                                    return(
+                                        <p key={cate?._id} 
+                                        className='bg-transparent border border-gray-300 p-2 m-1 flex items-center gap-2 rounded-sm'>
+                                            {cate?.name}
+                                            <div className='hover:text-green-600 cursor-pointer'
+                                                onClick={() => handleRemoveCategorySelected(cate?._id)}>
+                                                <IoMdClose size={20}/>
+                                            </div>
+                                        </p>
+                                    )                                      
+                                })
+                            }
+                        </div>                        
+                    </div>                   
+                    {
+                        isLoading ? (
+                            <div className='flex items-center justify-center'>
+                                <button className='w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
+                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className='flex items-center justify-center'>
+                                <button disabled={!changeColorValue} className={`${subCategoryData.name && subCategoryData.image && subCategoryData.category[0] ? 'w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                                    : 'w-[150px] flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
+                                    Thêm mới
+                                </button>
+                            </div>
+                        )
+                    }                    
                 </form>                
             </div>
         </section>

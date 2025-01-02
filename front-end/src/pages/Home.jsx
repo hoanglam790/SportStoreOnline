@@ -7,14 +7,13 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const Home = () => {
-    //const loadingCategory = useSelector(state => state.product_data.loadingCategory)
-    const categoryData = useSelector(state => state.product_data.allCategory)
+    const productData = useSelector(state => state.product_data.product)
 
     return (
         <section>
             <div className='container mx-auto p-3'>
                 {/** Hiển thị các ảnh banner */}
-                <div className='py-2'>
+                <div className='py-1'>
                     <BannerPage />
                 </div>
 
@@ -25,17 +24,7 @@ const Home = () => {
 
                 {/** Hiển thị sản phẩm nổi bật */}
                 <div className='py-16'>
-                {
-                    categoryData.map((c,index) => {
-                        return(
-                            <ProductDisplay 
-                                key={c?._id}
-                                id={c?._id}
-                                name={c?.name}
-                            />
-                        )
-                    })
-                }                
+                    <ProductDisplay />
                 </div>
 
                 {/** Hiển thị tin tức nổi bật */}

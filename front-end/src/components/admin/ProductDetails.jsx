@@ -30,7 +30,7 @@ const ProductDetails = ({ close, data: productData }) => {
                         <label className='py-2'>Tên sản phẩm:</label>
                         <input 
                             type='text'
-                            value={productDataDetail.name}
+                            value={productDataDetail?.name}
                             disabled
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />
@@ -40,7 +40,7 @@ const ProductDetails = ({ close, data: productData }) => {
                         <label className='py-2'>Mô tả:</label>
                         <textarea 
                             type='text'                                                      
-                            value={productDataDetail.description}
+                            value={productDataDetail?.description}
                             rows={3}                           
                             disabled
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
@@ -51,7 +51,7 @@ const ProductDetails = ({ close, data: productData }) => {
                         <label className='py-2'>Giá:</label>
                         <input 
                             type='text'
-                            value={productDataDetail.price}
+                            value={productDataDetail?.price}
                             disabled
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />                       
@@ -61,22 +61,22 @@ const ProductDetails = ({ close, data: productData }) => {
                         <label className='py-2'>Giảm giá (%):</label>
                         <input 
                             type='text'
-                            value={productDataDetail.discount}
+                            value={productDataDetail?.discount}
                             disabled
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />                       
                     </div>
 
                     <div className='grid gap-2 mt-2'>
-                        <label className='py-2'>Danh mục sản phẩm: <span className='font-semibold'>{productDataDetail.category[0].name}</span></label>                       
+                        <label className='py-2'>Danh mục sản phẩm: <span className='font-semibold'>{productDataDetail?.category?.[0].name}</span></label>                       
                     </div>
 
                     <div className='grid gap-2 mt-2'>
-                        <label className='py-2'>Danh mục sản phẩm phụ: <span className='font-semibold'>{productDataDetail.subCategory[0].name}</span></label>                       
+                        <label className='py-2'>Danh mục sản phẩm phụ: <span className='font-semibold'>{productDataDetail?.subCategory?.[0].name}</span></label>                       
                     </div>
 
                     <div className='grid gap-2 mt-2'>
-                        <label className='py-2'>Số lượng trong kho: <span className='font-semibold'>{productDataDetail.quantity_in_stock}</span></label>                      
+                        <label className='py-2'>Số lượng trong kho: <span className='font-semibold'>{productDataDetail?.quantity_in_stock}</span></label>                      
                     </div>                 
                 </form>
             </div>

@@ -88,7 +88,7 @@ const ProductDisplayPage = () => {
                                             className='w-14 lg:h-14 lg:w-12 h-full object-scale-down'
                                         />
                                     </div>
-                                    <p className='-mt-6 lg:mt-0 text-xs text-center lg:text-left lg:text-base'>{d.name}</p>
+                                    <p className='-mt-6 lg:mt-0 text-xs text-center lg:text-left lg:text-base md:mt-4'>{d.name}</p>
                                 </Link>
                             )
                         })
@@ -97,14 +97,10 @@ const ProductDisplayPage = () => {
 
                 {/** Hiển thị product */}
                 <div className='sticky top-20'>
-                    <div className='bg-white border-b p-4 mt-2 z-10'>
-                        <h2 className='text-xl font-semibold'>{subCategoryName}</h2>
-                    </div>
-
                     <div className='relative min-h-[80vh] max-h-[80vh] overflow-y-auto'>
-                        <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-2 gap-3'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-2 gap-3'>
                         {
-                            productData.map((p,index) => {
+                            productData.map((p, index) => {
                                 return(
                                     <ProductCard 
                                         data={p}

@@ -174,19 +174,22 @@ const UploadCategory = ({ close, fetchData }) => {
                                     disabled={!categoryData.name}
                                     onChange={handleUploadImage}
                                 />
-                            </label>
-                            
+                            </label>                         
                         </div>
                         {
                             isLoading ? (
-                                <button className='w-full flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
-                                    <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
-                                </button>
+                                <div className='flex items-center justify-center'>
+                                    <button className='w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'>
+                                        <CgSpinner size={25} className='animate-[spin_0.8s_linear_infinite]' />
+                                    </button>
+                                </div>                              
                             ) : (
-                                <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.image ? 'w-full flex items-center justify-center gap-4 mt-4 px-5 py-2.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
-                                    : 'w-full flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
-                                    Thêm mới
-                                </button>
+                                <div className='flex items-center justify-center'>
+                                    <button disabled={!changeColorValue} className={`${categoryData.name && categoryData.image ? 'w-[150px] flex items-center justify-center gap-4 mt-4 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'
+                                        : 'w-[150px] flex items-center justify-center gap-4 px-5 py-3.5 mt-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
+                                        Thêm mới
+                                    </button>
+                                </div>                                
                             )
                         }                      
                     </div>
