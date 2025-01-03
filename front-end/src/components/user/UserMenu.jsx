@@ -109,6 +109,11 @@ const UserMenu = ({ close }) => {
                             </div>
 
                             <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+                                <TiShoppingCart size={20}/>
+                                <Link onClick={handleClose} to={'/admin/orders'}>Đơn hàng</Link>
+                            </div>
+
+                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
                                 <TbReportAnalytics size={20}/>
                                 <Link onClick={handleClose} to={''}>Thống kê</Link>
                             </div>

@@ -174,8 +174,7 @@ const EditCategory = ({ close, fetchData, data : cateData }) => {
                                     </button>
                                 </div>                               
                             )
-                        }
-                        
+                        }                      
                     </div>
                 </form>
             </div>

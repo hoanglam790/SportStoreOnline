@@ -4,10 +4,9 @@ import connectApi from '@/common/ApiBackend'
 import Swal from 'sweetalert2'
 import moment from 'moment'
 import { FaRegEdit } from 'react-icons/fa'
-import { MdAdd, MdDelete } from 'react-icons/md'
-import ChangeRole from '@/components/admin/ChangeRole'
+import { MdDelete } from 'react-icons/md'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
-
+import EditAccount from '@/components/admin/EditAccount'
 
 const AllUsers = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -16,7 +15,8 @@ const AllUsers = () => {
     const [updateDataUser, setUpdateDataUser] = useState({
         name: '',
         email: '',
-        role: ''
+        role: '',
+        status: ''
     })
 
     // Gửi yêu cầu API để lấy dữ liệu người dùng.
@@ -68,33 +68,25 @@ const AllUsers = () => {
                     <thead>
                         <tr className='bg-black text-white'>
                             <th className='w-14'>STT</th>
-                            <th className='w-80'>Tên tài khoản/Email</th>
-                            <th className='w-80'>Tên</th>
+                            <th className='w-[300px]'>Tên tài khoản/Email</th>
+                            <th className='w-[230px]'>Tên</th>
                             <th className=''>Vai trò</th>
                             <th className=''>Trạng thái</th>
                             <th className=''>Ngày tạo</th>
                             <th className=''>Hành động</th>
-                        </tr>
-                        
+                        </tr>                        
                     </thead>
                     <tbody>
                         {
                             dataUser.map((u, index) => {
                                 return (
                                     <tr>
-                                        <td>{index+1}</td>
+                                        <td>{index + 1}</td>
                                         <td>{u?.email}</td>
                                         <td>{u?.name}</td>
                                         <td>{u?.role}</td>
-                                        <td className='p-4'>
-                                            <label className='relative cursor-pointer'>
-                                                <input type='checkbox' className='sr-only peer' checked/>
-                                                <div className='w-11 h-6 flex items-center bg-gray-300 rounded-full peer peer-checked:after:translate-x-full after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#007bff]'>
-                                                    
-                                                </div>
-                                            </label>
-                                        </td>
-                                        <td>{(moment(u?.createdAt).format('DD/MM/YYYY - HH:mm'))}</td>
+                                        <td>{u?.status}</td>
+                                        <td>{(moment(u?.createdAt).format('DD/MM/YYYY - HH:mm:ss'))}</td>
                                         <td className='flex justify-center gap-2'>
                                             <button 
                                                 onClick={() => {
@@ -116,7 +108,7 @@ const AllUsers = () => {
                 </table>
                 {
                     openUpdateUser && (
-                        <ChangeRole fetchUserData={fetchDataAllUsers} data={updateDataUser} close={() => setOpenUpdateUser(false)} />
+                        <EditAccount fetchUserData={fetchDataAllUsers} data={updateDataUser} close={() => setOpenUpdateUser(false)} />
                     )
                 }
                 

@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useSelector } from 'react-redux'
 
 const ProductDetails = ({ close, data: productData }) => {
     const [productDataDetail, setProductDataDetail] = useState({
-        _id: productData._id,
-        name: productData.name,
-        image: productData.image,
-        description: productData.description,
-        price: productData.price,
-        discount: productData.discount,
-        quantity_in_stock: productData.quantity_in_stock,
-        category: productData.category,
-        subCategory: productData.subCategory
+        _id: productData?._id,
+        name: productData?.name,
+        image: productData?.image,
+        description: productData?.description,
+        price: productData?.price,
+        discount: productData?.discount,
+        quantity_in_stock: productData?.quantity_in_stock,
+        category: productData?.category,
+        subCategory: productData?.subCategory
     })
 
     return (

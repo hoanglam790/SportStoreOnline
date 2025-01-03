@@ -212,7 +212,7 @@ const loginUser = async(req,res) => {
         }
 
         // Kiểm tra tình trạng hoạt động của tài khoản: Active - cho phép đăng nhập, Inactive + Suspended - từ chối
-        if(user.status != 'Active'){
+        if(user.status != 'Đang hoạt động'){
             return res.status(402).json({
                 success: false,
                 error: true,
@@ -349,7 +349,7 @@ const uploadImageUser = async(req,res) => {
 const updateUser = async(req,res) => {
     try {
         // const userId = req.user.id // Middleware auth
-        const { _id, name, email, password, phone_number, address, role } = req.body
+        const { _id, name, email, password, phone_number, address, role, status } = req.body
                
         let hashPassword = ''
 
@@ -366,7 +366,8 @@ const updateUser = async(req,res) => {
             ...(password && { password: hashPassword }),
             ...(phone_number && { phone_number: phone_number }),
             ...(address && { address: address }),
-            ...(role && { role: role })
+            ...(role && { role: role }),
+            ...(status && { status: status })
         })
 
         // Thông báo khi cập nhật thành công

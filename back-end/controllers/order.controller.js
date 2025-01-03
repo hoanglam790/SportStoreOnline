@@ -277,7 +277,7 @@ const getAllOrders = async(req,res) => {
     try {
         const user_id = req?.user?.id // Middleware
         
-        // Tìm tất cả các đơn hàng của người dùng
+        // Tìm đơn hàng của người dùng theo Id
         const getOrder = await OrderModel.find({ user_id }).sort({ createdAt: -1 })
         if(getOrder.length === 0) {
             return res.status(404).json({
@@ -355,4 +355,76 @@ const getOrderDetails = async(req,res) => {
     }
 }
 
-module.exports = { orderCheckOutInCash, orderCheckOutPaymentOnline, getAllOrders, getOrderDetails, webhookStripeOrder }
+{/** Dành cho Admin */}
+{/** Lấy tất cả đơn hàng */}
+const getAllOrdersAdmin = async(req,res) => {
+    try {
+        // Tìm tất cả các đơn hàng của người dùng
+        const getAllOrder = await OrderModel.find()
+            .populate('user_id', 'email')
+            .populate('delivery_address').sort({ createdAt: -1 }) // Hiển thị đơn hàng mới nhất, bao gồm thông tin người nhận
+
+        if(getAllOrder.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: 'Không có đơn hàng nào'
+            })
+        }
+        // Lấy chi tiết các đơn hàng
+        const getOrderDetails = await OrderDetailModel.find({
+            order_id: { 
+                $in: getAllOrder.map(order => order._id) 
+            }
+        }).populate('product_id', 'name image price') // Bao gồm thông tin sản phẩm, chỉ lấy 3 trường: tên, hình ảnh và giá
+
+        // Tạo một đối tượng để gộp các chi tiết đơn hàng vào từng đơn hàng
+        const ordersWithDetails = getAllOrder.map(order => {
+            const details = getOrderDetails.filter(detail => detail.order_id.toString() === order._id.toString())
+            return {
+                ...order.toObject(),
+                details
+            }
+        })
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Lấy danh sách đơn hàng thành công',
+            data: ordersWithDetails
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+{/** Cập nhật đơn hàng */}
+const updateOrder = async(req,res) => {
+    try {
+        const { order_id, status } = req.body
+
+        // Thực hiện cập nhật vào dữ liệu
+        const updateOrder = await OrderModel.updateOne({ _id: order_id }, {
+            ...(status && { status: status })
+        })
+
+        // Thông báo khi cập nhật thành công
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Cập nhật đơn hàng thành công',
+            data: updateOrder
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+module.exports = { orderCheckOutInCash, orderCheckOutPaymentOnline, 
+    getAllOrders, getOrderDetails, webhookStripeOrder, getAllOrdersAdmin, updateOrder }

@@ -154,6 +154,14 @@ const connectApi = {
         url: '/api/order/get-order-details',
         method: 'POST'
     },
+    getAllOrdersAdmin: {
+        url: '/api/order/get-all-orders-admin',
+        method: 'GET'
+    },
+    updateOrder: {
+        url: '/api/order/update-order',
+        method: 'PUT'
+    },
 
     // API giao hàng
     createNewDeliveryAddress: {

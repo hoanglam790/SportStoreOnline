@@ -117,7 +117,7 @@ const Category = () => {
              * Ngược lại sẽ hiển thị ra danh sách.
             */}
             {
-                !categoryData[0] && !isLoading ? (
+                !categoryData?.[0] && !isLoading ? (
                     <NoDataCategory />
                 ) : (
                     <div className='p-3 m-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 h-[calc(80vh-100px)] overflow-y-scroll'>

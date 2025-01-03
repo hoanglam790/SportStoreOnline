@@ -48,8 +48,8 @@ const userSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Active', 'Inactive', 'Suspended'],
-        default: 'Active'
+        enum: ['Đang hoạt động', 'Không hoạt động', 'Cấm hoạt động'],
+        default: 'Đang hoạt động'
     },
     forgot_password_otp: {
         type: String,

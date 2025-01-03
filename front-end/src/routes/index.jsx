@@ -23,6 +23,7 @@ import PaymentSuccess from '@/pages/PaymentSuccess'
 import MyAccount from '@/pages/MyAccount'
 import MyOrder from '@/pages/MyOrder'
 import MyOrderDetail from '@/pages/MyOrderDetail'
+import OrderAdmin from '@/pages_admin/OrderAdmin'
 
 const router = createBrowserRouter([
     {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
                     {
                         path : 'products',
                         element : <AdminPermission><ProductAdmin /></AdminPermission>
+                    },
+                    {
+                        path : 'orders',
+                        element : <AdminPermission><OrderAdmin /></AdminPermission>
                     }
                 ]
             },
