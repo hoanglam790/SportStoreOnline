@@ -260,7 +260,7 @@ const updateProduct = async(req,res) => {
             })
         }
 
-        // Cập nhật sản phẩm
+        // Cập nhật sản phẩm (cho phép cập nhật thủ công)
         const updateProduct = await ProductModel.updateOne(
             { _id: _id }, 
             {

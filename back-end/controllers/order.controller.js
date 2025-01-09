@@ -359,18 +359,58 @@ const getOrderDetails = async(req,res) => {
 {/** Lấy tất cả đơn hàng */}
 const getAllOrdersAdmin = async(req,res) => {
     try {
-        // Tìm tất cả các đơn hàng của người dùng
-        const getAllOrder = await OrderModel.find()
-            .populate('user_id', 'email')
-            .populate('delivery_address').sort({ createdAt: -1 }) // Hiển thị đơn hàng mới nhất, bao gồm thông tin người nhận
+        let { page, limit, search } = req.body
 
-        if(getAllOrder.length === 0) {
-            return res.status(404).json({
-                success: false,
-                error: true,
-                message: 'Không có đơn hàng nào'
-            })
+        // Nếu page không có trong yêu cầu (người dùng không gửi), gán giá trị mặc định là 1
+        if(!page){
+            page = 1
         }
+
+        // Nếu limit không có, gán giá trị mặc định là 10
+        if(!limit) {
+            limit = 10
+        }
+
+        // Nếu có tham số tìm kiếm (search), sẽ tạo ra một truy vấn MongoDB sử dụng $text để tìm kiếm văn bản trong các trường đã được chỉ định cho tìm kiếm văn bản
+        // Nếu không có từ khóa tìm kiếm, query sẽ là một đối tượng rỗng {}, tức là không có điều kiện tìm kiếm, sẽ lấy tất cả sản phẩm
+        let query = {}
+        if(search) {
+            if(mongoose.Types.ObjectId.isValid(search) && search.length === 24) {
+                // Nếu search là một ObjectId hợp lệ, chuyển nó thành ObjectId
+                query = { _id: new mongoose.Types.ObjectId(search) }
+            } else {
+                // Nếu không phải ObjectId, tìm kiếm các trường khác như order_id, email, status
+                query = {
+                    $or: [
+                        { order_id: { $regex: search, $options: 'i' } },
+                        { status: { $regex: search, $options: 'i' } }
+                    ]
+                }
+            }
+        }
+
+        // Tính toán số đơn hàng cần bỏ qua để lấy đúng trang
+        const skipPage = (page - 1) * limit
+
+        // Tìm tất cả các đơn hàng của người dùng
+        const [getAllOrder, totalCountPage] = await Promise.all([
+            OrderModel.find(query)   // Tìm đơn hàng theo điều kiện tìm kiếm (query)
+                .populate('user_id', 'email')  // Bao gồm thông tin email của người dùng
+                .populate('delivery_address')  // Bao gồm thông tin địa chỉ giao hàng
+                .sort({ createdAt: -1 })  // Sắp xếp theo đơn hàng mới nhất
+                .skip(skipPage)  // Áp dụng phân trang
+                .limit(limit),  // Giới hạn số lượng đơn hàng trả về
+            OrderModel.countDocuments(query)  // Đếm tổng số đơn hàng thỏa mãn điều kiện tìm kiếm
+        ])
+
+        // if(getAllOrder.length === 0) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         error: true,
+        //         message: 'Không có đơn hàng nào'
+        //     })
+        // }
+
         // Lấy chi tiết các đơn hàng
         const getOrderDetails = await OrderDetailModel.find({
             order_id: { 
@@ -390,7 +430,11 @@ const getAllOrdersAdmin = async(req,res) => {
             success: true,
             error: false,
             message: 'Lấy danh sách đơn hàng thành công',
-            data: ordersWithDetails
+            data: ordersWithDetails,
+            pagination: {
+                totalCountOrder: totalCountPage,
+                totalNumberPage: Math.ceil(totalCountPage / limit)
+            }
         })
     } catch (error) {
         return res.status(500).json({

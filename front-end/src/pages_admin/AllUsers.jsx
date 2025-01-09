@@ -93,10 +93,13 @@ const AllUsers = () => {
                                                     setOpenUpdateUser(true),
                                                     setUpdateDataUser(u)                                                                                             
                                                 }}
-                                                className='bg-blue-600 rounded p-1.5 hover:bg-blue-700 hover:text-white cursor-pointer'>
+                                                className='bg-blue-600 rounded p-1.5 hover:bg-blue-700 hover:text-white cursor-pointer'
+                                                title='Chỉnh sửa'>
                                                 <FaRegEdit size={20}/>
                                             </button>
-                                            <button className='bg-red-500 rounded p-1.5 hover:bg-red-700 hover:text-white cursor-pointer'>
+                                            <button 
+                                                className='bg-red-500 rounded p-1.5 hover:bg-red-700 hover:text-white cursor-pointer'
+                                                title='Xóa'>
                                                 <MdDelete size={20}/>
                                             </button>                                        
                                         </td>

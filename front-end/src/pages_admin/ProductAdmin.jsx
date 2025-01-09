@@ -67,7 +67,7 @@ const Product = () => {
                     search: search
                 }
             })
-    
+            
             if(responseData.data.success){
                 setTotalPageCount(responseData.data.totalNumberPage)
                 setProductData(responseData.data.data)
@@ -155,7 +155,7 @@ const Product = () => {
                         {/** Giao diện hiển thị danh sách sản phẩm */}
                         <div className='bg-slate-100 shadow-lg flex items-center justify-between p-2 ml-2'>
                             <h2 className='font-semibold'>Danh sách sản phẩm</h2>
-                            <div className='min-w-[220px] lg:min-w-[330px] h-10 rounded-md border overflow-hidden focus-within:border-orange-600'>
+                            <div className='min-w-[220px] lg:min-w-[330px] h-10 rounded-md border border-gray-400 overflow-hidden focus-within:border-orange-600'>
                                 <button className='flex items-center justify-between ml-auto w-full h-full p-2 text-neutral-500'>
                                     <input type='text'
                                         //value={searchText.text}
@@ -206,14 +206,16 @@ const Product = () => {
                                                                         setOpenEditProduct(true),
                                                                         setEditProduct(p)
                                                                     }} 
-                                                                    className='w-full h-8 bg-blue-600 hover:bg-blue-700 rounded focus:outline-none flex items-center justify-center'>
+                                                                    className='w-full h-8 bg-blue-600 hover:bg-blue-700 rounded focus:outline-none flex items-center justify-center'
+                                                                    title='Chỉnh sửa'>
                                                                     <FaEdit size={20} className=''/>                   
                                                                 </button>
                                                                 <button onClick={() => {
                                                                         handleDeleteProduct(),
                                                                         setDeleteProduct(p)
                                                                     }} 
-                                                                    className='w-full h-8 bg-red-500 hover:bg-red-700 rounded focus:outline-none flex items-center justify-center'>
+                                                                    className='w-full h-8 bg-red-500 hover:bg-red-700 rounded focus:outline-none flex items-center justify-center'
+                                                                    title='Xóa'>
                                                                     <RiDeleteBin6Line size={20} />
                                                                 </button>
                                                             </div>

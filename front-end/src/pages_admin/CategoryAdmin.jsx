@@ -137,13 +137,15 @@ const Category = () => {
                                                 setOpenEditCate(true),
                                                 setEditCategory(c)
                                             }} 
-                                            className='w-full h-8 bg-blue-600 hover:bg-blue-700 rounded focus:outline-none flex items-center justify-center'>
+                                            className='w-full h-8 bg-blue-600 hover:bg-blue-700 rounded focus:outline-none flex items-center justify-center'
+                                            title='Chỉnh sửa'>
                                             <FaEdit size={20} className=''/>                   
                                         </button>
                                         <button onClick={() => {
                                                 handleDeleteCate(),
                                                 setDeleteCategory(c)
-                                            }} className='w-full h-8 bg-red-500 hover:bg-red-700 rounded focus:outline-none flex items-center justify-center'>
+                                            }} className='w-full h-8 bg-red-500 hover:bg-red-700 rounded focus:outline-none flex items-center justify-center'
+                                            title='Xóa'>
                                             <RiDeleteBin6Line size={20} />
                                         </button>
                                     </div>

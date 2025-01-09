@@ -11,7 +11,7 @@ orderRouter.post('/get-order-details', auth, getOrderDetails)
 orderRouter.post('/webhook', webhookStripeOrder)
 
 {/** Admin */}
-orderRouter.get('/get-all-orders-admin', auth, getAllOrdersAdmin)
+orderRouter.post('/get-all-orders-admin', auth, getAllOrdersAdmin)
 orderRouter.put('/update-order', auth, updateOrder)
 
 module.exports = orderRouter

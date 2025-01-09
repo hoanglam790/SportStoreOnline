@@ -156,7 +156,7 @@ const connectApi = {
     },
     getAllOrdersAdmin: {
         url: '/api/order/get-all-orders-admin',
-        method: 'GET'
+        method: 'POST'
     },
     updateOrder: {
         url: '/api/order/update-order',
