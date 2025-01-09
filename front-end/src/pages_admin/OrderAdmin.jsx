@@ -28,7 +28,8 @@ const OrderAdmin = () => {
     
     const [updateOrderData, setUpdateOrderData] = useState({
         order_id: '',
-        status: ''
+        status: '',
+        details: []
     })
 
     const fetchDataAllOrders = async() => {

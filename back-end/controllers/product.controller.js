@@ -73,8 +73,9 @@ const getAllProduct = async(req,res) => {
         // Nếu có tham số tìm kiếm (search), sẽ tạo ra một truy vấn MongoDB sử dụng $text để tìm kiếm văn bản trong các trường đã được chỉ định cho tìm kiếm văn bản
         // Nếu không có từ khóa tìm kiếm, query sẽ là một đối tượng rỗng {}, tức là không có điều kiện tìm kiếm, sẽ lấy tất cả sản phẩm
         const query = search ? {
-            $text: {
-                $search: search
+            name: {
+                $regex: search, // Tìm kiếm tương đối với bất kỳ chuỗi nào, miễn từ cần tìm có chứa từ khóa trong cơ sở dữ liệu
+                $options: 'i'   // Không phân biệt chữ hoa và chữ thường
             }
         } : {}
 
@@ -230,9 +231,19 @@ const getProductByCateAndSubCate = async(req,res) => {
 const updateProduct = async(req,res) => {
     try {
         const { _id } = req.body
+        const quantitySold = parseInt(req.body.quantitySold, 10) // Chuyển quantitySold thành số
 
-        // Kiểm tra id có tồn tại hay không?
-        if(!mongoose.Types.ObjectId.isValid(_id)) {
+        if(isNaN(quantitySold) || quantitySold <= 0) {
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Số lượng sản phẩm bán không hợp lệ'
+            })
+        }
+
+        // Lấy thông tin sản phẩm từ cơ sở dữ liệu
+        const product = await ProductModel.findById(_id)
+        if(!product) {
             return res.status(404).json({
                 success: false,
                 error: true,
@@ -240,16 +251,32 @@ const updateProduct = async(req,res) => {
             })
         }
 
-        const update = await ProductModel.updateOne({ _id: _id }, {
-            ...req.body
-        })
+        // Kiểm tra tồn kho, nếu sản phẩm có đủ số lượng thì thực hiện giao dịch
+        if(product.quantity_in_stock < quantitySold) {
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Số lượng sản phẩm này không đủ để thực hiện giao dịch'
+            })
+        }
+
+        // Cập nhật sản phẩm
+        const updateProduct = await ProductModel.updateOne(
+            { _id: _id }, 
+            {
+                $inc: { 
+                    quantity_in_stock: -quantitySold,   // Trừ đi số lượng đã bán
+                    sold: quantitySold  // Cộng số lượng đã bán thành công
+                }
+            }
+        )
 
         // Thông báo khi chỉnh sửa sản phẩm thành công
         return res.status(200).json({
             success: true,
             error: false,
-            message: 'Chỉnh sửa sản phẩm thành công',
-            data: update
+            message: 'Cập nhật sản phẩm thành công',
+            data: updateProduct
         })
     } catch (error) {
         return res.status(500).json({

@@ -15,6 +15,7 @@ const UploadCategory = ({ close, fetchData }) => {
     })
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isImageLoading, setIsImageLoading] = useState(false)
 
     {/** Xử lý sự kiện thay đổi giá trị nhập liệu trong biểu mẫu (form) */}
     const handleInputChange = (e) => {
@@ -36,7 +37,7 @@ const UploadCategory = ({ close, fetchData }) => {
             return
         }
 
-        setIsLoading(true)
+        setIsImageLoading(true)
         try {
             const fileName = file.name.split('.')[0] // Lấy tên file (không có phần mở rộng)
 
@@ -44,14 +45,14 @@ const UploadCategory = ({ close, fetchData }) => {
             const imageExists = await checkImageExistence(fileName)  // Kiểm tra ảnh trên Cloudinary
 
             if (imageExists) {
-                setIsLoading(false)
+                setIsImageLoading(false)
                 alert("Ảnh đã tồn tại trên Cloudinary!")
                 return
             }
 
             const responseImage = await uploadNewImage(file)
             const { data: responseNewImage } = responseImage
-            setIsLoading(false)
+            setIsImageLoading(false)
 
             setCategoryData((prev) => {
                 return {
@@ -62,7 +63,7 @@ const UploadCategory = ({ close, fetchData }) => {
         } catch (error) {
             axiosErrorAnnounce(error)
         } finally {
-            setIsLoading(false)
+            setIsImageLoading(false)
         }      
     }
 

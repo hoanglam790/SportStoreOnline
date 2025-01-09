@@ -197,7 +197,9 @@ const Product = () => {
                                                                     className='w-full h-36 mt-3 object-scale-down cursor-pointer'
                                                                 />
                                                             </div>
-                                                            <p className='font-normal mt-2 truncate'>{p?.name}</p>
+                                                            <p className='font-normal mt-2 truncate' title={p?.name}>
+                                                                {p?.name}
+                                                            </p>
                                                             <div className='flex items-center h-10 mt-3 gap-3 text-sm'>
                                                                 <button onClick={() => 
                                                                     {   

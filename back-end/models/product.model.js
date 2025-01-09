@@ -25,6 +25,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
+    sold: {
+        type: Number,
+        default: 0
+    },
     category: [
         {
             type: mongoose.Schema.ObjectId,
@@ -46,14 +50,15 @@ const productSchema = new mongoose.Schema({
     timestamps: true
 })
 
-
-// Tạo index
-productSchema.index({
-    name: 'text',
-    description: 'text'
-},{
-    name: 10,
-    description: 5
-})
+// Tạo index để tìm kiếm chính xác
+{/**
+    productSchema.index({
+        name: 'text',
+        description: 'text'
+    },{
+        name: 10,
+        description: 5
+    })
+*/}
 
 module.exports = mongoose.model('product', productSchema)
