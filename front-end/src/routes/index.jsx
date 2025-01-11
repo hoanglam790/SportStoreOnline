@@ -24,6 +24,8 @@ import MyAccount from '@/pages/MyAccount'
 import MyOrder from '@/pages/MyOrder'
 import MyOrderDetail from '@/pages/MyOrderDetail'
 import OrderAdmin from '@/pages_admin/OrderAdmin'
+import PageNotFoundAdmin from '@/pages_admin/PageNotFoundAdmin'
+import Warehouse from '@/pages_admin/Warehouse'
 
 const router = createBrowserRouter([
     {
@@ -52,7 +54,7 @@ const router = createBrowserRouter([
                 children : [
                     {
                         path : '*',
-                        element : <PageNotFound />
+                        element : <PageNotFoundAdmin />
                     },
                     {
                         path : 'all-users',
@@ -73,6 +75,10 @@ const router = createBrowserRouter([
                     {
                         path : 'orders',
                         element : <AdminPermission><OrderAdmin /></AdminPermission>
+                    },
+                    {
+                        path : 'warehouse',
+                        element : <AdminPermission><Warehouse /></AdminPermission>
                     }
                 ]
             },

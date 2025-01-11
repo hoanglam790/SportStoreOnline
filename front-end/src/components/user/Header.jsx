@@ -65,7 +65,7 @@ const Header = () => {
     return (
         <header className='h-32 border-b fixed top-0 left-0 w-full bg-white z-50'>
             {
-                user.role === 'Admin' ? (
+                user?.role === 'Admin' ? (
                 <>
                     <div className='container mx-auto h-full flex items-center justify-between p-3 gap-6'>
                         {/* Logo  */}
@@ -107,7 +107,7 @@ const Header = () => {
 
                             <div className='items-center hidden lg:flex gap-10'>
                                 {
-                                    user._id ? (
+                                    user?._id ? (
                                         <div className='relative'>
                                             <div onClick={() => setIsOpenMenu(pre => !pre)} className='flex items-center select-none gap-2 cursor-pointer'>
                                                 <p>Tài khoản</p>
@@ -122,7 +122,7 @@ const Header = () => {
                                             {
                                                 isOpenMenu && (
                                                     <div className='absolute right-2 top-10'>
-                                                        <div className='bg-slate-300 rounded-sm p-4 min-w-52'>
+                                                        <div className='bg-slate-300 rounded-sm p-4 min-w-52' style={{ display: 'none' }}>
                                                             <UserMenu close={handleCloseUserMenu}/>
                                                         </div>                                       
                                                     </div>

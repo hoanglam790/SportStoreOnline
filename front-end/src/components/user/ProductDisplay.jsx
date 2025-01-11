@@ -12,10 +12,12 @@ const ProductDisplay = () => {
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
 
+    // Chuyển hướng trang
     const handleDirectPage = () => {
         navigate('/products')
     }
 
+    // Gọi API lấy danh sách sản phẩm
     const fetchAllProduct = async() => {
         try {
             setIsLoading(true)

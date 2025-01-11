@@ -6,6 +6,8 @@ const { createNewProduct,
         getProductByCategory,
         getProductByCateAndSubCate, 
         updateProduct,
+        updateQuantityInStock,
+        updateProductWarehouse,
         deleteProduct
     } = require('../controllers/product.controller')
 
@@ -19,6 +21,8 @@ productRouter.post('/get-product-by-cate-and-subcate', getProductByCateAndSubCat
 // Chức năng: thêm, sửa, xóa bên trang Admin
 productRouter.post('/create-product', auth, createNewProduct)
 productRouter.put('/update-product', auth, updateProduct)
+productRouter.put('/update-quantity-in-stock', auth, updateQuantityInStock)
+productRouter.put('/update-product-warehouse', auth, updateProductWarehouse)
 productRouter.delete('/delete-product', auth, deleteProduct)
 
 module.exports = productRouter

@@ -114,6 +114,14 @@ const connectApi = {
         url: '/api/products/update-product',
         method: 'PUT'
     },
+    updateQuantityInStock: {
+        url: '/api/products/update-quantity-in-stock',
+        method: 'PUT'
+    },
+    updateProductWarehouse: {
+        url: '/api/products/update-product-warehouse',
+        method: 'PUT'
+    },
     deleteProduct: {
         url: '/api/products/delete-product',
         method: 'DELETE'

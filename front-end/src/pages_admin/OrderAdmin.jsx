@@ -171,24 +171,27 @@ const OrderAdmin = () => {
                                                     <td>{order?._id}</td>
                                                     <td>{moment(order?.createdAt).format('DD/MM/YYYY - HH:mm:ss')}</td>
                                                     <td>{order?.status}</td>
-                                                    <td className='flex items-center justify-center gap-3'>
-                                                        <button 
-                                                            onClick={() => {
-                                                                setOpenOrderDetail(true),
-                                                                setOrderDataDetail(order)                                                                                             
-                                                            }}
-                                                            className='bg-blue-500 rounded p-1.5 hover:bg-blue-700 hover:text-white cursor-pointer'
-                                                            title='Xem chi tiết'>
-                                                            <IoMdEye size={20}/>
-                                                        </button>
-                                                        <button onClick={() => {
-                                                                setOpenUpdateOrder(true),
-                                                                setUpdateOrderData(order)                                                                                             
-                                                            }}
-                                                            className='bg-orange-500 rounded p-1.5 hover:bg-orange-700 hover:text-white cursor-pointer'
-                                                            title='Chỉnh sửa'>
-                                                            <FaRegEdit size={20}/>
-                                                        </button>
+                                                    <td>
+                                                        <div className='flex items-center justify-center gap-3'>
+                                                            <button 
+                                                                onClick={() => {
+                                                                    setOpenOrderDetail(true),
+                                                                    setOrderDataDetail(order)                                                                                             
+                                                                }}
+                                                                className='bg-blue-500 rounded p-1.5 hover:bg-blue-700 hover:text-white cursor-pointer'
+                                                                title='Xem chi tiết'>
+                                                                <IoMdEye size={20}/>
+                                                            </button>
+                                                            <button onClick={() => {
+                                                                    setOpenUpdateOrder(true),
+                                                                    setUpdateOrderData(order)                                                                                             
+                                                                }}
+                                                                className='bg-orange-500 rounded p-1.5 hover:bg-orange-700 hover:text-white cursor-pointer'
+                                                                title='Chỉnh sửa'>
+                                                                <FaRegEdit size={20}/>
+                                                            </button>
+                                                        </div>
+                                                        
                                                     </td>
                                                 </tr>
                                             )

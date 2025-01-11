@@ -1,39 +1,44 @@
-<div className='flex flex-col px-5 py-4 border rounded cursor-pointer transition-all'>
-                                    <div className='w-full h-full relative'>
-                                        <img
-                                            src={p?.image[0]}
-                                            className='w-full h-[250px] object-cover'
-                                        />                      
-                                    </div>
-                                    <div className='p-2 flex-1 flex flex-col'>
-                                        <div className='flex-1 mt-3'> {/** truncate: hiển thị ngắn gọn văn bản*/}
-                                            <h5 className='text-sm sm:text-base text-center font-bold text-gray-800'>{p?.name}</h5>
-                                            <div className='flex flex-wrap gap-2 mt-2'>
-                                                <div className='flex gap-2'>
-                                                {Boolean(p?.discount) && (
-                                                    <>
-                                                        <p className='text-green-600 bg-green-100 px-2 w-fit text-sm rounded-full'>
-                                                            -{p?.discount}%
-                                                        </p>
-                                                        <strike className='text-gray-500 font-normal text-sm'>{displayCurrencyToVND(p?.price)}</strike>
-                                                    </>                  
-                                                )}
-                                                </div>
-                                            </div>
-                                            <div className='flex flex-wrap justify-between gap-2 mt-2'>
-                                                <div className='flex items-center gap-1'>
-                                                    <div className='font-semibold text-xl'>
-                                                        {displayCurrencyToVND(displayDiscountPrice(p?.price, p?.discount))}
-                                                    </div>
-                                                </div>
-                                                <div className=''>
-                                                    {p?.quantity_in_stock == 0 ? (
-                                                    <p className='text-red-500 text-sm text-center'>Hết hàng</p>
-                                                    ) : (
-                                                        <AddToCartButton data={p} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+<div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3'>
+    {
+        productData.map((p,index) => {
+            return(
+                <div className='w-36 p-4 bg-white rounded'>
+                    <div>
+                        <img 
+                            src={p?.image[0]} 
+                            alt={p.name}
+                            onClick={() => 
+                            {
+                                setOpenProductDetail(true)
+                                setEditProduct(p)
+                            }}
+                            className='w-full h-36 mt-3 object-scale-down cursor-pointer'
+                        />
+                    </div>
+                    <p className='font-normal mt-2 truncate' title={p?.name}>
+                        {p?.name}
+                    </p>
+                    <div className='flex items-center h-10 mt-3 gap-3 text-sm'>
+                        <button onClick={() => 
+                            {   
+                                setOpenEditProduct(true),
+                                setEditProduct(p)
+                            }} 
+                            className='w-full h-8 bg-blue-600 hover:bg-blue-700 rounded focus:outline-none flex items-center justify-center'
+                            title='Chỉnh sửa'>
+                            <FaEdit size={20} className=''/>                   
+                        </button>
+                        <button onClick={() => {
+                                handleDeleteProduct(),
+                                setDeleteProduct(p)
+                            }} 
+                            className='w-full h-8 bg-red-500 hover:bg-red-700 rounded focus:outline-none flex items-center justify-center'
+                            title='Xóa'>
+                            <RiDeleteBin6Line size={20} />
+                        </button>
+                    </div>
+                </div>
+            )
+        })
+    }                                           
+</div>

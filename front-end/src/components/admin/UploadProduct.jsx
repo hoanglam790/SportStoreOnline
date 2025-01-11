@@ -19,9 +19,9 @@ const UploadProduct = ({ back, fetchData }) => {
         description: '',
         price: '',
         discount: '',
-        quantity_in_stock: '',
         category: [],
         subCategory: [],
+        warehouse_history: [],
         publish: true
     })
 
@@ -107,12 +107,12 @@ const UploadProduct = ({ back, fetchData }) => {
         })
     }
 
+    // Xử lý xóa danh mục sản phẩm nếu chọn sai
     const handleRemoveCategorySelected = async(index)=>{
         productData.category.splice(index, 1)
         if(productData.category.length === 1){
             setSelectCategory('')
         }
-
         setProductData((prev) => {
             return {
                 ...prev
@@ -120,6 +120,7 @@ const UploadProduct = ({ back, fetchData }) => {
         })
     }
 
+    // Xử lý xóa danh mục sản phẩm phụ nếu chọn sai
     const handleRemoveSubCategorySelected = async(index)=>{
         productData.subCategory.splice(index, 1)
         if(productData.subCategory.length === 1){
@@ -179,8 +180,7 @@ const UploadProduct = ({ back, fetchData }) => {
                 })
             }
             back()
-            fetchData()
-                      
+            fetchData()                     
         } catch (error) {
             axiosErrorAnnounce(error)
         } finally {
@@ -377,20 +377,7 @@ const UploadProduct = ({ back, fetchData }) => {
                         className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                     />
                 </div>
-
-                <div className='grid py-1 mx-2'>
-                    <label className='py-2'>Số lượng trong kho:</label>
-                    <input 
-                        type='number'
-                        id='quantity_in_stock'
-                        placeholder='Nhập số lượng tồn kho'
-                        value={productData.quantity_in_stock}
-                        name='quantity_in_stock'
-                        onChange={handleInputChange}
-                        required
-                        className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
-                    />
-                </div>
+                            
                 {
                     isLoading ? (
                         <div className='flex items-center justify-center'>
@@ -408,7 +395,7 @@ const UploadProduct = ({ back, fetchData }) => {
                                         productData.description && 
                                         productData.price && 
                                         productData.discount && 
-                                        productData.quantity_in_stock && 
+                                        //productData.quantity_in_stock && 
                                         productData.category[0] && 
                                         productData.subCategory[0] ? 
                                         'w-[150px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-md focus:outline-none'

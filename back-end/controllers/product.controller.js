@@ -16,7 +16,7 @@ const createNewProduct = async(req,res) => {
         } = req.body
 
         // Kiểm tra dữ liệu đầu vào
-        if(!name || !image[0] || !description || !price || !discount || !quantity_in_stock || !category[0] || !subCategory[0]){
+        if(!name || !image[0] || !description || !category[0] || !subCategory[0]){
             return res.status(400).json({
                 success: false,
                 error: true,
@@ -33,7 +33,8 @@ const createNewProduct = async(req,res) => {
             discount,
             quantity_in_stock,
             category,
-            subCategory
+            subCategory,
+            warehouse_history: []
         })
 
         // Lưu vào cơ sở dữ liệu
@@ -227,8 +228,49 @@ const getProductByCateAndSubCate = async(req,res) => {
     }
 }
 
-{/** Chỉnh sửa sản phẩm */}
+{/** Cập nhật sản phẩm */}
 const updateProduct = async(req,res) => {
+    try {
+        const { _id, name, image, description, price, discount, category, subCategory } = req.body
+
+        // Kiểm tra id có tồn tại hay không?
+        if(!mongoose.Types.ObjectId.isValid(_id)) {
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: `Không tìm thấy sản phẩm có mã số: ${_id}`
+            })
+        }
+
+        // Cập nhật sản phẩm
+        const updateProduct = await ProductModel.findByIdAndUpdate(_id, {
+            name,
+            image,
+            description,
+            price,
+            discount,
+            category,
+            subCategory
+        })
+
+        // Thông báo khi chỉnh sửa sản phẩm thành công
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Cập nhật sản phẩm thành công',
+            data: updateProduct
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
+{/** Cập nhật sản phẩm khi thanh toán thành công */}
+const updateQuantityInStock = async(req,res) => {
     try {
         const { _id } = req.body
         const quantitySold = parseInt(req.body.quantitySold, 10) // Chuyển quantitySold thành số
@@ -287,6 +329,60 @@ const updateProduct = async(req,res) => {
     }
 }
 
+{/** Cập nhật sản phẩm (cập nhật số lượng tồn kho) */}
+const updateProductWarehouse = async(req,res) => {
+    try {
+        const { _id, cost_price } = req.body
+        const quantity_added = parseInt(req.body.quantity_added, 10) // Chuyển quantity_added thành số
+
+        // Kiểm tra số lượng nhập vào có hợp lệ không?
+        if(isNaN(quantity_added) || quantity_added <= 0) {
+            return res.status(400).json({
+                success: false,
+                error: true,
+                message: 'Số lượng sản phẩm không hợp lệ'
+            })
+        }
+
+        // Lấy thông tin sản phẩm từ cơ sở dữ liệu
+        const product = await ProductModel.findById(_id)
+        if(!product) {
+            return res.status(404).json({
+                success: false,
+                error: true,
+                message: `Không tìm thấy sản phẩm có mã số: ${_id}`
+            })
+        }
+
+        // Cập nhật số lượng sản phẩm
+        product.quantity_in_stock += quantity_added
+
+        // Thêm vào lịch sử cập nhật
+        product.warehouse_history.push({
+            quantity_added,
+            cost_price,
+            date: new Date()
+        })
+
+        // Lưu sản phẩm sau khi cập nhật
+        await product.save()
+
+        // Thông báo khi chỉnh sửa sản phẩm thành công
+        return res.status(200).json({
+            success: true,
+            error: false,
+            message: 'Cập nhật sản phẩm trong kho thành công',
+            data: product
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: true,
+            message: error.message
+        })
+    }
+}
+
 {/** Xóa sản phẩm */}
 const deleteProduct = async(req,res) => {
     try {
@@ -318,4 +414,5 @@ const deleteProduct = async(req,res) => {
     }
 }
 
-module.exports = { createNewProduct, getAllProduct, getProductDetails, getProductByCategory, getProductByCateAndSubCate, updateProduct, deleteProduct }
+module.exports = { createNewProduct, getAllProduct, getProductDetails, getProductByCategory, getProductByCateAndSubCate, 
+    updateProduct, updateQuantityInStock, updateProductWarehouse, deleteProduct }

@@ -1,9 +1,9 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
 import AddToCartButton from '@/components/user/AddToCartButton'
 import displayDiscountPrice from '@/utils/DisplayDiscountPrice'
 import displayCurrencyToVND from '@/utils/FormatCurrency'
 import urlConvert from '@/utils/urlConvert'
-import React from 'react'
-import { Link } from 'react-router-dom'
 
 const ProductPageDisplayHome = ({ data }) => {
     const url = `/product/${urlConvert(data.name)}-${data._id}`
@@ -21,14 +21,14 @@ const ProductPageDisplayHome = ({ data }) => {
                     <h5 className='text-sm sm:text-base text-center font-bold text-gray-800'>{data?.name}</h5>
                     <div className='flex flex-wrap gap-2 mt-2'>
                         <div className='flex gap-2'>
-                        {Boolean(data?.discount) && (
-                            <>
-                                <p className='text-green-600 bg-green-100 px-2 w-fit text-sm rounded-full'>
-                                    -{data?.discount}%
-                                </p>
-                                <strike className='text-gray-500 font-normal text-sm'>{displayCurrencyToVND(data?.price)}</strike>
-                            </>                  
-                        )}
+                            {Boolean(data?.discount) && (
+                                <>
+                                    <p className='text-green-600 bg-green-100 px-2 w-fit text-sm rounded-full'>
+                                        -{data?.discount}%
+                                    </p>
+                                    <strike className='text-gray-500 font-normal text-sm'>{displayCurrencyToVND(data?.price)}</strike>
+                                </>                  
+                            )}
                         </div>
                     </div>
                     <div className='flex flex-wrap justify-between gap-2 mt-2'>
@@ -39,7 +39,7 @@ const ProductPageDisplayHome = ({ data }) => {
                         </div>
                         <div className=''>
                             {data?.quantity_in_stock == 0 ? (
-                            <p className='text-red-500 text-sm text-center'>Hết hàng</p>
+                                <p className='text-red-500 text-sm text-center'>Hết hàng</p>
                             ) : (
                                 <AddToCartButton data={data} />
                             )}

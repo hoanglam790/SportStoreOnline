@@ -14,21 +14,20 @@ import Swal from 'sweetalert2'
 const EditProduct = ({ close, fetchData, data: products }) => {
     const [productData, setProductData] = useState({
         _id: products._id,
-        name: products.name,
-        image: products.image,
-        description: products.description,
-        price: products.price,
-        discount: products.discount,
-        quantity_in_stock: products.quantity_in_stock,
-        category: products.category,
-        subCategory: products.subCategory
+        name: products?.name,
+        image: products?.image,
+        description: products?.description,
+        price: products?.price,
+        discount: products?.discount,
+        category: products?.category,
+        subCategory: products?.subCategory
     })
     const [isLoading, setIsLoading] = useState(false)
     const [isImageLoading, setIsImageLoading] = useState(false)
     const [viewFullImage, setViewFullImage] = useState('')
     const [selectCate, setSelectCate] = useState('')
     const [selectSubCate, setSelectSubCate] = useState('')
-
+    
     const allCategories = useSelector(state => state.product_data?.allCategory)
     const allSubCategories = useSelector(state => state.product_data?.allSubCategory)
     const changeColorValue = Object.values(productData).every(p => p)
@@ -235,8 +234,7 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                                             <p>Tải hình ảnh</p>
                                         </>
                                     )
-                                }
-                                    
+                                }                                   
                                 </div>
                                 <input 
                                     type='file'
@@ -373,20 +371,6 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                             className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
                         />
                     </div>
-
-                    <div className='grid py-1 mx-2'>
-                        <label className='py-2'>Số lượng trong kho:</label>
-                        <input 
-                            type='number'
-                            id='quantity_in_stock'
-                            placeholder='Nhập số lượng trong kho'
-                            value={productData.quantity_in_stock}
-                            name='quantity_in_stock'
-                            onChange={handleInputChange}
-                            required
-                            className='bg-blue-50 border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500'
-                        />
-                    </div>
                     {
                         isLoading ? (
                             <div className='flex items-center justify-center'>
@@ -403,8 +387,7 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                                             productData?.image[0] && 
                                             productData?.description && 
                                             productData?.price && 
-                                            productData?.discount && 
-                                            productData?.quantity_in_stock && 
+                                            productData?.discount &&
                                             productData?.category[0] && 
                                             productData?.subCategory[0] ? 
                                             'w-[150px] flex items-center justify-center gap-4 mt-4 ml-2 px-5 py-3.5 text-sm tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none'
@@ -419,7 +402,6 @@ const EditProduct = ({ close, fetchData, data: products }) => {
                         )
                     }                
                 </form>
-
                 {
                     viewFullImage && (
                         <ViewImage url={viewFullImage} close={() => setViewFullImage('')}/>

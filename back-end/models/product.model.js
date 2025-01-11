@@ -41,6 +41,22 @@ const productSchema = new mongoose.Schema({
             ref: 'subCategory'
         }
     ],
+    warehouse_history: [
+        {
+            quantity_added: {
+                type: Number,
+                default: null
+            },
+            cost_price: {
+                type: Number,
+                default: null
+            },
+            date: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
     publish: {
         type: Boolean,
         default: true

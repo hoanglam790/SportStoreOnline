@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { MdAdd } from 'react-icons/md'
 import NoProductData from '@/components/admin/NoDataSample'
 import Loading from '@/components/admin/Loading'
 import UploadProduct from '@/components/admin/UploadProduct'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Axios from '@/utils/AxiosConfig'
 import connectApi from '@/common/ApiBackend'
+import ProductDetails from '@/components/admin/ProductDetails'
+import EditProduct from '@/components/admin/EditProduct'
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from 'react-icons/hi'
 import { GrSearch } from 'react-icons/gr'
-import ProductDetails from '@/components/admin/ProductDetails'
+import { MdAdd } from 'react-icons/md'
 import { FaEdit } from 'react-icons/fa'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import EditProduct from '@/components/admin/EditProduct'
 import Swal from 'sweetalert2'
 
 const Product = () => {
@@ -29,6 +29,7 @@ const Product = () => {
         description: '',
         price: '',
         discount: '',
+        cost_price: '',
         quantity_in_stock: '',
         category: [],
         subCategory: []
@@ -38,24 +39,28 @@ const Product = () => {
         _id: ''
     })
 
+    // Xử lý quay về trang trước
     const handlePreviousPage = () => {
         if(page > 1){
             setPage(prev => prev - 1)
         }
     }
 
+    // Xử lý đi tới trang sau
     const handleNextPage = () => {
         if(page !== totalPageCount){
             setPage(prev => prev + 1)
         }       
     }
 
+    // Xử lý tìm kiếm
     const handleSearch = (e) => {
         const { value } = e.target
         setSearch(value)
         setPage(1)
     }
     
+    // Lấy danh sách sản phẩm
     const fetchProductData = async() => {
         try {
             setIsLoading(true)
@@ -92,6 +97,7 @@ const Product = () => {
         }
     }
 
+    // Xử lý sản phẩm
     const handleDeleteProduct = () => {
         Swal.fire({
             title: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
@@ -132,6 +138,7 @@ const Product = () => {
         })
     }
 
+    // Gọi fetchProductData() sau một khoảng thời gian trễ (300ms) kể từ khi có sự thay đổi trong page hoặc search
     useEffect(() => {
         let flag = true 
 

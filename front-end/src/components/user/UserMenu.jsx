@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from '../../utils/AxiosConfig'
 import connectApi from '../../common/ApiBackend'
@@ -13,6 +13,7 @@ import { TbCategory } from 'react-icons/tb'
 import { MdCategory, MdProductionQuantityLimits } from 'react-icons/md'
 import { IoNewspaperSharp } from 'react-icons/io5'
 import { TbReportAnalytics } from 'react-icons/tb'
+import { LuWarehouse } from 'react-icons/lu'
 
 const UserMenu = ({ close }) => {
     const user = useSelector((state) => state.user_data)
@@ -69,57 +70,88 @@ const UserMenu = ({ close }) => {
 
     return (
         <div>
-            <div className='font-bold'>Tài khoản của tôi</div>
-            <div className='my-3 text-center flex items-center ml-8 gap-4 cursor-pointer w-full'>{user.name}
-                <Link onClick={handleClose} to='/admin/profile'>
+            <div className='font-bold flex items-center justify-center uppercase'>Tài khoản của tôi</div>
+            <div className='flex items-center justify-center gap-4 w-full my-3'>
+                {user.name}
+                {/* <Link onClick={handleClose} to='/admin/profile'>
                     <FaExternalLinkAlt size={17} />
-                </Link>
+                </Link> */}
             </div>
             <p className='text-center text-red-800 mb-5'>{user.role === 'Admin' ? 'Admin' : ''}</p>
 
             <div className='p-[1px] bg-[#121e31]'/>
 
-            <div className='text-[15px] grid gap-4 py-5'>
+            <div className='text-[15px] grid gap-3 py-4'>
                 {
                     user.role === 'Admin' ? (
                         <>
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <FaUserTie size={20}/>
-                                <Link onClick={handleClose} to='/admin/all-users'>Thông tin tài khoản</Link>
+                            <div className='text-white text-sm'>                               
+                                <NavLink onClick={handleClose} to={'/admin/all-users'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <FaUserTie size={20}/>
+                                    Thông tin tài khoản
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <TbCategory size={20}/>
-                                <Link onClick={handleClose} to='/admin/categories'>Danh mục sản phẩm</Link>
+                            <div className='text-white text-sm'>                  
+                                <NavLink onClick={handleClose} to={'/admin/categories'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <TbCategory size={20}/>
+                                    Danh mục sản phẩm
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <MdCategory size={20}/>
-                                <Link onClick={handleClose} to='/admin/sub-categories'>Danh mục sản phẩm phụ</Link>
+                            <div className='text-white text-sm'>          
+                                <NavLink onClick={handleClose} to={'/admin/sub-categories'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <MdCategory size={20}/>
+                                    Danh mục sản phẩm phụ
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <MdProductionQuantityLimits size={20}/>
-                                <Link onClick={handleClose} to='/admin/products'>Sản phẩm</Link>
+                            <div className='text-white text-sm'>                           
+                                <NavLink onClick={handleClose} to={'/admin/products'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <MdProductionQuantityLimits size={20}/>
+                                    Sản phẩm
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <IoNewspaperSharp size={20}/>
-                                <Link onClick={handleClose} to={''}>Tin tức</Link>
+                            <div className='text-white text-sm'>                     
+                                <NavLink onClick={handleClose} to={'/admin/warehouse'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <LuWarehouse size={20}/>
+                                    Quản lý sản phẩm tồn kho
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <TiShoppingCart size={20}/>
-                                <Link onClick={handleClose} to={'/admin/orders'}>Đơn hàng</Link>
+                            <div className='text-white text-sm'>                              
+                                <NavLink onClick={handleClose} to={'/admin/all-news'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <IoNewspaperSharp size={20}/>
+                                    Tin tức
+                                </NavLink>
                             </div>
 
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
-                                <TbReportAnalytics size={20}/>
-                                <Link onClick={handleClose} to={''}>Thống kê</Link>
+                            <div className='text-white text-sm'>                  
+                                <NavLink onClick={handleClose} to={'/admin/orders'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <TiShoppingCart size={20}/>
+                                    Đơn hàng
+                                </NavLink>
                             </div>
-                            <div className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1'>
+
+                            <div className='text-white text-sm'>                  
+                                <NavLink onClick={handleClose} to={'/admin/reports'}
+                                className={({ isActive }) => `${isActive ? 'flex items-center gap-3 bg-gray-700 rounded p-2 w-full' : 'flex items-center gap-3 text-white text-sm ml-2 py-2'}`}>
+                                    <TbReportAnalytics size={20}/>
+                                    Thống kê
+                                </NavLink>
+                            </div>
+                            
+                            <div onClick={handleLogout} className='flex items-center gap-3 text-white text-sm hover:bg-gray-700 rounded px-2 py-1 cursor-pointer'>
                                 <BiLogOut size={22}/>
-                                <button onClick={handleLogout}>Đăng xuất</button>
+                                <button>Đăng xuất</button>
                             </div>
                         </>
                     ) : (

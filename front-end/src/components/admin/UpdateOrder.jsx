@@ -60,7 +60,7 @@ const UpdateOrder = ({ close, fetchOrderData, data: orderData }) => {
                     // Gửi yêu cầu cập nhật tồn kho
                     for(const productUpdate of productUpdates){
                         await Axios({
-                            ...connectApi.updateProduct,
+                            ...connectApi.updateQuantityInStock,
                             data: {
                                 _id: productUpdate?._id,
                                 quantitySold: productUpdate?.quantity // Trừ số lượng đã bán

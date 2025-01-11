@@ -166,7 +166,7 @@ const SubCategory = () => {
                                                 }
                                             </td>
                                             <td>
-                                                <div className='flex items-center justify-center h-10 mt-3 gap-2 text-sm'>
+                                                <div className='flex items-center justify-center h-10 gap-2 text-sm'>
                                                     <button onClick={() => {
                                                         setOpenEditSubCate(true),
                                                         setEditSubCategory(s)

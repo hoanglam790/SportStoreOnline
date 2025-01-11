@@ -1,10 +1,10 @@
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import BannerPage from '@/components/user/BannerPage'
 import Category from '@/components/user/Category'
 import NewsDisplay from '@/components/user/NewsDisplay'
 import ProductDisplay from '@/components/user/ProductDisplay'
 import urlConvert from '@/utils/urlConvert'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 
 const Home = () => {
     const productData = useSelector(state => state.product_data.product)
