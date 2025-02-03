@@ -31,6 +31,11 @@ const Home = () => {
                 <div className='py-20'>
                     <NewsDisplay />
                 </div>
+                <div>
+                    
+                    
+
+                </div>
             </div>           
         </section>
     )

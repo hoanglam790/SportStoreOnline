@@ -33,6 +33,7 @@ const MyOrderDetail = () => {
                 }
             })
 
+            // Nếu lấy dữ liệu thành công thì gán giá trị vào orderData
             if(responseOrderData.data.success){
                 setOrderData(responseOrderData.data.data)
             }
@@ -145,25 +146,28 @@ const MyOrderDetail = () => {
                             return(
                             <>
                                 <div key={index} className='grid lg:grid-cols-[90px_auto_20%] gap-5 mt-10'>
+                                    {/** Cột hình ảnh */}
                                     <div className='w-20 h-16 ml-2'>
                                         <img 
                                             src={orderItem?.product_id?.image?.[0]}
                                             className='w-full h-full object-cover' 
                                         />
                                     </div>
+                                    {/** Cột thông tin sản phẩm */}
                                     <div className='grid grid-rows-2 gap-3 mx-3'>
-                                        <p>{orderItem?.product_id?.name}</p>
+                                        <p className='italic text-lg'>{orderItem?.product_id?.name}</p>
                                         <div className='flex items-center gap-3'>
-                                            <p>Số lượng: </p>
+                                            <p className='font-medium'>Số lượng: </p>
                                             <span>{orderItem?.quantity}</span>
                                         </div>
                                         <div className='flex items-center gap-5'>
-                                            <p>Đơn giá: </p>
+                                            <p className='font-medium'>Đơn giá: </p>
                                             <span>{displayCurrencyToVND(orderItem?.price)}</span>
                                         </div>
                                     </div>
+                                    {/** Cột giá tiền của sản phẩm */}
                                     <div className='flex justify-end'>
-                                        <p className='font-semibold'>{displayCurrencyToVND(orderItem?.quantity * orderItem?.price)}</p>
+                                        <p className='font-semibold text-lg'>{displayCurrencyToVND(orderItem?.quantity * orderItem?.price)}</p>
                                     </div>
                                 </div>                                                                        
                             </>
@@ -192,7 +196,7 @@ const MyOrderDetail = () => {
                             <span>Tổng cộng: </span>
                             <span>{displayCurrencyToVND(totalPrice)}</span>
                         </p>
-                        <p className='mb-2.5 w-1/3 flex items-center justify-between'>
+                        <p className='mb-2.5 w-1/3 flex items-center justify-between text-lg'>
                             <span className='font-semibold'>Số tiền đã thanh toán: </span>
                             <span className='font-bold text-red-600'>{displayCurrencyToVND(totalPrice)}</span>
                         </p>

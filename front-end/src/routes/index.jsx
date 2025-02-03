@@ -26,6 +26,7 @@ import MyOrderDetail from '@/pages/MyOrderDetail'
 import OrderAdmin from '@/pages_admin/OrderAdmin'
 import PageNotFoundAdmin from '@/pages_admin/PageNotFoundAdmin'
 import Warehouse from '@/pages_admin/Warehouse'
+import Contact from '@/pages/Contact'
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path : 'no-item',
                 element : <NoItemInCart />
+            },
+            {
+                path : 'contact',
+                element : <Contact />
             },
             {
                 path : 'admin',

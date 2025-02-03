@@ -10,6 +10,7 @@ import { GrSearch } from 'react-icons/gr'
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from 'react-icons/hi'
 import { FaRegEdit } from 'react-icons/fa'
 import { IoMdEye } from 'react-icons/io'
+import WarehouseDetail from '@/components/admin/WarehouseDetail'
 
 const Warehouse = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -18,29 +19,40 @@ const Warehouse = () => {
     const [totalPageCount, setTotalPageCount] = useState(1)
     const [search, setSearch] = useState('')
     const [openEditProduct, setOpenEditProduct] = useState(false)
+    const [openProductHistory, setOpenProductHistory] = useState(false)
     const [editProduct, setEditProduct] = useState({
         name: '',
         warehouse_history: []
     })
 
+    const [productDataHistory, setProductDataHistory] = useState({
+        _id: '',
+        name: '',
+        warehouse_history: []
+    })
+
+    // Hiển thị trang trước
     const handlePreviousPage = () => {
         if(page > 1){
             setPage(prev => prev - 1)
         }
     }
 
+    // Hiển thị trang sau
     const handleNextPage = () => {
         if(page !== totalPageCount){
             setPage(prev => prev + 1)
         }       
     }
 
+    // Xử lý tìm kiếm
     const handleSearch = (e) => {
         const { value } = e.target
         setSearch(value)
-        setPage(1)
+        setPage(1)  // Hiển thị số trang mặc định là 1
     }
 
+    // Lấy dữ liệu sản phẩm
     const fetchProductData = async() => {
         try {
             setIsLoading(true)
@@ -53,11 +65,13 @@ const Warehouse = () => {
                 }
             })
             
+            // Lấy dữ liệu thành công thì sẽ gán giá trị vào ProductData và hiển thị số trang trong TotalPageCount
             if(responseData.data.success){
                 setTotalPageCount(responseData.data.totalNumberPage)
                 setProductData(responseData.data.data)
             }
             
+            // Lấy dữ liệu thất bại thì hiển thị thông báo lỗi
             if(responseData.data.error){
                 Swal.fire({
                     position: 'center',
@@ -77,24 +91,24 @@ const Warehouse = () => {
         }
     }
 
+    // Xử lý sự kiện tải lại trang nếu dữ liệu thay đổi khi tìm kiếm
     useEffect(() => {
         let flag = true 
-
         const interval = setTimeout(() => {
             if(flag){
                 fetchProductData()
                 flag = false
             }
         }, 300)
-
         return () => {
-            clearTimeout(interval)
+            clearTimeout(interval)  // Xóa bộ nhớ đệm khi mỗi lần hiển thị dữ liệu thành công
         }
     },[page, search])
+
     return (
         <section>
         {
-            !openEditProduct && (
+            !openEditProduct && !openProductHistory && (
                 <>
                     <div className='bg-slate-100 shadow-lg flex items-center justify-between p-3 mb-3'>
                         <h2 className='font-semibold'>Danh sách sản phẩm</h2>
@@ -151,7 +165,8 @@ const Warehouse = () => {
                                                             <td>
                                                                 <div className='flex items-center justify-center gap-2 text-sm'>                                                           
                                                                     <button onClick={() => {
-                                                                            setOpenEditProduct(true),
+                                                                            setOpenEditProduct(true)
+                                                                            setOpenProductHistory(false)
                                                                             setEditProduct(p)                                                                                             
                                                                         }}
                                                                         className='bg-orange-500 rounded p-1.5 hover:bg-orange-700 hover:text-white cursor-pointer'
@@ -160,8 +175,9 @@ const Warehouse = () => {
                                                                     </button>
                                                                     <button 
                                                                         onClick={() => {
-                                                                            setOpenOrderDetail(true),
-                                                                            setOrderDataDetail(order)                                                                                             
+                                                                            setOpenProductHistory(true)
+                                                                            setOpenEditProduct(false)                                                                                                                                                       
+                                                                            setProductDataHistory(p)                                                                                             
                                                                         }}
                                                                         className='bg-blue-500 rounded p-1.5 hover:bg-blue-700 hover:text-white cursor-pointer'
                                                                         title='Xem lịch sử'>
@@ -206,6 +222,12 @@ const Warehouse = () => {
         {
             openEditProduct && (
                 <EditProductWarehouse fetchData={fetchProductData} data={editProduct} back={() => setOpenEditProduct(false)}/>
+            )
+        }
+
+        {
+            openProductHistory && (
+                <WarehouseDetail data={productDataHistory} back={() => setOpenProductHistory(false)}/>
             )
         }
         </section>

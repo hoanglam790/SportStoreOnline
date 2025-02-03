@@ -16,6 +16,7 @@ const EditProductWarehouse = ({ back, fetchData, data: productWarehouseData }) =
     const [isLoading, setIsLoading] = useState(false)
     const changeColorValue = Object.values(productData).every(p => p)
 
+    // Lấy ra lịch sử cập nhật mới nhất
     const latestHistory = productData?.warehouse_history?.sort((a,b) => new Date(b.date) - new Date(a.date))[0] // Phần tử đầu tiên nếu mảng đã được sắp xếp theo thời gian
     const latestCostPrice = latestHistory?.cost_price
 
@@ -80,10 +81,6 @@ const EditProductWarehouse = ({ back, fetchData, data: productWarehouseData }) =
             setIsLoading(false)
         }
     }
-
-    // Lấy ra lịch sử cập nhật mới nhất
-    //const latestedHistory = productData?.warehouse_history?.sort((a,b) => new Date(b.date) - new Date(a.date))[0]
-    console.log(productData)
     return (
         <section>
             <div className='bg-white flex items-center justify-between w-full mt-2'>

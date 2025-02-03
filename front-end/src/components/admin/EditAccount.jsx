@@ -5,11 +5,11 @@ import connectApi from '@/common/ApiBackend'
 import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 import Swal from 'sweetalert2'
 import Role from '@/common/Role'
-import AccountStatus from '@/common/AccountStatus'
+// import AccountStatus from '@/common/AccountStatus'
 
 const EditAccount = ({close, fetchUserData, data: userData}) => {
     const [userRole, setUserRole] = useState(userData.role || '')
-    const [userStatus, setUserStatus] = useState(userData.status || '')
+    // const [userStatus, setUserStatus] = useState(userData.status || '')
 
     const [allUserData, setAllUserData] = useState({
         _id: userData?._id,
@@ -31,14 +31,21 @@ const EditAccount = ({close, fetchUserData, data: userData}) => {
         })
     }
 
-    // Xử lý sự kiện thay đổi dữ liệu trong DropDownList
+    // Xử lý sự kiện thay đổi dữ liệu trong Toggle
     const handleChangeStatus = (e) => {
-        const selectedStatus = e.target.value
-        setUserStatus(selectedStatus)
+        // const selectedStatus = e.target.value
+        // setUserStatus(selectedStatus)
+        // setAllUserData((prev) => {
+        //     return {
+        //         ...prev,
+        //         status: selectedStatus
+        //     }
+        // })
+        const newStatus = e.target.checked ? 'Đang hoạt động' : 'Không hoạt động'
         setAllUserData((prev) => {
             return {
                 ...prev,
-                status: selectedStatus
+                status: newStatus
             }
         })
     }
@@ -54,27 +61,13 @@ const EditAccount = ({close, fetchUserData, data: userData}) => {
     }
 
     // Gọi API và cập nhật dữ liệu vào cơ sở dữ liệu khi nhấn nút Xác nhận
-    const updateUserRole = async(e) => {
+    const updateUser = async(e) => {
         e.preventDefault()
         try {
             const responseData = await Axios({
                 ...connectApi.updateUser,
                 data: allUserData
             })
-
-            // Kiểm tra trước khi gửi dữ liệu
-            if (!allUserData.role) {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'warning',
-                    text: 'Vui lòng chọn 01 vai trò.',
-                    showConfirmButton: true,
-                    customClass: {
-                        title: 'text-xl font-semibold'
-                    }
-                })
-                return // Dừng lại nếu role không hợp lệ
-            }
 
             if(responseData.data.success){
                 Swal.fire({
@@ -118,7 +111,7 @@ const EditAccount = ({close, fetchUserData, data: userData}) => {
                     </button>
                 </div>
                 
-                <form onSubmit={updateUserRole}>
+                <form onSubmit={updateUser}>
                     <div className='my-2'>
                         <p>Email:</p>
                         <input
@@ -158,21 +151,22 @@ const EditAccount = ({close, fetchUserData, data: userData}) => {
                             }                       
                         </select>
                     </div>
-
-                    <div className='flex items-center justify-between my-4'>
+                    
+                    <div className='flex items-center justify-between my-6'>
                         <p>Trạng thái: </p>
-                        <select value={allUserData?.status} onChange={handleChangeStatus} className='border px-4 py-2'>
-                            {
-                                Object.values(AccountStatus).map(u => {
-                                    return (
-                                        <option value={u} key={u}>
-                                            {u}
-                                        </option>       
-                                    )
-                                })
-                            }                       
-                        </select>
-                    </div>               
+                        <label className='inline-flex items-center cursor-pointer'>
+                            <input
+                                type='checkbox'
+                                className='sr-only peer'
+                                checked={allUserData?.status === 'Đang hoạt động'} // Kiểm tra trạng thái ban đầu
+                                onChange={handleChangeStatus} // Lắng nghe sự thay đổi
+                            />
+                            <div className='relative w-11 h-6 bg-gray-200 rounded-full dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600'></div>
+                            <span className='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'>
+                                {allUserData?.status === 'Đang hoạt động' ? 'Đang hoạt động' : 'Không hoạt động'}
+                            </span>
+                        </label>
+                    </div>                         
                     <button className='w-fit mx-auto block px-3 py-2 bg-blue-500 rounded hover:bg-blue-700 hover:text-white'>Xác nhận</button>
                 </form>              
             </div>
