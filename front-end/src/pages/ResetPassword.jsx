@@ -12,29 +12,12 @@ const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    {/** Gán dữ liệu */}
+    // Gán dữ liệu
     const [userData, setUserData] = useState({
         email: '',
         newPassword: '',
         confirmPassword: ''
     })
-
-    useEffect(() => {
-        {/** Nếu không có giá trị thành công (success) trong currentLocation?.state?.data, người dùng sẽ được chuyển hướng về trang chủ */}
-        if(!(currentLocation?.state?.data?.success)){
-            navigate('/')
-        }
-
-        {/** Nếu có giá trị email trong currentLocation?.state?.email, state người dùng sẽ được cập nhật với email đó */}
-        if(currentLocation?.state?.email){
-            setUserData((prev)=>{
-                return{
-                    ...prev,
-                    email : currentLocation?.state?.email
-                }
-            })
-        }
-    },[])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -106,13 +89,29 @@ const ResetPassword = () => {
                     confirmPassword: ''
                 })              
             }
-
         } catch (error) {
             {/** Hiển thị thông báo lỗi từ API */}
             axiosErrorAnnounce(error)
         }       
     }
 
+    useEffect(() => {
+        // Nếu không có giá trị thành công (success) trong currentLocation?.state?.data, người dùng sẽ được chuyển hướng về trang chủ
+        if(!(currentLocation?.state?.data?.success)){
+            navigate('/')
+        }
+
+        // Nếu có giá trị email trong currentLocation?.state?.email, state người dùng sẽ được cập nhật với email đó
+        if(currentLocation?.state?.email){
+            setUserData((prev)=>{
+                return{
+                    ...prev,
+                    email : currentLocation?.state?.email
+                }
+            })
+        }
+    },[])
+    
     return (
         <section id='register' className='py-8'>
             <div className='font-[sans-serif] bg-white border border-b max-w-2xl flex items-center mx-auto p-4 rounded-lg mt-28'>

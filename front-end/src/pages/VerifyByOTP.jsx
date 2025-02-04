@@ -7,11 +7,10 @@ import axiosErrorAnnounce from '@/utils/AxiosErrorAnnouce'
 
 const VerifyPasswordByOtp = () => {
     const [userData, setUserData] = useState(['','','','','',''])
-
     const navigate = useNavigate()
     const currentLocation = useLocation()
     const inputNumber = useRef([])  
-    console.log('location', currentLocation)
+    //console.log('location', currentLocation)
     
     const valideValue = userData.every(e => e)
 
@@ -101,6 +100,11 @@ const VerifyPasswordByOtp = () => {
         }
     }
 
+    // Xử lý sự kiện reset lại giá trị về ban đầu khi nhập sai
+    const handleResetData = () => {
+        setUserData(['', '', '', '', '', ''])  // Đặt lại giá trị của mảng userData
+    }
+
     useEffect(() => {
         if(!currentLocation?.state?.email){
             navigate('/forgot-password')
@@ -142,9 +146,14 @@ const VerifyPasswordByOtp = () => {
                         </div>
 
                         <div className='mt-12'>
-                            <button disabled={!valideValue} className={`${valideValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-green-700 hover:bg-green-500 rounded-md focus:outline-none' 
-                                : 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none'}`}>
+                            <button disabled={!valideValue} className={`${valideValue ? 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-green-600 hover:bg-green-500 rounded-md focus:outline-none' 
+                                : 'w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-gray-700 rounded-md focus:outline-none cursor-not-allowed'}`}>
                             Xác thực
+                            </button>
+                        </div>
+                        <div className='mt-3'>
+                            <button onClick={handleResetData} className='w-full flex items-center justify-center gap-4 py-2.5 px-5 text-sm tracking-wide text-white bg-transparent border border-gray-500 hover:bg-white hover:text-black rounded-md'>
+                            Đặt lại
                             </button>
                         </div>
                     </form>
